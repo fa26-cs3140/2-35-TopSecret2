@@ -1,0 +1,33 @@
+User Interface - TopSecret
+Owner: Team Member A
+
+Command Options
+  java -jar TopSecret.jar                  List available files
+  java -jar TopSecret.jar <number>         Display that file (default key)
+  java -jar TopSecret.jar <number> <key>   Display that file using an alternate key
+
+Examples
+  java -jar TopSecret.jar
+      01 filea.txt
+      02 fileb.txt
+  java -jar TopSecret.jar 01
+      (shows contents of filea.txt)
+
+Errors
+  Invalid number, too many arguments, or a missing file prints an error
+  message and exits. The program never crashes.
+
+Interface with Program Control
+  listFiles()                         -> list of file names
+  getFileContents(number, keyPath)    -> file contents (keyPath null = default key)
+
+Testing
+  UI tests run independently of the other parts of the program.
+  - No arguments: shows numbered file list
+  - No files: shows "No files available."
+  - Valid number ("01" or "1"): shows file contents
+  - Number and key: passes the key to Program Control
+  - Invalid number ("abc", "0", "-1"): shows error
+  - Too many arguments: shows error
+  - Blank key: shows error
+  - Error from Program Control: shows error, does not crash
