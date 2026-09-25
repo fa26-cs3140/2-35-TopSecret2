@@ -1,0 +1,29 @@
+Scenario: User wants to read a Cipher key file
+
+    GIVEN user calls method FileHandler.getFileLinesList()
+    WHEN user passes correct parameters (key.txt, FileHandler.fileTypes.CIPHER)
+    THEN user receives the ArrayList<String> of the lines in the Cipher key.txt file
+
+
+
+Scenario: User wants to read a data file, carnivore.cip
+
+    GIVEN user calls method FileHandler.getFileLinesList()
+    WHEN user passes correct parameters (carnivore.cip, FileHandler.fileTypes.DATA)
+    THEN user receives the ArrayList<String> of the lines in the carnivore.cip data file
+
+
+
+Scenario: User wants to read a data file, cointelpro.cip
+
+    GIVEN user calls method FileHandler.getFileLinesList()
+    WHEN user passes correct parameters (cointelpro.cip, FileHandler.fileTypes.DATA)
+    THEN user receives the ArrayList<String> of the lines in the cointelpro.cip data file
+
+
+
+Scenario: User wants to read a data file that doesn't exist
+
+    GIVEN user calls method FileHandler.getFileLinesList()
+    WHEN user passes incorrect parameters (example.cip, FileHandler.fileTypes.DATA)
+    THEN user receives null value

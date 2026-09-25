@@ -1,11 +1,87 @@
 import org.junit.jupiter.api.Test;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.util.ArrayList;
+import java.util.Scanner;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class FileHandlerTest {
+    Scanner scnr;
 
+
+    /**
+     * Testing when querying for a cipher key file
+     */
     @Test
-    void getFileLinesList() {
+    void getCipherLinesList() {
+        try {
+            Scanner scnr = new Scanner(new File("src/main/resources/ciphers/key.txt"));
+            ArrayList<String> expectedLines = new ArrayList<>();
+            while (scnr.hasNextLine()) {
+                expectedLines.add(scnr.nextLine());
+            }
+
+            ArrayList<String> actualLines = FileHandler.getFileLinesList("key.txt", FileHandler.fileTypes.CIPHER);
+
+            assertArrayEquals(expectedLines.toArray(), actualLines.toArray());
+        } catch (FileNotFoundException e) {
+            assertEquals(1, 0, "Exception: " + e.getMessage());
+        }
+    }
+
+    /**
+     * Testing when querying for a data file
+     */
+    @Test
+    void getFileLinesList2() {
+        try {
+            Scanner scnr = new Scanner(new File("src/main/resources/data/carnivore.cip"));
+            ArrayList<String> expectedLines = new ArrayList<>();
+            while (scnr.hasNextLine()) {
+                expectedLines.add(scnr.nextLine());
+            }
+            System.out.println(expectedLines);
+            ArrayList<String> actualLines = FileHandler.getFileLinesList("carnivore.cip", FileHandler.fileTypes.DATA);
+
+            assertArrayEquals(expectedLines.toArray(), actualLines.toArray());
+        } catch (FileNotFoundException e) {
+            assertEquals(1, 0, "Exception: " + e.getMessage());
+        }
+
 
     }
+
+    /**
+     * Testing when querying for a data file
+     */
+    @Test
+    void getFileLinesList3() {
+        try {
+            Scanner scnr = new Scanner(new File("src/main/resources/data/cointelpro.cip"));
+            ArrayList<String> expectedLines = new ArrayList<>();
+            while (scnr.hasNextLine()) {
+                expectedLines.add(scnr.nextLine());
+            }
+
+            ArrayList<String> actualLines = FileHandler.getFileLinesList("cointelpro.cip", FileHandler.fileTypes.DATA);
+
+            assertArrayEquals(expectedLines.toArray(), actualLines.toArray());
+        } catch (FileNotFoundException e) {
+            assertEquals(1, 0, "Exception: " + e.getMessage());
+        }
+    }
+
+
+    /**
+     * Testing when querying for a non-existent file
+     */
+    @Test
+    void getFileLinesList4() {
+        ArrayList<String> actualLines = FileHandler.getFileLinesList("example.cip", FileHandler.fileTypes.DATA);
+        assertNull(actualLines);
+    }
+
+
 }
