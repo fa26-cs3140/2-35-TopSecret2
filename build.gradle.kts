@@ -25,7 +25,15 @@ tasks.test {
 }
 tasks.jar {
     archiveFileName.set("TopSecret.jar")
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+
     manifest {
         attributes["Main-Class"] = "TopSecret"
     }
+
+    from({
+        configurations.runtimeClasspath.get().map {
+            if (it.isDirectory) it else zipTree(it)
+        }
+    })
 }
