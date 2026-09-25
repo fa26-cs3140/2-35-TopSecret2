@@ -14,6 +14,16 @@ public class FileHandler {
         return new ArrayList<>();
     }
 
+
+    /**
+     * returns an ArrayList of the names of data files in src/main/resources/data directory
+     * @return {@code ArrayList<String>} of data file names in data directory.
+     */
+    public static ArrayList<String> listDataFiles() {
+
+        return new ArrayList<String>();
+    }
+
     public enum fileTypes {
         DATA,
         CIPHER

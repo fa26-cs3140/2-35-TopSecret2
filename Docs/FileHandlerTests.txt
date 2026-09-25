@@ -27,3 +27,9 @@ Scenario: User wants to read a data file that doesn't exist
     GIVEN user calls method FileHandler.getFileLinesList()
     WHEN user passes incorrect parameters (example.cip, FileHandler.fileTypes.DATA)
     THEN user receives null value
+
+
+Scenario: User wants to get a list of file names in data directory
+
+    GIVEN user calls method FileHandler.listDataFiles()
+    THEN user receives the list of file names in data directory
