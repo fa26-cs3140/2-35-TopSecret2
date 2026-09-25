@@ -12,7 +12,7 @@ import org.junit.jupiter.api.Test;
 class UserInterfaceTest {
 
     // Mock ProgramControl that returns set values and records what the UI asked for.
-    static class FakeControl implements ProgramControl {
+    static class FakeControl extends ProgramControl {
         List<String> files = new ArrayList<>(List.of("filea.txt", "fileb.txt", "filec.txt"));
         String contents = "secret contents";
         TopSecretException toThrow;
@@ -21,8 +21,10 @@ class UserInterfaceTest {
         String lastKey;
         boolean contentsCalled;
 
+        @Override
         public List<String> listFiles() { return files; }
 
+        @Override
         public String getFileContents(int n, String key) throws TopSecretException {
             contentsCalled = true;
             lastNumber = n;

@@ -1,0 +1,42 @@
+ProgramControl Testing
+------------------------
+Cases:
+Case 1:
+Call listFiles() when data files are available
+Expected:
+Returns the file names
+
+Case 2:
+Call listFiles() when no files are there
+Excepted:
+Returns an empty list<string>
+
+Case 3:
+Call getFileContents() with valid number from file list and null for keyFileName
+Expected:
+Reads the data file, passes default cipher to Cipher, returns the output from Cipher to UserInterface
+
+Case 4:
+Call getFileContents() with valid number from the file list and valid (non-null) cipher.
+Expected:
+Reads the data file, passes file and cipher to Cipher, returns the output to UserInterface
+
+Case 5:
+Call getFileContents() with invalid (0 or negative) file number
+Expected:
+Throws a TopSecretException and doesn't attempt to read file
+
+Case 6:
+Call getFileContents() with an invalid (greater than number of files) file number
+Expected:
+Throws a TopSecretException and doesn't attempt to read file
+
+Case 7:
+Call getFileContents with a valid file but invalid cipher
+Expected:
+Throws an exception and doesn't pass the cipher to Cipher
+
+Case 8:
+Call getFileContents with a valid file number which links to an invalid File
+Expected:
+Throws a TopSecretException and doesn't pass to Cipher

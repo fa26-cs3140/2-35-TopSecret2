@@ -1,0 +1,21 @@
+FileHandler
+-----------------
+-----------------
++ getFileLinesList(fileName:String, fileType:fileTypes):ArrayList<String>
++ listDataFiles():ArrayList<String>
+
+           |
+           |
+           |
+           |
+           | contains
+           |
+           |
+          \|/
+           T
+<<enumeration>>
+fileTypes
+--------------------------------
+---------------------------------
+DATA
+CIPHER

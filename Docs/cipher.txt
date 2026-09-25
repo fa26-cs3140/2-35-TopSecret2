@@ -1,0 +1,14 @@
+Cipher
+------------------
+-substitutions:HashMap<Character, Character>
+------------------
++Cipher(keyFileName: String)
++decipher(cipherText: String):String
+
+A map of character substitutions is stored in the property substitutions.
+This map is filled using a key named keyFileName loaded from FileHandler upon
+initialization.
+
+The decipher method accepts a String cipherText and returns a String of
+the deciphered value according to the substitution cipher. Characters
+that do not have a defined substitution are unchanged.
