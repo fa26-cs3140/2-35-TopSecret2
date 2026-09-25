@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 import java.util.Scanner;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -25,7 +24,7 @@ class FileHandlerTest {
                 expectedLines.add(scnr.nextLine());
             }
 
-            ArrayList<String> actualLines = FileHandler.getFileLinesList("key.txt", FileHandler.fileTypes.CIPHER);
+            ArrayList<String> actualLines = FileHandler.getFileLinesList("key.txt", FileHandler.FileTypes.CIPHER);
 
             assertArrayEquals(expectedLines.toArray(), actualLines.toArray());
         } catch (FileNotFoundException e) {
@@ -45,7 +44,7 @@ class FileHandlerTest {
                 expectedLines.add(scnr.nextLine());
             }
             System.out.println(expectedLines);
-            ArrayList<String> actualLines = FileHandler.getFileLinesList("carnivore.cip", FileHandler.fileTypes.DATA);
+            ArrayList<String> actualLines = FileHandler.getFileLinesList("carnivore.cip", FileHandler.FileTypes.DATA);
 
             assertArrayEquals(expectedLines.toArray(), actualLines.toArray());
         } catch (FileNotFoundException e) {
@@ -67,7 +66,7 @@ class FileHandlerTest {
                 expectedLines.add(scnr.nextLine());
             }
 
-            ArrayList<String> actualLines = FileHandler.getFileLinesList("cointelpro.cip", FileHandler.fileTypes.DATA);
+            ArrayList<String> actualLines = FileHandler.getFileLinesList("cointelpro.cip", FileHandler.FileTypes.DATA);
 
             assertArrayEquals(expectedLines.toArray(), actualLines.toArray());
         } catch (FileNotFoundException e) {
@@ -81,7 +80,7 @@ class FileHandlerTest {
      */
     @Test
     void getFileLinesList4() {
-        ArrayList<String> actualLines = FileHandler.getFileLinesList("example.cip", FileHandler.fileTypes.DATA);
+        ArrayList<String> actualLines = FileHandler.getFileLinesList("example.cip", FileHandler.FileTypes.DATA);
         assertNull(actualLines);
     }
 

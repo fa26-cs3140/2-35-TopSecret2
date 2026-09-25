@@ -13,9 +13,9 @@ public class FileHandler {
      * @param fileType type of file to read: DATA or CIPHER from {@code enum fileTypes}
      * @return {@code ArrayList<String>} containing the lines of the file. {@code null} if file does not exist
      */
-    public static ArrayList<String> getFileLinesList(String fileName, fileTypes fileType) {
+    public static ArrayList<String> getFileLinesList(String fileName, FileTypes fileType) {
 
-        String path = "src/main/resources/" + (fileType == fileTypes.DATA ? "data/" : "ciphers/") + fileName;
+        String path = "src/main/resources/" + (fileType == FileTypes.DATA ? "data/" : "ciphers/") + fileName;
         try {
             Scanner scnr = new Scanner(new File(path));
             ArrayList<String> lines = new ArrayList<>();
@@ -41,7 +41,7 @@ public class FileHandler {
         return new ArrayList<>(Arrays.asList(folder.list()));
     }
 
-    public enum fileTypes {
+    public enum FileTypes {
         DATA,
         CIPHER
     }
