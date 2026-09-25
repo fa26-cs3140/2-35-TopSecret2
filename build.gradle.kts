@@ -24,12 +24,8 @@ tasks.test {
     useJUnitPlatform()
 }
 tasks.jar {
-    archiveBaseName = "TopSecret"
-    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+    archiveFileName.set("TopSecret.jar")
     manifest {
-        attributes("Main-Class" to "TopSecret")
+        attributes["Main-Class"] = "TopSecret"
     }
-    from({
-        configurations.runtimeClasspath.get().map { if (it.isDirectory) it else zipTree(it) }
-    })
 }

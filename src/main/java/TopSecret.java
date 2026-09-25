@@ -6,6 +6,5 @@ public class TopSecret {
         if (exitCode != 0){
             System.exit(exitCode);
         }
-        System.out.println("I am in Main method");
     }
 }
