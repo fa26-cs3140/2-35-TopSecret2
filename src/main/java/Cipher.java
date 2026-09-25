@@ -4,11 +4,10 @@ import java.util.ArrayList;
 public class Cipher {
     private HashMap<Character, Character> substitutions;
 
-
-    public Cipher() throws TopSecretException {
+    public Cipher(String keyFileName) throws TopSecretException {
         ArrayList<String> keyLines =
                 FileHandler.getFileLinesList(
-                        "key.txt",
+                        keyFileName,
                         FileHandler.FileTypes.CIPHER
                 );
 
@@ -39,7 +38,7 @@ public class Cipher {
              characterIdx < numKeyCharacters;
              ++characterIdx) {
             substitutions.put(
-                    // Key is cipher character because we are deciphering
+                    // HashMap Key is cipher character because deciphering
                     cipherCharacters.charAt(characterIdx),
                     regularCharacters.charAt(characterIdx)
             );
