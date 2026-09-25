@@ -1,5 +1,4 @@
 User Interface - TopSecret
-Owner: Team Member A
 
 Command Options
   java -jar TopSecret.jar                  List available files

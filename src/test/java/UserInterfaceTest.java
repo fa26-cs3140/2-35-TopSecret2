@@ -8,8 +8,10 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+// Unit tests for UserInterface, using a mock ProgramControl.
 class UserInterfaceTest {
 
+    // Mock ProgramControl that returns set values and records what the UI asked for.
     static class FakeControl implements ProgramControl {
         List<String> files = new ArrayList<>(List.of("filea.txt", "fileb.txt", "filec.txt"));
         String contents = "secret contents";
@@ -38,6 +40,7 @@ class UserInterfaceTest {
     private FakeControl control;
     private UserInterface ui;
 
+    // Captures printed output and creates a fresh UI before each test.
     @BeforeEach
     void setUp() {
         outBytes = new ByteArrayOutputStream();
@@ -48,15 +51,18 @@ class UserInterfaceTest {
         ui = new UserInterface(control);
     }
 
+    // Restores normal screen output after each test.
     @AfterEach
     void tearDown() {
         System.setOut(originalOut);
         System.setErr(originalErr);
     }
 
+    // Returns what was printed to normal output and error output.
     private String out() { return outBytes.toString().replace("\r\n", "\n"); }
     private String err() { return errBytes.toString(); }
 
+    // Tests for running with no arguments
     @Test
     void noArgsListsNumberedFiles() {
         assertEquals(0, ui.run(new String[]{}));
@@ -76,6 +82,7 @@ class UserInterfaceTest {
         assertTrue(out().contains("No files available"));
     }
 
+    // Tests for the file number argument
     @Test
     void validNumberDisplaysContentsWithDefaultKey() {
         assertEquals(0, ui.run(new String[]{"01"}));
@@ -109,6 +116,7 @@ class UserInterfaceTest {
         assertFalse(control.contentsCalled);
     }
 
+    // Tests for the alternate key and extra arguments
     @Test
     void secondArgumentPassedAsAlternateKey() {
         assertEquals(0, ui.run(new String[]{"01", "ciphers/alt.txt"}));
@@ -128,6 +136,7 @@ class UserInterfaceTest {
         assertTrue(err().contains("Usage"));
     }
 
+    // Tests for errors from Program Control
     @Test
     void controlErrorPrintedWithoutCrashing() {
         control.toThrow = new TopSecretException("File 09 does not exist.");
@@ -142,6 +151,7 @@ class UserInterfaceTest {
         assertTrue(err().startsWith("Error:"));
     }
 
+    // Tests for the helper methods
     @Test
     void formatListEntryPadsToTwoDigits() {
         assertEquals("05 x.txt", UserInterface.formatListEntry(5, "x.txt"));
