@@ -1,0 +1,19 @@
+All cases are tested with 2 cipher keys
+
+Case 1:
+Only letters in sentence case
+
+Case 2:
+Only letters in upper case
+
+Case 3:
+Letters, numbers, and a special character (not ciphered on either key)
+
+Case 4:
+Only special characters (one character is ciphered in key2.txt)
+
+Case 5:
+E-mail style string
+
+Case 6:
+String with letters, special characters, and a tab
