@@ -1,5 +1,10 @@
 plugins {
     id("java")
+    application
+}
+
+application {
+    mainClass.set("TopSecret") // Changed mainClassName to mainClass
 }
 
 group = "edu.virgina.cs"
