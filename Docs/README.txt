@@ -1,4 +1,2 @@
-Adding more text to test
-I like coding
-This is a test
-This is a test
+Cipher keys are stored in src/main/resources/keys
+data files to read are stored in src/main/resources/data
