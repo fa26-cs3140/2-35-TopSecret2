@@ -1,4 +1,8 @@
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Scanner;
 
 public class FileHandler {
 
@@ -11,17 +15,30 @@ public class FileHandler {
      */
     public static ArrayList<String> getFileLinesList(String fileName, fileTypes fileType) {
 
-        return new ArrayList<>();
+        String path = "src/main/resources/" + (fileType == fileTypes.DATA ? "data/" : "ciphers/") + fileName;
+        try {
+            Scanner scnr = new Scanner(new File(path));
+            ArrayList<String> lines = new ArrayList<>();
+            while (scnr.hasNextLine()) {
+                lines.add(scnr.nextLine());
+            }
+
+            return lines;
+        } catch (FileNotFoundException e) {
+            return null;
+        }
+
     }
 
 
     /**
      * returns an ArrayList of the names of data files in src/main/resources/data directory
+     *
      * @return {@code ArrayList<String>} of data file names in data directory.
      */
     public static ArrayList<String> listDataFiles() {
-
-        return new ArrayList<String>();
+        File folder = new File("src/main/resources/data");
+        return new ArrayList<>(Arrays.asList(folder.list()));
     }
 
     public enum fileTypes {
