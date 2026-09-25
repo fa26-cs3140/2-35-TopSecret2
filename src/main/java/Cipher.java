@@ -5,18 +5,21 @@ public class Cipher {
     private HashMap<Character, Character> substitutions;
 
 
-    public Cipher() {
-        // TODO: Implement exception
-
+    public Cipher() throws TopSecretException {
         ArrayList<String> keyLines =
                 FileHandler.getFileLinesList(
                         "key.txt",
                         FileHandler.FileTypes.CIPHER
                 );
 
+        // Cannot decipher without a key
+        if (keyLines == null) {
+            throw new TopSecretException("Cipher key does not exist");
+        }
+
         // Valid key should have 2 lines
         if (keyLines.size() != 2) {
-            // TODO: Implement exception
+            throw new TopSecretException("Invalid cipher key provided");
         }
 
         String regularCharacters = keyLines.get(0);
@@ -24,7 +27,7 @@ public class Cipher {
 
         // Valid key should have pairs of characters
         if (regularCharacters.length() != cipherCharacters.length()) {
-            // TODO: Implement exception
+            throw new TopSecretException("Invalid cipher key provided");
         }
 
         int numKeyCharacters = regularCharacters.length();

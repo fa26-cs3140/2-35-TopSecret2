@@ -1,3 +1,4 @@
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.BeforeEach;
 import static org.junit.jupiter.api.Assertions.*;
@@ -7,7 +8,11 @@ class CipherTest {
 
     @BeforeEach
     void setUp() {
-        cipher = new Cipher();
+        try {
+            cipher = new Cipher();
+        } catch (TopSecretException e) {
+            Assertions.fail("Unexpected exception", e);
+        }
     }
 
     @Test
