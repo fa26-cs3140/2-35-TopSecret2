@@ -1,0 +1,44 @@
+noArgsListsNumberedFiles
+Verifies that running with no arguments lists all available files with two-digit numbering.
+
+nullArgsTreatedAsNoArgs
+Verifies that null arguments are handled the same as providing no arguments.
+
+noArgsWithNoFilesPrintsMessage
+Verifies that an appropriate message is displayed when no files are available.
+
+validNumberDisplaysContentsWithDefaultKey
+Verifies that a valid file number displays the file contents using the default key.
+
+numberWithoutLeadingZeroAccepted
+Verifies that a valid file number without a leading zero is accepted.
+
+nonNumericArgumentRejected
+Verifies that a non-numeric file number is rejected with an error message.
+
+zeroRejected
+Verifies that file number zero is rejected.
+
+negativeRejected
+Verifies that a negative file number is rejected.
+
+secondArgumentPassedAsAlternateKey
+Verifies that a second command-line argument is passed to the controller as an alternate key.
+
+blankKeyRejected
+Verifies that a blank or whitespace-only alternate key is rejected.
+
+tooManyArgumentsRejected
+Verifies that more than two command-line arguments are rejected with a usage message.
+
+controlErrorPrintedWithoutCrashing
+Verifies that a TopSecretException from the controller is displayed as an error without crashing the program.
+
+unexpectedRuntimeErrorHandledGracefully
+Verifies that an unexpected runtime exception is handled gracefully with an error message.
+
+formatListEntryPadsToTwoDigits
+Verifies that file numbers are formatted with two digits when displaying a file entry.
+
+parseFileNumberCases
+Verifies that file number parsing handles valid numbers, whitespace, invalid text, empty strings, null values, and decimals correctly.

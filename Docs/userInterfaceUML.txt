@@ -1,0 +1,11 @@
+UserInterface
+------------------------------
+-USAGE:String
+-control:ProgramControl
+------------------------------
++UserInterface(control:ProgramControl)
++run(args:String[]):int
+~showFileList():int
+~formatListEntry(number:int, fileName:String):String
+~parseFileNumber(text:String):int
+-fail(message:String):int
