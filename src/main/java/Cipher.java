@@ -14,6 +14,7 @@ public class Cipher {
                         FileHandler.FileTypes.CIPHER
                 );
 
+        // Valid key should have 2 lines
         if (keyLines.size() != 2) {
             // TODO: Implement exception
         }
@@ -21,28 +22,47 @@ public class Cipher {
         String regularCharacters = keyLines.get(0);
         String cipherCharacters = keyLines.get(1);
 
+        // Valid key should have pairs of characters
         if (regularCharacters.length() != cipherCharacters.length()) {
             // TODO: Implement exception
         }
 
         int numKeyCharacters = regularCharacters.length();
 
+        // Initialize substitutions map with set capacity
         substitutions = new HashMap<>(numKeyCharacters);
 
         for (int characterIdx = 0;
              characterIdx < numKeyCharacters;
              ++characterIdx) {
             substitutions.put(
-                    regularCharacters.charAt(characterIdx),
-                    cipherCharacters.charAt(characterIdx)
+                    // Key is cipher character because we are deciphering
+                    cipherCharacters.charAt(characterIdx),
+                    regularCharacters.charAt(characterIdx)
             );
         }
     }
 
     public String decipher(String cipherText) {
-        // TODO: Implement substitution cipher
+        StringBuilder plaintextBuilder = new StringBuilder(cipherText);
 
-        return cipherText;
+        for (int characterIdx = 0;
+             characterIdx < cipherText.length();
+             ++characterIdx) {
+            Character currCipheredCharacter =
+                    cipherText.charAt(characterIdx);
+
+            Character currPlaintextCharacter =
+                    substitutions.get(currCipheredCharacter);
+
+            // Check if character was ciphered
+            if (currPlaintextCharacter != null) {
+                plaintextBuilder.setCharAt(characterIdx, currPlaintextCharacter);
+            }
+
+            // Non-ciphered characters are unchanged
+        }
+        return plaintextBuilder.toString();
     }
 
 }
