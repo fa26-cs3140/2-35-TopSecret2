@@ -1,0 +1,16 @@
+ProgramControl
+----------------
++listFiles(): List<String>
++getFileContents(fileNumber:int, KeyFileName:String): String
+
+ProgramControl connects the other 3 classes (cipher, userInterface, and FileHandler)
+
+The listFiles() method requests available files from FileHandler and
+returns the names to userInterface.
+
+The getFileContents() method takes a file number and an (optional) cipher key file name.
+It finds the corresponding file, requests it from FileHandler, and passes it to Cipher
+for decoding.
+If a null cipher is passed, the program will instruct Cipher to use the default cipher
+If anything invalid is passed, the program will throw an exception (TopSecretException)
+UserInterface will catch the exception and display it to prevent crashing.
