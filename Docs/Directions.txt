@@ -1,39 +1,30 @@
-Tasks:
-    Create a task list.
-    Draw a diagram to illustrate the design of your program. Don’t worry too much about doing the diagram ‘perfect’ at the moment, just make your own picture. You should be able to circle responsibilities for A, B, C and D (D only if the team has four members).
-    Define how these parts interconnect.
-    Connect to your team in GitHub, download the starter code for your project, and commit documentation and test designs. This step ensures every member of the team is poised to contribute!
-    Create JUnit tests for the area in which you are responsible.
-Second Phase Tasks
-    Write code, run tests.
-    Further refine tests and update them. (NOTE each engineer has their own tests.)
-
 Midpoint Checklist
-    Team formed… all members have joined the team in GitHub
-    Documentation files created:
+    Team formed… all members have joined the team in GitHub DONE
+    Documentation files created: DONE
         Userinterface
         Filehandler
         Programcontrol
         Cipher
-    Tests designed and documented
+    Tests designed and documented DONE
         Userinterface
         Filehandler
         Programcontrol
         Cipher
 Tasklist for Final Week written
 
-    Does the program run?
-    Does it list available files with no arguments?
-    Does it handle asking for a file that doesn’t exist without crashing?
-    Does it decipher a file requested as an argument and display results, then exit?
-    Does it handle a second argument that allows for an alternate key?
-    Does the program exit gracefully if a file cannot be found or deciphered?
-    Have the assigned users completed and committed their assigned part?
-    User interface works according to Sam’s requirements
-    Program control layer exists
-    Files are not directly accessed outside of filehandler
-    Deciphering works
-    Are unit tests complete?
-    Every class has tests
-    Every method has at least one test - not strictly required for ‘boilerplate’ getter and setter methods
+    Does the program run? DONE
+    Does it list available files with no arguments? DONE
+    Does it handle asking for a file that doesn’t exist without crashing? DONE
+    Does it decipher a file requested as an argument and display results, then exit? DONE
+    Does it handle a second argument that allows for an alternate key? DONE
+    Does the program exit gracefully if a file cannot be found or deciphered? DONE
+    Have the assigned users completed and committed their assigned part? DONE
+    User interface works according to Sam’s requirements DONE?
+    Program control layer exists DONE
+    Files are not directly accessed outside of filehandler DONE
+    Deciphering works DONE
+    Are unit tests complete? DONE
+    Every class has tests DONE
+    Every method has at least one test - not strictly required for ‘boilerplate’ getter and setter methods DONE
+
 
