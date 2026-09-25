@@ -61,7 +61,7 @@ class CipherTest {
     @Test
     void decipherTestCase5() {
         String defaultKeyInput = "ntu4l@wjshjojb.fev";
-        String key2Input = "2Rgua@3rpsrwrm.QAM";
+        String key2Input = "2Rgua}3rpsrwrm.QAM";
         String expectedString = "mst3k@virginia.edu";
 
         assertEquals(expectedString, defaultKeyCipher.decipher(defaultKeyInput));
