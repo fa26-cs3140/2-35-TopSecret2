@@ -4,5 +4,6 @@ public class TopSecret {
         // TODO: make sure we can run with gradle
         // TODO: make sure we can run from terminal
         // TODO: make sure we can run using the generated JAR file
+        System.out.println("I am in Main method");
     }
 }
