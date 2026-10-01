@@ -1,0 +1,83 @@
+Adding Interfaces:
+Add:
+    ProgramControlInterface
+    DataStoreInterface
+    AuthenticationInterface
+    SearchInterface
+
+How the System Will work:
+    On startup:
+    1) Check for credential file (.cip)
+        If not found:
+            prompt to create username and password, save it as a .cip, exit
+        If found:
+            Prompt for username and password, verify they are correct
+            Pass to userInterface, which displays options:
+                List missions
+                    lists missions
+                    reprints menu
+                Search missions
+                    Allows user to enter word or phrase
+                    Searches mission database for said word or phrase
+                    return either all matching missions or "no missions found" message
+                    reprints menu
+                Enter mission number
+                    Returns file of entered number
+                    reprints menu
+                Change password
+                   Has user enter password twice, validates
+                   Updates password according to user entry
+                Exit
+                    exits program
+                Loops until exit is selected
+
+Interfaces Required
+- ProgramControlInterface
+  Created by: B (done)
+  Used by: D (UserInterface)
+  Methods: listFiles(), getFileContents(int fileNumber, String keyFile)
+
+- DataStoreInterface
+  Created by: A
+  Used by: ProgramControl, C (SearchService)
+  Methods (proposed):
+    listMissions() -> List<Mission>
+    getMission(int id) -> Mission
+    initDatabase()
+    importTsv(String path)
+
+- AuthenticationInterface
+  Created by: B
+  Used by: D (UserInterface)
+  Methods (proposed):
+    createCredentials(String user, String pass)
+    verifyLogin(String user, String pass) -> boolean
+    changePassword(String newPass, String confirmPass)
+    credentialFileExists() -> boolean
+
+- SearchInterface
+  Created by: C
+  Used by: D (UserInterface)
+  Methods (proposed): search(String phrase) -> List<Mission>
+  Note: Implemented in Java via DataStoreInterface.getAllMissions(),
+  filtering on brief only, case-insensitive. No SQL in C's code.
+
+- UserInterface (D) (no interface, just modifying existing code)
+  Additions needed:
+    - Replace one-shot CLI with interactive menu loop (List / Read / Search / Change password / Exit)
+    - Depend on ProgramControlInterface for list/read (already done)
+    - Depend on AuthenticationInterface for startup login and create-credentials flow
+    - Depend on SearchInterface for search option
+    - Re-display menu after each action; only Exit terminates
+Checklist for week 1:
+- Unit test stubs committed (A/B/C/D)
+- Integration tests created
+
+- Interfaces/code stubbed
+- Documentation for test and code stubs completed
+- Mission table diagram created
+- Canvas check-in form? (might be outdated)
+
+
+
+
