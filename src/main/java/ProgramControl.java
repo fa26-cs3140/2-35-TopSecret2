@@ -2,9 +2,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class ProgramControl {
+public class ProgramControl implements ProgramControlInterface{
     private static final String DEFAULT_KEY_FILE = "key.txt";
-
+    @Override
     public List<String> listFiles() {//Returning all file names available
         ArrayList<String> files;
         try {
@@ -21,7 +21,7 @@ public class ProgramControl {
     }
 
     ;
-
+    @Override
     public String getFileContents(int fileNumber, String keyFile) throws TopSecretException {//Returns the file deciphered;
         List<String> files = listFiles();
         if (fileNumber < 1 || fileNumber > files.size()) {

@@ -11,10 +11,10 @@ public class UserInterface {
                     + "  java -jar TopSecret.jar <number>        display a file\n"
                     + "  java -jar TopSecret.jar <number> <key>  display a file using an alternate key";
 
-    private final ProgramControl control;
+    private final ProgramControlInterface control;
 
     // Stores the ProgramControl the UI will ask for files and contents.
-    public UserInterface(ProgramControl control) {
+    public UserInterface(ProgramControlInterface control) {
         this.control = control;
     }
 
