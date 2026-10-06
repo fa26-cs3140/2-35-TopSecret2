@@ -19,7 +19,6 @@ public class FileHandler {
     public static ArrayList<String> getFileLinesList(String fileName, FileTypes fileType) {
         String folder = (fileType == FileTypes.DATA ? "data/" : "ciphers/");
         InputStream input = FileHandler.class.getResourceAsStream("/" + folder + fileName);
-        String path = "src/main/resources/" + (fileType == FileTypes.DATA ? "data/" : "ciphers/") + fileName;
 
         if (input == null) {
             return null;
