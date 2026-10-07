@@ -1,0 +1,24 @@
+Authentication Tests
+----------------------
+Unit Test:
+
+usernameValidation
+accepts all lowercase usernames, rejects all uppercase/number/other usernames
+
+passwordValidation
+accepts passwords only of length 5 or more
+
+createCredentialsCreatesFile
+Creating credentials creates a (non-empty) .cip file
+
+createCredentialsRejectsBadInput
+Invalid user or password will throw TopSecretException and doesn't create file
+
+credentialsCheckStoredPair
+Correct user + password passes, all other combinations fail
+
+failsWithNoFile
+Can't verify without a .cip file
+
+ChangePasswordOverwrites
+Changing the password/username replaces the .cip file
