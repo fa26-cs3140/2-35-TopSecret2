@@ -1,15 +1,26 @@
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.junit.jupiter.api.extension.ExtendWith;
 
 @ExtendWith(MockitoExtension.class)
 public class SearchTest {
+    private Search searchObj;
 
-    private final Search searchObj = new Search();
+    @Mock
+    private DataStoreInterface mockDataStore;
+
+    @BeforeEach
+    void beforeEach(){
+        searchObj = new Search(mockDataStore);
+    }
+
 
     @Test
     public void searchFoundScenario1() {
         //TODO assertEquals with mockObj of DataStoreInterface
+        //mockDataStore.listMissions() return a List<Mission> of given choice
         searchObj.search("Secure");
     }
 

@@ -1,10 +1,17 @@
 import java.util.List;
 
 public class Search implements SearchInterface {
-    private SQLiteDataStore dataStore;
+    private DataStoreInterface dataStore;
 
-    public Search(SQLiteDataStore dataStoreObj){
-        this.SQLiteDataStore = dataStoreObj;
+
+    /**
+     * creates an object of Search by specifying the source from the dataStoreObj
+     *
+     * @param dataStoreObj where we get the list of missions. if null, setMissionListSrc must be manually called after
+     *                     object creation. Otherwise, an empty list will be searched
+     */
+    public Search(DataStoreInterface dataStoreObj){
+        this.dataStore = dataStoreObj;
     }
 
     /**

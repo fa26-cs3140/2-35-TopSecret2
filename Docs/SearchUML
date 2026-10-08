@@ -1,6 +1,6 @@
 Search
 -----------------------------------------------------
-- dataStore: SQLiteDataStore
+- dataStore: DataStoreInterface
 -----------------------------------------------------
-+ Search(dataStoreObj: SQLiteDataStore)
++ Search(dataStoreObj: DataStoreInterface)
 + search(phrase: String): List<Mission>
