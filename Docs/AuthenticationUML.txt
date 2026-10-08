@@ -1,0 +1,8 @@
+Authentication
+--------------------
++credentialsExist(): boolean
++createCredentials(username: String, password: String): void
++verifyCredentials(username: String, password: String): boolean
++changePassword(username: String, password: String): void
++isValidUsername(username: String): boolean
++isValidPassword(password: String): boolean
