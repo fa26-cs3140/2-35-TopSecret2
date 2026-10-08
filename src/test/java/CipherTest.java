@@ -77,4 +77,18 @@ class CipherTest {
         assertEquals(expectedString, defaultKeyCipher.decipher(defaultKeyInput));
         assertEquals(expectedString, key2Cipher.decipher(key2Input));
     }
+    @Test //Enciphering matches expected enciphered values
+    void encipherSentenceCase(){
+        String input= "Hey!\tWhere's Perry?";
+        String expectedDefault ="Ifz!\tXifsf't Qfssz?";
+        String expectedKey2 = "cQV!\tWtQpQ'R oQppV?";
+        assertEquals(expectedDefault, defaultKeyCipher.encipher(input));
+        assertEquals(expectedKey2, key2Cipher.encipher(input));
+    }
+    @Test //enciphering and deciphering a message returns the original message
+    void encipherDecipherReturnsOriginal(){
+        String input = "The quick brown fox jumps over the lazy dog";
+        assertEquals(input, defaultKeyCipher.decipher(defaultKeyCipher.encipher(input)));
+        assertEquals(input, key2Cipher.decipher(key2Cipher.encipher(input)));
+    }
 }

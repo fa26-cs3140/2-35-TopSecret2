@@ -4,7 +4,7 @@ Cipher
 ------------------
 +Cipher(keyFileName: String)
 +decipher(cipherText: String):String
-
++encipher(plainText: String): String
 A map of character substitutions is stored in the property substitutions.
 This map is filled using a key named keyFileName loaded from FileHandler upon
 initialization.
@@ -12,3 +12,5 @@ initialization.
 The decipher method accepts a String cipherText and returns a String of
 the deciphered value according to the substitution cipher. Characters
 that do not have a defined substitution are unchanged.
+
+The encipher method accepts a String plainText, and uses the cipher to encipher it.

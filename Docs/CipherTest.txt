@@ -17,3 +17,9 @@ E-mail style string
 
 Case 6:
 String with letters, special characters, and a tab
+
+Case 7:
+Encipher with letters in sentence case
+
+Case 8:
+Enciphering a message and then deciphering it returns the original message
