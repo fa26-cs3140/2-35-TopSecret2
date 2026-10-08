@@ -1,4 +1,4 @@
-import java.util.ArrayList;
+import java.util.List;
 
 public interface SearchInterface {
     /**
@@ -7,5 +7,5 @@ public interface SearchInterface {
      * @param phrase phrase/word to search in mission briefs
      * @return {@code ArrayList<String>} containing all the matched mission briefs. Empty if no match.
      */
-    ArrayList<String> search(String phrase);
+    List<Mission> search(String phrase);
 }

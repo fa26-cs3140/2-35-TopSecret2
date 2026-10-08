@@ -1,5 +1,6 @@
-<<interface>>
-SearchInterface
+Search
 -----------------------------------------------------
+- dataStore: SQLiteDataStore
 -----------------------------------------------------
++ Search(dataStoreObj: SQLiteDataStore)
 + search(phrase: String): List<Mission>
