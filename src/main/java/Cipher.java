@@ -1,5 +1,6 @@
 import java.util.HashMap;
 import java.util.ArrayList;
+import java.util.Map;
 
 public class Cipher {
     private HashMap<Character, Character> substitutions;
@@ -67,4 +68,24 @@ public class Cipher {
         return plaintextBuilder.toString();
     }
 
+    public String encipher(String plaintext) {
+        HashMap<Character, Character> reverseSubstitutions =
+                new HashMap<>(substitutions.size());
+        for (Map.Entry<Character, Character> entry : substitutions.entrySet()) {
+            reverseSubstitutions.put(entry.getValue(), entry.getKey());
+        }
+        StringBuilder cipheredBuilder = new StringBuilder(plaintext);
+        for (int characterIndex = 0; characterIndex < plaintext.length(); ++characterIndex) {
+            Character currentPlainTextCharacter = plaintext.charAt(characterIndex);
+            Character currentCipheredCharacter = reverseSubstitutions.get(currentPlainTextCharacter);
+
+            if (currentCipheredCharacter != null) {
+                cipheredBuilder.setCharAt(characterIndex, currentCipheredCharacter);
+            }
+
+        }
+        return cipheredBuilder.toString();
+    }
 }
+
+
