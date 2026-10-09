@@ -22,3 +22,13 @@ Can't verify without a .cip file
 
 ChangePasswordOverwrites
 Changing the password/username replaces the .cip file
+
+---------------------------------------
+Integration Tests:
+---------------------------------------
+
+fullFirstRunCanBeValidated
+After setting up credentials, the validation will work on a later login
+
+passwordChangePropagates
+A password change updates throughout the system, the new password works, the old one doesn't, and the file remains ciphered
