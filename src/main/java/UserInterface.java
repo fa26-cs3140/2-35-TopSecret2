@@ -8,10 +8,12 @@ public class UserInterface {
             ------------------------------""";
     private DataStoreInterface storageInterface;
     private SearchInterface searchInterface;
+    private AuthenticationInterface authentication;
 
     public UserInterface(ProgramControlInterface control) {
         storageInterface = new SQLiteDataStore();
         searchInterface = new Search((SQLiteDataStore) storageInterface);
+        authentication = new Authentication();
     }
 
     public int run(String[] args) {
@@ -59,7 +61,19 @@ public class UserInterface {
                 case 3:
                     break;
                 case 4:
-                    // TODO: Implement password change
+                    System.out.print("Enter new password: ");
+                    String newPass1 = scnr.nextLine();
+
+                    System.out.print("Confirm new password: ");
+                    String newPass2 = scnr.nextLine();
+
+                    try {
+                        authentication.changePassword(newPass1, newPass2);
+                        System.out.println("Password changed successfully.");
+                    } catch (TopSecretException e) {
+                        System.out.println("Unable to change password: " + e.getMessage());
+                    }
+                    break;
                 default:
                     break;
             }
