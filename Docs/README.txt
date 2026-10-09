@@ -55,7 +55,7 @@ Project Structure:
 
 
 Testing:
-    The project uses JUnit for automated unit testing. Tests cover the command-line interface, file handling, program control, and cipher functionality.
+    The project uses JUnit for automated unit testing.
 
     Run the test suite with:
         ./gradlew test
