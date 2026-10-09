@@ -14,7 +14,7 @@ Authentication
 -KEY_FILE: String
 -ALLOWED_CHARACTERS: String
 ----------------------
-+credentialsExist(): boolean
++credentialExist(): boolean
 +createCredentials(username: String, password: String): void
 +verifyCredentials(username: String, password: String): boolean
 +changePassword(username: String, password: String): void
