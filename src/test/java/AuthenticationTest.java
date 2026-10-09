@@ -71,7 +71,7 @@ class AuthenticationTest {
     void changePasswordRejectsMismatches() throws Exception{
         auth.createCredentials("seb", "oldpass");
         assertThrows(TopSecretException.class, () -> auth.changePassword("newpass" ,"notnewpass")); //mismatched new passwords should throw an error
-        assertTrue(auth.verifyCredentials("seb", "old_pass")); //the file should be untouched
+        assertTrue(auth.verifyCredentials("seb", "oldpass")); //the file should be untouched
     }
     @Test
     void changePasswordRejectsInvalidPassword() throws Exception{

@@ -48,11 +48,11 @@ public class Authentication implements AuthenticationInterface {
         if (!credentialExists()){
             throw new TopSecretException("No credential File Found");
         }
+        if (!isValidPassword(newpass1)) {
+            throw new TopSecretException("Invalid password, make sure it's more than 5 characters!");
+        }
         if (!newpass1.equals(newpass2)){
             throw new TopSecretException("Passwords don't match!");
-        }
-        if (!isValidPassword(newpass1)){
-            throw new TopSecretException("Invalid password, make sure it's more than 5 characters!");
         }
         try {
             String stored = new Cipher(KEY_FILE).decipher(Files.readString(CREDENTIAL_FILE).strip());
