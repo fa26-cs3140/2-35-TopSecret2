@@ -8,12 +8,10 @@ public class UserInterface {
             ------------------------------""";
     private DataStoreInterface storageInterface;
     private SearchInterface searchInterface;
-    private AuthenticationInterface authentication;
 
     public UserInterface(ProgramControlInterface control) {
         storageInterface = new SQLiteDataStore();
         searchInterface = new Search((SQLiteDataStore) storageInterface);
-        authentication = new Authentication();
     }
 
     public int run(String[] args) {
@@ -59,21 +57,13 @@ public class UserInterface {
                     searchOption(phrase);
                     break;
                 case 3:
+                    System.out.print("Enter mission ID: ");
+                    String id = scnr.nextLine();
+                    viewMissionById(id);
                     break;
                 case 4:
-                    System.out.print("Enter new password: ");
-                    String newPass1 = scnr.nextLine();
+                    // TODO: Implement password change
 
-                    System.out.print("Confirm new password: ");
-                    String newPass2 = scnr.nextLine();
-
-                    try {
-                        authentication.changePassword(newPass1, newPass2);
-                        System.out.println("Password changed successfully.");
-                    } catch (TopSecretException e) {
-                        System.out.println("Unable to change password: " + e.getMessage());
-                    }
-                    break;
                 default:
                     break;
             }
@@ -108,7 +98,7 @@ public class UserInterface {
 
             for (int currIdx = 0; currIdx < missionList.size(); ++currIdx) {
                 Mission currMission = missionList.get(currIdx);
-                System.out.println((currIdx + 1) + ". " + currMission.getTitle());
+                System.out.println(missionList.get(currIdx).getId() + ". " + currMission.getTitle());
             }
         } else {
             System.out.println("No mission files available");
@@ -135,6 +125,23 @@ public class UserInterface {
             }
         }
 
+    }
+
+    public void viewMissionById(String id) {
+        List<Mission> missionList = storageInterface.listMissions();
+
+        System.out.println(separator);
+
+        for (Mission mission : missionList) {
+            if (String.valueOf(mission.getId()).equals(id)) {
+                System.out.println("Mission Details");
+                System.out.println("Title: " + mission.getTitle());
+                System.out.println("Date: " + mission.getDate());
+                System.out.println("Brief: " + mission.getBrief());
+                System.out.println(separator);
+                return;
+            }
+        }
     }
 
 
