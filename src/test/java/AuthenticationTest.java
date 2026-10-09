@@ -63,9 +63,21 @@ class AuthenticationTest {
     @Test
     void ChangePasswordOverwrites() throws Exception{
         auth.createCredentials("seb", "oldpass");
-        auth.changePassword("seb", "newpass");
+        auth.changePassword("newpass", "newpass");
         assertTrue(auth.verifyCredentials("seb", "newpass")); //new password works
         assertFalse(auth.verifyCredentials("seb", "oldpass")); //older password, shouldn't work
+    }
+    @Test
+    void changePasswordRejectsMismatches() throws Exception{
+        auth.createCredentials("seb", "oldpass");
+        assertThrows(TopSecretException.class, () -> auth.changePassword("newpass" ,"notnewpass")); //mismatched new passwords should throw an error
+        assertTrue(auth.verifyCredentials("seb", "old_pass")); //the file should be untouched
+    }
+    @Test
+    void changePasswordRejectsInvalidPassword() throws Exception{
+        auth.createCredentials("seb", "oldpass");
+        assertThrows(TopSecretException.class, () -> auth.changePassword("a", "a")); //not a valid password should throw
+        assertTrue(auth.verifyCredentials("seb", "oldpass")); //file shouldn't have been touched
     }
 
 }

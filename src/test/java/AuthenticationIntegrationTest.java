@@ -26,7 +26,7 @@ public class AuthenticationIntegrationTest {
     void passwordChangePropagates() throws Exception{
         Authentication auth = new Authentication();
         auth.createCredentials("firstusername", "firstpassword"); //set up the credentials
-        auth.changePassword("firstusername" , "secondpassword"); //replace the password
+        auth.changePassword("secondpassword" , "secondpassword"); //replace the password
 
         assertTrue(auth.verifyCredentials("firstusername", "secondpassword"));
         assertFalse(auth.verifyCredentials("firstusername", "firstpassword"));
