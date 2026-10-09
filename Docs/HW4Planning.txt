@@ -80,7 +80,7 @@ Checklist for week 1:
 
 
 
-TODO: we must update README file to reflect the new changes
+TODO: we must update README file to reflect the new changes. I updated other parts, just need to update the USAGE part
 
 
 
