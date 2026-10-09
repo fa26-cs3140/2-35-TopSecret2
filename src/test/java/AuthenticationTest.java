@@ -13,7 +13,8 @@ class AuthenticationTest {
     private Authentication auth;
     @BeforeEach
     void setup() throws Exception{
-        Files.deleteIfExists(CREDENTIAL_FILE); //resets the credential file
+        Files.deleteIfExists(CREDENTIAL_FILE);
+        auth = new Authentication();//resets the credential file
     }
     @Test
     void usernameValidation()
