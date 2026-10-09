@@ -1,0 +1,5 @@
+Group Member | Name             | Github ID
+Member A     | Srikar Kolli     | Srikar-Kolli
+Member B     | Sebastian Nowicki| sgnowicki-gif
+Member C     | Eltaf Sameem     | Eltaf-Sameem
+Member D     | Jaime Lopez      | MrTwoMile
