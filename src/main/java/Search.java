@@ -10,7 +10,7 @@ public class Search implements SearchInterface {
      * @param dataStoreObj where we get the list of missions. if null, setMissionListSrc must be manually called after
      *                     object creation. Otherwise, an empty list will be searched
      */
-    public Search(DataStoreInterface dataStoreObj){
+    public Search(DataStoreInterface dataStoreObj) {
         this.dataStore = dataStoreObj;
     }
 
@@ -24,8 +24,9 @@ public class Search implements SearchInterface {
     public List<Mission> search(String phrase) {
         List<Mission> missions = dataStore.listMissions();
 
-        missions.removeIf(mission -> mission.brief.toLowerCase().contains(phrase.toLowerCase()));
-
-        return missions;
+        return missions.stream()
+                .filter(mission -> mission.getBrief()
+                        .matches("(?i).*\\b" + phrase + "\\b.*"))
+                .toList();
     }
 }
