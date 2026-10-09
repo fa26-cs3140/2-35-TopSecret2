@@ -14,14 +14,21 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SQLiteDataStore implements DataStoreInterface {
+public class SQLiteDataStore implements DataStoreInterface, AutoCloseable {
 
     private static final String DATABASE_URL = "jdbc:sqlite:missions.db";
     private static final String TSV_RESOURCE = "dataset/mission_briefs.tsv";
 
+    private final String databaseUrl;
     private Connection connection;
 
     public SQLiteDataStore() {
+        this(DATABASE_URL);
+    }
+
+    // Package-private constructor for tests using a temporary database.
+    SQLiteDataStore(String databaseUrl) {
+        this.databaseUrl = databaseUrl;
         initDatabase();
         importDefaultTsvIfEmpty();
     }
@@ -30,7 +37,7 @@ public class SQLiteDataStore implements DataStoreInterface {
     public void initDatabase() {
         try {
             if (connection == null || connection.isClosed()) {
-                connection = DriverManager.getConnection(DATABASE_URL);
+                connection = DriverManager.getConnection(databaseUrl);
             }
 
             String sql = """
@@ -138,10 +145,8 @@ public class SQLiteDataStore implements DataStoreInterface {
                     "Could not find resource: " + TSV_RESOURCE);
         }
 
-        try (InputStream stream = input;
-             BufferedReader reader = new BufferedReader(
-                     new InputStreamReader(
-                             stream, StandardCharsets.UTF_8))) {
+        try (BufferedReader reader = new BufferedReader(
+                new InputStreamReader(input, StandardCharsets.UTF_8))) {
 
             importTsvReader(reader);
 
@@ -167,14 +172,11 @@ public class SQLiteDataStore implements DataStoreInterface {
         }
     }
 
-    private void importTsvReader(BufferedReader reader)
-            throws IOException {
-
+    private void importTsvReader(BufferedReader reader) throws IOException {
         String header = reader.readLine();
 
         if (header == null) {
-            throw new IllegalArgumentException(
-                    "The TSV file is empty.");
+            throw new IllegalArgumentException("The TSV file is empty.");
         }
 
         String insertSql = """
@@ -207,8 +209,7 @@ public class SQLiteDataStore implements DataStoreInterface {
                     String date = fields[1].trim();
                     String brief = fields[2].trim();
 
-                    if (title.isEmpty() || date.isEmpty()
-                            || brief.isEmpty()) {
+                    if (title.isEmpty() || date.isEmpty() || brief.isEmpty()) {
                         throw new IllegalArgumentException(
                                 "TSV row contains an empty field: " + line);
                     }
@@ -232,16 +233,15 @@ public class SQLiteDataStore implements DataStoreInterface {
         } catch (SQLException e) {
             throw new IllegalStateException(
                     "Failed to import TSV data into the database.", e);
-
         } catch (RuntimeException e) {
             throw e;
-
         } catch (Exception e) {
             throw new IllegalStateException(
                     "Failed to import TSV data.", e);
         }
     }
 
+    @Override
     public void close() {
         try {
             if (connection != null && !connection.isClosed()) {
