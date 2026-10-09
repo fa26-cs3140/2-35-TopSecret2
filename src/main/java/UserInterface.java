@@ -7,9 +7,11 @@ public class UserInterface {
     private String separator = """
             ------------------------------""";
     private DataStoreInterface storageInterface;
+    private SearchInterface searchInterface;
 
-    public UserInterface(ProgramControlInterface  control) {
+    public UserInterface(ProgramControlInterface control) {
         storageInterface = new SQLiteDataStore();
+        searchInterface = new Search((SQLiteDataStore) storageInterface);
     }
 
     public int run(String[] args) {
@@ -41,6 +43,7 @@ public class UserInterface {
         }
 
         currOptionNum = scnr.nextInt();
+        scnr.nextLine();
 
         while (currOptionNum != 5) {
             switch (currOptionNum) {
@@ -49,6 +52,9 @@ public class UserInterface {
                     break;
                 case 2:
                     // TODO: Implement mission search
+                    System.out.print("Enter a search phrase: ");
+                    String phrase = scnr.nextLine();
+                    searchOption(phrase);
                     break;
                 case 3:
                     break;
@@ -72,6 +78,7 @@ public class UserInterface {
             }
 
             currOptionNum = scnr.nextInt();
+            scnr.nextLine();
         }
 
         return 0;
@@ -95,5 +102,26 @@ public class UserInterface {
 
         System.out.println(separator);
     }
+
+    public void searchOption(String phrase) {
+        List<Mission> results = searchInterface.search(phrase);
+
+        System.out.println(separator);
+
+        if (results == null || results.isEmpty()) {
+            System.out.println("No missions found matching: " + phrase);
+        } else {
+            System.out.println("Search results for: " + phrase + "\n");
+
+            for (Mission mission : results) {
+                System.out.println("Title: " + mission.getTitle());
+                System.out.println("Date: " + mission.getDate());
+                System.out.println("Brief: " + mission.getBrief());
+                System.out.println(separator);
+            }
+        }
+
+    }
+
 
 }

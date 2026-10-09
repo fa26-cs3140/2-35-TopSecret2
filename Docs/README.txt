@@ -32,23 +32,24 @@ Usage
 
 
 
-    List Available Files:
-        Run the program without arguments to display the available mission files:
-            01 file1.txt
-            02 file2.txt
-            03 file3.txt
+    Options:
+        1. Run the program without arguments to display the available options:
+            Available Options:
+
+            1. List missions
+            2. Search missions
+            3. View mission
+            4. Change password
+            5. Exit
+            ------------------------------
+        *. enter option number 1 to list the missions.
+        *. enter option number 2 to search for a particular phrase in the mission briefs
+        *. enter option number 3 to view a mission by entering the Id in the following prompt
+        *. enter option number 4 to change password
+
+        *. enter option number 5 to exit program
 
 
-    View a File:
-        Pass the file number as an argument:
-            java -jar TopSecret.jar 01
-            The contents of the corresponding file will be displayed in the terminal before the program exits.
-
-
-    Use an Alternate Cipher Key
-        An alternate cipher key can be provided as a second argument:
-            java -jar TopSecret.jar 01 alternate-key.txt
-            (If no alternate key is provided, the default cipher key is used.)
 
 
 Project Structure:
