@@ -1,10 +1,15 @@
 import java.util.Scanner;
+import java.util.List;
 
 // Command-line interface for TopSecret.
 // Validates user input, asks ProgramControl for results, and displays them.
 public class UserInterface {
+    private String separator = """
+            ------------------------------""";
+    private DataStoreInterface storageInterface;
+
     public UserInterface(ProgramControlInterface  control) {
-        int test = 5;
+        storageInterface = new SQLiteDataStore();
     }
 
     public int run(String[] args) {
@@ -17,9 +22,6 @@ public class UserInterface {
                 4. Change password
                 5. Exit""";
 
-        String separator = """
-            ------------------------------""";
-
         Scanner scnr = new Scanner(System.in);
         int currOptionNum;
 
@@ -31,7 +33,6 @@ public class UserInterface {
         System.out.print("Enter an option number: ");
 
         while (!scnr.hasNextInt()) {
-            scnr.next();
             System.out.println(separator);
             System.out.println(optionsList);
             System.out.println(separator);
@@ -44,13 +45,12 @@ public class UserInterface {
         while (currOptionNum != 5) {
             switch (currOptionNum) {
                 case 1:
-                    // TODO: Implement mission list
+                    showFileList();
                     break;
                 case 2:
                     // TODO: Implement mission search
                     break;
                 case 3:
-                    // TODO: Implement mission view
                     break;
                 case 4:
                     // TODO: Implement password change
@@ -64,7 +64,6 @@ public class UserInterface {
             System.out.print("Enter an option number: ");
 
             while (!scnr.hasNextInt()) {
-                scnr.next();
                 System.out.println(separator);
                 System.out.println(optionsList);
                 System.out.println(separator);
@@ -77,4 +76,24 @@ public class UserInterface {
 
         return 0;
     }
+
+    public void showFileList() {
+        List<Mission> missionList = storageInterface.listMissions();
+
+        System.out.println(separator);
+
+        if (!missionList.isEmpty()) {
+            System.out.println("Available mission files:\n");
+
+            for (int currIdx = 0; currIdx < missionList.size(); ++currIdx) {
+                Mission currMission = missionList.get(currIdx);
+                System.out.println((currIdx + 1) + ". " + currMission.getTitle());
+            }
+        } else {
+            System.out.println("No mission files available");
+        }
+
+        System.out.println(separator);
+    }
+
 }
