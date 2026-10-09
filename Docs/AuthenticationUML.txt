@@ -4,7 +4,7 @@ AuthenticationInterface
 +credentialExists(): boolean
 +createCredentials(username: String, password: String): void
 +verifyCredentials(username: String, password: String): boolean
-+changePassword(String username, String oldPassword1, String oldPassword2, String newPassword): void
++changePassword(String newPass1, String newPass2): void
 +isValidUsername(username: String): boolean
 +isValidPassword(password: String): boolean
 ---------------------------------------------------
@@ -17,7 +17,7 @@ Authentication
 +credentialExist(): boolean
 +createCredentials(username: String, password: String): void
 +verifyCredentials(username: String, password: String): boolean
-+changePassword(String username, String oldPassword1, String oldPassword2, String newPassword): void
++changePassword(String newPass1, String newPass2): void
 +isValidUsername(username: String): boolean
 +isValidPassword(password: String): boolean
 
@@ -31,6 +31,6 @@ then writes the ciphered file with the credentials
 verifyCredentials deciphers the existing credentials, and returns true if they match
 with the inputted username and password, returning false for any missing files or errors/mismatches
 
-changePassword replaces the existing credentials file with the new password. It requires the current username,
-and two copies of the old password to verify, and will throw a TopSecret Exception if username and oldpass1 or 2 don't work
+changePassword replaces the existing credentials file with the new password. It takes in the the new password two times.
+If these match (and are valid passwords), it will overwrite the credential file with the new password
 
