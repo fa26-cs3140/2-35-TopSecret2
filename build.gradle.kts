@@ -18,7 +18,7 @@ dependencies {
     testImplementation(platform("org.junit:junit-bom:5.10.0"))
     testImplementation("org.junit.jupiter:junit-jupiter")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
-    implementation("org.xerial:sqlite-jdbc:3.50.2.0")
+    implementation("org.xerial:sqlite-jdbc:3.53.4.0")
 
     testImplementation("org.mockito:mockito-core:5.+")
     testImplementation("org.mockito:mockito-junit-jupiter:5.+")
