@@ -1,0 +1,61 @@
+Scenario: searchFoundScenario1 | User searches for a mission using a capitalized phrase
+
+GIVEN user calls method Search.search()
+WHEN user passes the phrase ("Secure")
+THEN user receives the list of missions whose briefs contain the phrase, ignoring case
+
+
+Scenario: searchFoundScenario2 | User searches for a mission using a lowercase phrase
+
+GIVEN user calls method Search.search()
+WHEN user passes the phrase ("secure")
+THEN user receives the list of missions whose briefs contain the phrase, ignoring case
+
+
+Scenario: searchFoundScenario3 | User searches for a mission using an uppercase phrase
+
+GIVEN user calls method Search.search()
+WHEN user passes the phrase ("SECURE")
+THEN user receives the list of missions whose briefs contain the phrase, ignoring case
+
+
+Scenario: searchFoundScenario4 | User searches for a mission using a mixed-case phrase
+
+GIVEN user calls method Search.search()
+WHEN user passes the phrase ("sEcUrE")
+THEN user receives the list of missions whose briefs contain the phrase, ignoring case
+
+
+Scenario: searchFoundScenario5 | User searches for a mission using multiple words
+
+GIVEN user calls method Search.search()
+WHEN user passes the phrase ("secure the")
+THEN user receives the list of missions whose briefs contain the entire phrase
+
+
+Scenario: searchFoundScenario6 | User searches for a mission using multiple words in different cases
+
+GIVEN user calls method Search.search()
+WHEN user passes the phrase ("secure vpn tunnel")
+THEN user receives the list of missions whose briefs contain the entire phrase, ignoring case
+
+
+Scenario: searchFoundScenario7 | User searches for a number
+
+GIVEN user calls method Search.search()
+WHEN user passes the phrase ("12")
+THEN user receives the list of missions whose briefs contain the number
+
+
+Scenario: searchNotFoundScenario1 | User searches for a phrase that does not exist
+
+GIVEN user calls method Search.search()
+WHEN user passes a phrase that does not appear in any mission brief ("nonExisetentWord")
+THEN user receives an empty list
+
+
+Scenario: searchNotFoundScenario2 | User searches for a phrase that does not exist
+
+GIVEN user calls method Search.search()
+WHEN user passes the phrase ("secureThe")
+THEN user receives an empty list
