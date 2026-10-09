@@ -1,0 +1,17 @@
+Scenario: searchFoundScenario1
+
+GIVEN user calls method Search.search()
+WHEN user passes the phrase ("secUre tHe")
+THEN user receives the list of missions whose briefs contain the phrase, ignoring case
+
+Scenario: searchFoundScenario2
+
+GIVEN user calls method Search.search()
+WHEN user passes the phrase ("TACTICAL")
+THEN user receives the list of missions whose briefs contain the phrase, ignoring case
+
+Scenario: searchNotFoundScenario1
+
+GIVEN user calls method Search.search()
+WHEN user passes a phrase that does not appear in any mission brief ("NonExistentword")
+THEN user receives an empty list
