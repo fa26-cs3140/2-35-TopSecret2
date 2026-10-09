@@ -13,7 +13,8 @@ class AuthenticationTest {
     private Authentication auth;
     @BeforeEach
     void setup() throws Exception{
-        Files.deleteIfExists(CREDENTIAL_FILE); //resets the credential file
+        Files.deleteIfExists(CREDENTIAL_FILE);
+        auth = new Authentication();//resets the credential file
     }
     @Test
     void usernameValidation()
@@ -62,9 +63,21 @@ class AuthenticationTest {
     @Test
     void ChangePasswordOverwrites() throws Exception{
         auth.createCredentials("seb", "oldpass");
-        auth.changePassword("seb", "newpass");
+        auth.changePassword("newpass", "newpass");
         assertTrue(auth.verifyCredentials("seb", "newpass")); //new password works
         assertFalse(auth.verifyCredentials("seb", "oldpass")); //older password, shouldn't work
+    }
+    @Test
+    void changePasswordRejectsMismatches() throws Exception{
+        auth.createCredentials("seb", "oldpass");
+        assertThrows(TopSecretException.class, () -> auth.changePassword("newpass" ,"notnewpass")); //mismatched new passwords should throw an error
+        assertTrue(auth.verifyCredentials("seb", "oldpass")); //the file should be untouched
+    }
+    @Test
+    void changePasswordRejectsInvalidPassword() throws Exception{
+        auth.createCredentials("seb", "oldpass");
+        assertThrows(TopSecretException.class, () -> auth.changePassword("a", "a")); //not a valid password should throw
+        assertTrue(auth.verifyCredentials("seb", "oldpass")); //file shouldn't have been touched
     }
 
 }

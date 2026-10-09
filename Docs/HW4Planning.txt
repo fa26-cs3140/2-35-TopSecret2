@@ -51,9 +51,9 @@ Interfaces Required
   Used by: D (UserInterface)
   Methods (proposed):
     createCredentials(String user, String pass)
-    verifyLogin(String user, String pass) -> boolean
-    changePassword(String newPass, String confirmPass)
-    credentialFileExists() -> boolean
+    verifyCredentials(String user, String pass) -> boolean
+    changePassword(String username, String oldPassword1, String oldPassword2, String newPassword)
+    credentialgiExists() -> boolean
 
 - SearchInterface
   Created by: C

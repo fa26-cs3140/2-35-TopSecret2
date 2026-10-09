@@ -1,0 +1,31 @@
+Mission Database Schema
+
+Table Name: missions
+
+Purpose:
+Stores mission titles, dates, and brief text for the Top Secret application.
+
+Columns:
+
+id: INTEGER, primary key, automatically generated for each mission.
+
+title: TEXT, required; stores the mission title.
+
+date: TEXT, required; stores the mission date.
+
+brief: TEXT, required; stores the mission brief as plain text.
+
+SQL Definition:
+
+CREATE TABLE IF NOT EXISTS missions (
+id INTEGER PRIMARY KEY AUTOINCREMENT,
+title TEXT NOT NULL,
+date TEXT NOT NULL,
+brief TEXT NOT NULL
+);
+
+Data Source:
+Mission records are imported from dataset/mission_briefs.tsv. The TSV columns Title, Date, and Text map to the database columns title, date, and brief, respectively.
+
+Initialization:
+The table is created if it does not already exist. The default TSV is imported when the missions table is empty.

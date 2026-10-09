@@ -21,4 +21,20 @@ failsWithNoFile
 Can't verify without a .cip file
 
 ChangePasswordOverwrites
-Changing the password/username replaces the .cip file
+Changing the password replaces the credential file, leaving username intact
+
+ChangePasswordRejectsMismatch
+Throws an exception when the two new passwords don't match
+
+ChangePasswordRejectsInvalidPassword
+Throws when the password is invalid (under 5 characters), file unchanged
+
+---------------------------------------
+Integration Tests:
+---------------------------------------
+
+fullFirstRunCanBeValidated
+After setting up credentials, the validation will work on a later login
+
+passwordChangePropagates
+A password change updates throughout the system, the new password works, the old one doesn't, and the file remains ciphered
