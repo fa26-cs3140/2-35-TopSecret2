@@ -44,22 +44,22 @@ public class Authentication implements AuthenticationInterface {
     }
 
     @Override
-    public void changePassword(String username, String password) throws TopSecretException {
+    public void changePassword(String newpass1, String newpass2) throws TopSecretException {
         if (!credentialExists()){
             throw new TopSecretException("No credential File Found");
         }
-        if (!isValidPassword(password)){
-            throw new TopSecretException("Invalid username or password");
+        if (!newpass1.equals(newpass2)){
+            throw new TopSecretException("Passwords don't match!");
+        }
+        if (!isValidPassword(newpass1)){
+            throw new TopSecretException("Invalid password, make sure it's more than 5 characters!");
         }
         try {
-            String currentPassword = new Cipher(KEY_FILE).decipher(Files.readString(CREDENTIAL_FILE).strip());
-            if (!currentPassword.split(":")[0].equals(username)){
-                throw new TopSecretException("Username doesn't match existing username, please only change the password");
-            }
-            String ciphered = new Cipher(KEY_FILE).encipher(username + ":" + password);
-            Files.writeString(CREDENTIAL_FILE, ciphered);
+            String stored = new Cipher(KEY_FILE).decipher(Files.readString(CREDENTIAL_FILE).strip());
+            String username = stored.split(":")[0];
+            createCredentials(username, newpass1);
         } catch (IOException e) {
-            throw new TopSecretException("Couldn't write a credential file", e);
+            throw new TopSecretException("Couldn't read a credential file", e);
         }
     }
 
