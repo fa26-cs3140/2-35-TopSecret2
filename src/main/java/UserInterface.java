@@ -37,6 +37,7 @@ public class UserInterface {
         System.out.print("Enter an option number: ");
 
         while (!scnr.hasNextInt()) {
+            scnr.nextLine();
             System.out.println(separator);
             System.out.println(optionsList);
             System.out.println(separator);
@@ -45,7 +46,6 @@ public class UserInterface {
         }
 
         currOptionNum = scnr.nextInt();
-        scnr.nextLine();
 
         while (currOptionNum != 5) {
             switch (currOptionNum) {
@@ -83,6 +83,7 @@ public class UserInterface {
             System.out.print("Enter an option number: ");
 
             while (!scnr.hasNextInt()) {
+                scnr.nextLine();
                 System.out.println(separator);
                 System.out.println(optionsList);
                 System.out.println(separator);
@@ -91,7 +92,6 @@ public class UserInterface {
             }
 
             currOptionNum = scnr.nextInt();
-            scnr.nextLine();
         }
 
         return 0;
