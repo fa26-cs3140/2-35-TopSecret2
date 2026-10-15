@@ -84,8 +84,21 @@ public class UserInterface {
                 4. Change password
                 5. Exit""";
 
-        Scanner scnr = new Scanner(System.in);
+        int credentialStatus;
         int currOptionNum;
+
+        try {
+            credentialStatus = credentialStep();
+        } catch (TopSecretException e) {
+            return 1;
+        }
+
+        switch (credentialStatus) {
+            case -1:
+                return 0;
+            case 0:
+                break;
+        }
 
         System.out.println(separator);
         System.out.println("Welcome to TopSecret\n");
