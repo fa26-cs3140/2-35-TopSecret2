@@ -1,11 +1,49 @@
 UserInterface
 ------------------------------
--USAGE:String
--control:ProgramControl
+-scanner: Scanner
+-accounts: UserAccountInterface
+-store: DataStoreInterface
+-audit: AuditLogInterface
+-currentUser: String
+-isAdmin: Boolean
 ------------------------------
-+UserInterface(control:ProgramControl)
-+run(args:String[]):int
-~showFileList():int
-~formatListEntry(number:int, fileName:String):String
-~parseFileNumber(text:String):int
--fail(message:String):int
++UserInterface(accounts: UserAccountInterface, store:DataStoreInterface, audit: AuditLogInterface)
++run(): int
+-loginStep(): boolean
+-showMainMenu(): void
+-browseMenu(item: String): void
+-listEntries(item: String): void
+-readEntry(String): void
+-addEntry(String): void
+-reviewAuditLog(): void
+-changePassword(): void
+-searchMissions(): void
+
+The user interface displays and holds all the control logic for the program, after login
+all information is routed to the other classes, which return values which the UI displays
+
+run() calls loginStep() which when sucessful will run showMainMenu() until Exit
+loginStep() includes account creation and verification, which comes from accounts, and catches
+currentUser and isAdmin to change how showMainMenu() displays
+
+showMainMenu() displays the options: Briefs, Agents, Facilities, Search missions, change password, Exit for all users
+for admin users (isAdmin = True): create new user, Promote/Demote, review audit
+
+browseMenu(item) displays the options to list or read the items (add for admin) of the type, and will
+run the corresponding method
+
+listEntries(item) will display id and name of all of the item type
+
+readEntry() prompts for an id, and prints the full record, and adds an audit event
+
+addEntry() prompts for details for the item type, saves via Store, and adds an audit event, and calls listEntry(item)
+
+ChangePassword() prompts for new password (twice) and passes it to accounts
+
+CreateUser() prompts for a new username and passes it to accounts
+
+manageAccess() lists all existing users and prompts for promote/demote and user and passes to accounts
+
+reviewAuditLog() prints all audits, returned from audit log
+
+SearchMissions prompts for string and passes to Search
