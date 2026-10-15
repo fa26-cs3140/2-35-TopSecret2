@@ -1,0 +1,12 @@
+Mission
+------------------------------
+-id:int
+-title:String
+-date:String
+-brief:String
+------------------------------
++Mission(id:int, title:String, date:String, brief:String)
++getId():int
++getTitle():String
++getDate():String
++getBrief():String

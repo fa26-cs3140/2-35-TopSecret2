@@ -1,0 +1,17 @@
+SQLiteDataStore
+------------------------------
+-DATABASE_URL:String
+-TSV_RESOURCE:String
+-databaseUrl:String
+-connection:Connection
+------------------------------
++SQLiteDataStore()
+~SQLiteDataStore(databaseUrl:String)
++initDatabase():void
++listMissions():List<Mission>
++getMission(id:int):Mission
++importTsv(path:String):void
++importDefaultTsv():void
+-importDefaultTsvIfEmpty():void
+-importTsvReader(reader:BufferedReader):void
++close():void
