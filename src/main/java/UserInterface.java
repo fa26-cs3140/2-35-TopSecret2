@@ -183,6 +183,7 @@ public class UserInterface {
         }
 
         currOptionNum = scnr.nextInt();
+        scnr.nextLine();
 
         while (currOptionNum != 5) {
             switch (currOptionNum) {
@@ -229,6 +230,7 @@ public class UserInterface {
             }
 
             currOptionNum = scnr.nextInt();
+            scnr.nextLine();
         }
 
         return 0;
