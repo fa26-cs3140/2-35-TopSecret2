@@ -71,6 +71,72 @@ public class UserInterface {
             return -1;
         }
 
+        String loginUsername = "";
+        String loginPassword = "";
+
+        System.out.println("Log In:");
+
+        System.out.print("Username: ");
+        if (scnr.hasNext()) {
+            loginUsername += scnr.next();
+        }
+
+        System.out.print("Password: ");
+        if (scnr.hasNext()) {
+            loginPassword += scnr.next();
+        }
+
+        boolean validUsername = authentication
+                .isValidUsername(loginUsername);
+
+        boolean validPassword = authentication
+                .isValidPassword(loginPassword);
+
+        while (!validUsername | !validPassword) {
+            System.out.println("Invalid credentials, try again");
+
+            loginUsername = "";
+            loginPassword = "";
+
+            System.out.print("Username: ");
+            if (scnr.hasNext()) {
+                loginUsername += scnr.next();
+            }
+            System.out.print("Password: ");
+            if (scnr.hasNext()) {
+                loginPassword += scnr.next();
+            }
+
+            validUsername = authentication
+                    .isValidUsername(loginUsername);
+
+            validPassword = authentication
+                    .isValidPassword(loginPassword);
+        }
+
+        boolean correctCredentials = authentication
+                .verifyCredentials(loginUsername, loginPassword);
+
+        while (!correctCredentials) {
+            System.out.println("Incorrect credentials, try again");
+
+            loginUsername = "";
+            loginPassword = "";
+
+            System.out.print("Username: ");
+            if (scnr.hasNext()) {
+                loginUsername += scnr.next();
+            }
+            System.out.print("Password: ");
+            if (scnr.hasNext()) {
+                loginPassword += scnr.next();
+            }
+
+            correctCredentials = authentication
+                    .verifyCredentials(loginUsername, loginPassword);
+        }
+
+
         return 0;
     }
 
