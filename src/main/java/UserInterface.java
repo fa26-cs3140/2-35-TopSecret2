@@ -9,11 +9,69 @@ public class UserInterface {
     private DataStoreInterface storageInterface;
     private SearchInterface searchInterface;
     private AuthenticationInterface authentication;
+    private Scanner scnr;
 
     public UserInterface(ProgramControlInterface control) {
         storageInterface = new SQLiteDataStore();
         searchInterface = new Search((SQLiteDataStore) storageInterface);
         authentication = new Authentication();
+        scnr = new Scanner(System.in);
+    }
+
+    private int credentialStep() throws TopSecretException {
+        if (!authentication.credentialExists()) {
+            String proposedUsername = "";
+            String proposedPassword = "";
+
+            System.out.print("Create a username: ");
+            if (scnr.hasNext()) {
+                proposedUsername += scnr.next();
+            }
+            System.out.print("Create a password: ");
+            if (scnr.hasNext()) {
+                proposedPassword += scnr.next();
+            }
+
+            boolean validUsername = authentication
+                    .isValidUsername(proposedUsername);
+
+            boolean validPassword = authentication
+                    .isValidPassword(proposedPassword);
+
+            while (!validUsername | !validPassword) {
+                System.out.println("Invalid credentials, try again");
+
+                proposedUsername = "";
+                proposedPassword = "";
+
+                System.out.print("Create a username: ");
+                if (scnr.hasNext()) {
+                    proposedUsername += scnr.next();
+                }
+                System.out.print("Create a password: ");
+                if (scnr.hasNext()) {
+                    proposedPassword += scnr.next();
+                }
+
+                validUsername = authentication
+                        .isValidUsername(proposedUsername);
+
+                validPassword = authentication
+                        .isValidPassword(proposedPassword);
+            }
+
+            try {
+                authentication.createCredentials(proposedUsername, proposedPassword);
+            } catch (TopSecretException e) {
+                throw new TopSecretException(
+                        "Unable to create credential file",
+                        e);
+            }
+
+            return -1;
+        }
+
+        return 0;
     }
 
     public int run(String[] args) {
