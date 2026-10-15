@@ -191,7 +191,6 @@ public class UserInterface {
                     showFileList();
                     break;
                 case 2:
-                    // TODO: Implement mission search
                     System.out.print("Enter a search phrase: ");
                     String phrase = scnr.nextLine();
                     searchOption(phrase);
@@ -202,7 +201,6 @@ public class UserInterface {
                     viewMissionById(id);
                     break;
                 case 4:
-                    // TODO: Implement password change
                     System.out.print("Enter new password: ");
                     String newPass1 = scnr.nextLine();
 
