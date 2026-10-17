@@ -59,6 +59,69 @@ public class SQLiteDataStore implements DataStoreInterface, AutoCloseable {
         }
     }
 
+    /**
+     * query database to get all agents and return them as {@code List<Agent>}
+     *
+     * @return List<Agent>
+     */
+    @Override
+    public List<Agent> listAgents() {
+        return List.of();
+    }
+
+    /**
+     * query database to get all facilites and return them as {@code List<Facility>}
+     *
+     * @return List<Facility>
+     */
+    @Override
+    public List<Facility> listFacilities() {
+        return List.of();
+    }
+
+    /**
+     * query database to get all Briefs and return them as {@code List<Brief>}
+     *
+     * @return List<Brief>
+     */
+    @Override
+    public List<Brief> listBriefs() {
+        return List.of();
+    }
+
+    /**
+     * get an Agent from database by id
+     *
+     * @param id the id of the Agent to get
+     * @return Agent object representing the queried Agent null if no Agent found
+     */
+    @Override
+    public Agent getAgent(int id) {
+        return null;
+    }
+
+    /**
+     * get a Facility from database by id
+     *
+     * @param id the id of the Facility to get
+     * @return Facility object representing the queried Facility null if no Facility found
+     */
+    @Override
+    public Facility getFacility(int id) {
+        return null;
+    }
+
+    /**
+     * get a Brief from database by id
+     *
+     * @param id the id of the Brief to get
+     * @return Brief object representing the queried Brief null if no Brief found
+     */
+    @Override
+    public Brief getBrief(int id) {
+        return null;
+    }
+
     @Override
     public List<Mission> listMissions() {
         List<Mission> missions = new ArrayList<>();
