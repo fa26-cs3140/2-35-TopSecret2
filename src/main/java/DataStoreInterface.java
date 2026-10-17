@@ -8,4 +8,10 @@ public interface DataStoreInterface {
     void initDatabase();
 
     void importTsv(String path);
+
+
+
+    List<Agent> listAgents();
+    List<Facility> listFacilities();
+
 }
