@@ -122,6 +122,39 @@ public class SQLiteDataStore implements DataStoreInterface, AutoCloseable {
         return null;
     }
 
+    /**
+     * adds an Agent to the database, the agentID will be ignored and automatically assigned by the database
+     *
+     * @param agent
+     * @return the final Agent representation in the database
+     */
+    @Override
+    public Agent addAgent(Agent agent) {
+        return null;
+    }
+
+    /**
+     * add a facility to the database, the facilityID will be ignored and automatically assigned by the database
+     *
+     * @param facility
+     * @return the final Facility entry representation in the database
+     */
+    @Override
+    public Facility addFacility(Facility facility) {
+        return null;
+    }
+
+    /**
+     * add a Brief to the database, the briefID will be ignored and automatically assigned by the database
+     *
+     * @param brief
+     * @return the final Bief entry representation in the database
+     */
+    @Override
+    public Brief addBrief(Brief brief) {
+        return null;
+    }
+
     @Override
     public List<Mission> listMissions() {
         List<Mission> missions = new ArrayList<>();
