@@ -1,6 +1,3 @@
-import database.DataStoreInterface;
-import database.Mission;
-
 import java.util.List;
 
 public class Search implements SearchInterface {

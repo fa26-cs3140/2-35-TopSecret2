@@ -1,5 +1,3 @@
-package database;
-
 public class Brief {
 
     private int briefID, missionID;

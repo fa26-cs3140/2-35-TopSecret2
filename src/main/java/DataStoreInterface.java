@@ -1,5 +1,3 @@
-package database;
-
 import java.util.List;
 
 public interface DataStoreInterface {
@@ -55,10 +53,5 @@ public interface DataStoreInterface {
      * @return Brief object representing the queried Brief null if no Brief found
      */
     Brief getBrief(int id);
-
-
-    void addAgent(Agent agent);
-    void addFacility(Facility facility);
-    void addBrief(Brief brief);
 
 }

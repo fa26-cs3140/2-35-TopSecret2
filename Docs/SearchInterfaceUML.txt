@@ -2,4 +2,4 @@
 SearchInterface
 -----------------------------------------------------
 -----------------------------------------------------
-+ search(phrase: String): List<database.Mission>
++ search(phrase: String): List<Mission>

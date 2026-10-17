@@ -1,5 +1,3 @@
-package database;
-
 public class Mission {
     private int id;
     private String title;

@@ -1,4 +1,4 @@
-database.Mission Database Schema
+Mission Database Schema
 
 Table Name: missions
 
@@ -25,7 +25,7 @@ brief TEXT NOT NULL
 );
 
 Data Source:
-database.Mission records are imported from dataset/mission_briefs.tsv. The TSV columns Title, Date, and Text map to the database columns title, date, and brief, respectively.
+Mission records are imported from dataset/mission_briefs.tsv. The TSV columns Title, Date, and Text map to the database columns title, date, and brief, respectively.
 
 Initialization:
 The table is created if it does not already exist. The default TSV is imported when the missions table is empty.

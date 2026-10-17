@@ -1,7 +1,7 @@
 Adding Interfaces:
 Add:
     ProgramControlInterface
-    database.DataStoreInterface
+    DataStoreInterface
     AuthenticationInterface
     SearchInterface
 
@@ -37,12 +37,12 @@ Interfaces Required
   Used by: D (UserInterface)
   Methods: listFiles(), getFileContents(int fileNumber, String keyFile)
 
-- database.DataStoreInterface
+- DataStoreInterface
   Created by: A
   Used by: ProgramControl, C (SearchService)
   Methods (proposed):
-    listMissions() -> List<database.Mission>
-    getMission(int id) -> database.Mission
+    listMissions() -> List<Mission>
+    getMission(int id) -> Mission
     initDatabase()
     importTsv(String path)
 
@@ -58,8 +58,8 @@ Interfaces Required
 - SearchInterface
   Created by: C
   Used by: D (UserInterface)
-  Methods (proposed): search(String phrase) -> List<database.Mission>
-  Note: Implemented in Java via database.DataStoreInterface.getAllMissions(),
+  Methods (proposed): search(String phrase) -> List<Mission>
+  Note: Implemented in Java via DataStoreInterface.getAllMissions(),
   filtering on brief only, case-insensitive. No SQL in C's code.
 
 - UserInterface (D) (no interface, just modifying existing code)
@@ -75,7 +75,7 @@ Checklist for week 1:
 
 - Interfaces/code stubbed
 - Documentation for test and code stubs completed
-- database.Mission table diagram created
+- Mission table diagram created
 - Canvas check-in form? (might be outdated)
 
 
