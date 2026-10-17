@@ -1,4 +1,4 @@
-Agent
+database.Agent
 -----------------------------------------------------
 - id: int
 - name: String
@@ -6,7 +6,7 @@ Agent
 - date_of_death: String
 - notes: String
 -----------------------------------------------------
-+ Agent(id: int, name: String, date_of_birth: String,date_of_death: String, notes: String)
++ database.Agent(id: int, name: String, date_of_birth: String,date_of_death: String, notes: String)
 + getId(): int
 + getName(): String
 + getDate_of_birth(): String

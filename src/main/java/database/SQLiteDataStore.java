@@ -1,3 +1,5 @@
+package database;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -120,6 +122,24 @@ public class SQLiteDataStore implements DataStoreInterface, AutoCloseable {
     @Override
     public Brief getBrief(int id) {
         return null;
+    }
+
+    /// @param agent
+    @Override
+    public void addAgent(Agent agent) {
+
+    }
+
+    /// @param facility
+    @Override
+    public void addFacility(Facility facility) {
+
+    }
+
+    /// @param brief
+    @Override
+    public void addBrief(Brief brief) {
+
     }
 
     @Override

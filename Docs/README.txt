@@ -53,7 +53,7 @@ Usage
 
 
 Project Structure:
-    Mission briefs are stored in a SQLite database, initialized automatically if it does not exist.
+    database.Mission briefs are stored in a SQLite database, initialized automatically if it does not exist.
     User credentials are stored in a separate encrypted .cip file
     Cipher keys are stored in the ciphers directory:  src/main/resources/ciphers
     documentations are stored in the Docs directory at the project level

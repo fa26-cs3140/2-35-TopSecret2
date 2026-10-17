@@ -1,3 +1,5 @@
+import database.Mission;
+
 import java.util.List;
 
 public interface SearchInterface {

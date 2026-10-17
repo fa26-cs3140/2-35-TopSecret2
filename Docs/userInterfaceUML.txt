@@ -2,12 +2,12 @@ UserInterface
 ------------------------------
 -scanner: Scanner
 -accounts: UserAccountInterface
--store: DataStoreInterface
+-store: database.DataStoreInterface
 -audit: AuditLogInterface
 -currentUser: String
 -isAdmin: Boolean
 ------------------------------
-+UserInterface(accounts: UserAccountInterface, store:DataStoreInterface, audit: AuditLogInterface)
++UserInterface(accounts: UserAccountInterface, store:database.DataStoreInterface, audit: AuditLogInterface)
 +run(): int
 -loginStep(): boolean
 -showMainMenu(): void

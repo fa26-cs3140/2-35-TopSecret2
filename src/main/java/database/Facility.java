@@ -1,3 +1,5 @@
+package database;
+
 public class Facility {
     private int id;
     private String name, abbreviation;

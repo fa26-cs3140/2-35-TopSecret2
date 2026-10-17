@@ -1,3 +1,5 @@
+package database;
+
 public class Agent {
     private int id;
     private String name, date_of_birth, date_of_death, notes;
