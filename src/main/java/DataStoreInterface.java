@@ -54,4 +54,24 @@ public interface DataStoreInterface {
      */
     Brief getBrief(int id);
 
+    /**
+     * adds an Agent to the database, the agentID will be ignored and automatically assigned by the database
+     * @param agent
+     * @return the final Agent representation in the database
+     */
+    Agent addAgent(Agent agent);
+
+    /**
+     * add a facility to the database, the facilityID will be ignored and automatically assigned by the database
+     * @param facility
+     * @return the final Facility entry representation in the database
+     */
+    Facility addFacility(Facility facility);
+
+    /**
+     * add a Brief to the database, the briefID will be ignored and automatically assigned by the database
+     * @param brief
+     * @return the final Bief entry representation in the database
+     */
+    Brief addBrief(Brief brief);
 }

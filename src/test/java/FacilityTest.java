@@ -8,7 +8,7 @@ public class FacilityTest {
     public void facilityTest1(){
         Facility f1 = new Facility(1,"Startrek", "SK");
 
-        assertEquals(1,f1.getId());
+        assertEquals(1,f1.getFacilityID());
         assertEquals(f1.getName(),"Startrek");
         assertEquals(f1.getAbbreviation(), "SK");
 
@@ -19,11 +19,11 @@ public class FacilityTest {
         Facility f1 = new Facility(1,"Startrek", "SK");
         Facility f2 = new Facility(2,"Sandtrap", "ST");
 
-        assertEquals(1,f1.getId());
+        assertEquals(1,f1.getFacilityID());
         assertEquals(f1.getName(),"Startrek");
         assertEquals(f1.getAbbreviation(), "SK");
 
-        assertEquals(2,f2.getId());
+        assertEquals(2,f2.getFacilityID());
         assertEquals(f2.getName(),"Sandtrap");
         assertEquals(f2.getAbbreviation(), "ST");
     }
