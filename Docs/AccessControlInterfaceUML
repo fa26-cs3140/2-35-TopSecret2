@@ -1,0 +1,7 @@
+Interface: AccessControlInterface
+
+Methods:
++ isAdmin(username: String): boolean
++ promoteUser(adminUsername: String, targetUsername: String): boolean
++ demoteUser(adminUsername: String, targetUsername: String): boolean
++ hasPermission(username: String, action: String): boolean
