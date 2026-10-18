@@ -9,23 +9,33 @@ public class FacilityTest {
         Facility f1 = new Facility(1,"Startrek", "SK");
 
         assertEquals(1,f1.getFacilityID());
-        assertEquals(f1.getName(),"Startrek");
-        assertEquals(f1.getAbbreviation(), "SK");
+        assertEquals("Startrek", f1.getName());
+        assertEquals("SK", f1.getAbbreviation());
 
     }
 
     @Test
     public void facilityTest2(){
+        Facility f1 = new Facility("Startrek", "SK");
+
+        assertEquals(-1,f1.getFacilityID());
+        assertEquals("Startrek", f1.getName());
+        assertEquals("SK", f1.getAbbreviation());
+
+    }
+
+    @Test
+    public void facilityTest3(){
         Facility f1 = new Facility(1,"Startrek", "SK");
         Facility f2 = new Facility(2,"Sandtrap", "ST");
 
         assertEquals(1,f1.getFacilityID());
-        assertEquals(f1.getName(),"Startrek");
-        assertEquals(f1.getAbbreviation(), "SK");
+        assertEquals("Startrek", f1.getName());
+        assertEquals("SK", f1.getAbbreviation());
 
         assertEquals(2,f2.getFacilityID());
-        assertEquals(f2.getName(),"Sandtrap");
-        assertEquals(f2.getAbbreviation(), "ST");
+        assertEquals("Sandtrap", f2.getName());
+        assertEquals("ST", f2.getAbbreviation());
     }
 
 
