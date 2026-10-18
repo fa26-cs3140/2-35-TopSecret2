@@ -7,6 +7,7 @@ public class LoggedAction {
     private User user;
     // Probably redefine dateTime and record to better types later
     private String dateTime;
+    // Record is the item being acted upon
     private String record;
 
     public LoggedAction(int action,
