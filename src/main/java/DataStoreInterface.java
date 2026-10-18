@@ -74,4 +74,12 @@ public interface DataStoreInterface {
      * @return the final Bief entry representation in the database
      */
     Brief addBrief(Brief brief);
+
+
+    /**
+     * gets the list of logs from database
+     * @return {@code List<Log>}
+     */
+    List<Log> listLogs();
+
 }
