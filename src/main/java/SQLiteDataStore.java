@@ -516,11 +516,6 @@ public class SQLiteDataStore implements DataStoreInterface, AutoCloseable {
     public List<Log> listLogs() {
         return List.of();
     }
-
-    @Override
-    public List<Log> listLogs() {
-        return List.of();
-    }
     @Override
     public List<Mission> listMissions() {
         List<Mission> missions = new ArrayList<>();
