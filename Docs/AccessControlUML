@@ -1,0 +1,16 @@
+Class: AccessControl
+
+Implements: AccessControlInterface
+
+Fields:
+- admins: Set<String>
+- users: Set<String>
+
+Constructor:
++ AccessControl(admins: Set<String>, users: Set<String>)
+
+Methods:
++ isAdmin(username: String): boolean
++ promoteUser(adminUsername: String, targetUsername: String): boolean
++ demoteUser(adminUsername: String, targetUsername: String): boolean
++ hasPermission(username: String, action: String): boolean
