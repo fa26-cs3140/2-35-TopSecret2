@@ -18,7 +18,7 @@ public interface UserManagerInterface {
     boolean needsPasswordSetup(String username);
 
     //returns the user type associated with a username for audit logging
-    User getUserbyUsername(String username);
+    User getUserByUsername(String username);
 
     //returns all the usernames as a list type
     List<String> listUsernames();

@@ -19,4 +19,20 @@ public class LoggedAction {
         this.dateTime = dateTime;
         this.record = record;
     }
+    public int getAction() {
+        return action;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public String getDateTime() {
+        return dateTime;
+    }
+
+    public String getRecord() {
+        return record;
+    }
+
 }

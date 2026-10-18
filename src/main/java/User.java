@@ -6,4 +6,10 @@ public class User {
         this.userID = userID;
         this.username = username;
     }
+    public int getUserID() {
+        return userID;
+    }
+    public int getUsername(){
+        return username;
+    }
 }
