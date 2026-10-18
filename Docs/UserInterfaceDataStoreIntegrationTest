@@ -1,0 +1,11 @@
+Data Store UI Integration Test
+---------------------------------
+
+searchMissionsFindsRealMission
+Search finds a real row imported through the database
+
+listEntriesAsksRealStore
+Listing briefs will access and display real store
+
+readEntryNotFoundOnStore
+An incorrect get brief returns null values, so UI should report "Record not found"
