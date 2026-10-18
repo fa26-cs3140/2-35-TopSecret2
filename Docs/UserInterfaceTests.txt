@@ -1,2 +1,68 @@
-basicOutputTest
-Tests the main menu formatting and exit code
+Userinterface tests
+------------------
+
+runExitsCleanlyAfterLogin
+Successful login, then returns zero from exit
+
+runReturns1OnFailedLogin
+a bad login returns 1 and no menu is shown
+
+runReturnsOneEOF
+EOF on the standard in returns 1 instead of looping
+
+loginStepCreatesFirstAccount
+the first run creates the first account and password
+
+loginStepHandlesCreateUserException
+TopSecret exception is caught, printed, and login will fail
+
+loginStepSetsInitialPassword
+If a user has been admin-created, they will have to set their password (meets all reqiurements)
+
+loginStepSucceedsWithCorrectCredentials
+Entering a correct user/pass pair will login
+
+adminSeesAdminOptions
+Admin user can see Create user, promotion, and audit log in the menu
+
+standardUserNoAdminOptions
+a non-admin can't see the admin options
+
+listEntriesPassesToStore
+Listing briefs calls them from Store class
+
+listEntriesPrintsBriefTitles
+every brief title from the store is printed
+
+readEntryPrintsRecordAndAudits
+Reading a brief will print and log a read event for briefs
+
+readEntryHandlesUnknownId
+An unknown id prints "record not found" and doesn't log an audit
+
+addEntrySavesAuditRelists
+Adding a brief will save, logs a create event and relists the entries
+
+reviewAuditLogPrintsAudits
+each logged event prints time, username,event, and record
+
+changePasswordDelegatesToUsers
+Entering the new password twice is passed to users.changepassword()
+
+createUserDelegatesToUsers
+username creation is passed to users.createUser
+
+createUserPrintsExceptionMessage
+TopSecretErrors from createUser is caught and printed
+
+manageAccessPromotesUser
+Promote path calls access.promoteUser with the current admin and target
+
+manageAccessDemotesUser
+Demote path calls access.demoteUser; a false result prints "Not allowed."
+
+searchMissionsFindsMatch
+Search runs against the store and prints matching missions
+
+browseMenuListsThenBack
+Type menu option 1 lists entries and option 4 goes back

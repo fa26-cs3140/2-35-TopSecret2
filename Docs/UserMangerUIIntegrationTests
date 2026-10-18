@@ -1,0 +1,13 @@
+UserManager and UI integration tests
+--------------------------------------
+firstRunCreatesUserAndExits
+First run creates the account through UI and exits cleanly
+
+adminCreatesUserThenFirstLoginSetsPassword
+Admin creates a username for a new user, which then sets password on first login
+
+ChangePasswordThenLoginWithNewPassword
+Password change propagates throughout the system and works on next login (old password fails)
+
+CreateUserRejectsDuplicateName
+DuplicateUsername prints the error and the UI doesn't crash

@@ -1,11 +1,12 @@
 UserInterface
 ------------------------------
 -scanner: Scanner
--accounts: UserAccountInterface
+-accounts: UserManagementInterface
+-access: AccessControlInterface
 -store: DataStoreInterface
 -audit: AuditLogInterface
 -currentUser: String
--isAdmin: Boolean
+-currentUserObj: User
 ------------------------------
 +UserInterface(accounts: UserAccountInterface, store:DataStoreInterface, audit: AuditLogInterface)
 +run(): int

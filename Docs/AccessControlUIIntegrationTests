@@ -1,0 +1,16 @@
+Access Control User Interface Integration Tests
+----------------------------------------------
+adminSeesAdminOptions
+Real isAdmin = true shows the admin options
+
+nonAdminNoAdminOptions
+Real isAdmin = false doesn't show the admin options
+
+promoteCarriesThrough
+Promoting a worker switches their status
+
+demoteCarriesThrough
+Demoting an admin switches their status
+
+NoSelfDemote
+Admin can't demote themselves
