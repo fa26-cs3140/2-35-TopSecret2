@@ -78,8 +78,33 @@ public interface DataStoreInterface {
 
     /**
      * gets the list of logs from database
-     * @return {@code List<Log>}
+     * @return {@code List<LoggedAction>}
      */
-    List<Log> listLogs();
+    List<LoggedAction> listLogs();
+
+    /**
+     * return the list of logs for a given userID from the database
+     * @param userID user id of the desired user for users table in Database
+     * @return {@code List<LoggedAction>}
+     */
+    List<LoggedAction> listLogs(int userID);
+
+
+    /**
+     * get all users from database
+     * @return
+     */
+    List<User> listUsers();
+
+    /**
+     * get the user from database with the given user_ID
+     * @param userID
+     * @return User or null if it does not exist
+     */
+    User getUser(int userID);
+
+
+
+
 
 }

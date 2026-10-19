@@ -57,6 +57,23 @@ public class SQLiteDataStore implements DataStoreInterface, AutoCloseable {
 //                    )
 //                    """;
 
+            String usersInitSql = """
+                    CREATE TABLE IF NOT EXISTS users (
+                        user_ID INTEGER PRIMARY KEY AUTOINCREMENT,
+                        username TEXT NOT NULL,
+                    )
+                    """;
+
+            String logsInitSql = """
+                    CREATE TABLE IF NOT EXISTS logs (
+                        log_ID INTEGER PRIMARY KEY AUTOINCREMENT,
+                        user_ID INTEGER  NOT NULL REFERENCES users(user_ID),
+                        action INTEGER NOT NULL,
+                        record TEXT NOT NULL,
+                        time TEXT NOT NULL
+                    )
+                    """;
+
             String facilitiesInitSql = """
                     CREATE TABLE IF NOT EXISTS facilities (
                         facility_ID INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -102,7 +119,7 @@ public class SQLiteDataStore implements DataStoreInterface, AutoCloseable {
                     )
                     """;
 
-                    //use this if 2 foreign key constraint is not working for mission_ID
+            //use this if 2 foreign key constraint is not working for mission_ID
 //            String clearAgentMissionTriggerSql = """
 //                CREATE TRIGGER IF NOT EXISTS clear_agent_mission_on_delete
 //                BEFORE DELETE ON missions
@@ -119,6 +136,8 @@ public class SQLiteDataStore implements DataStoreInterface, AutoCloseable {
                 statement.execute("PRAGMA foreign_keys = ON");
 
 //                statement.execute(sql);
+                statement.execute(usersInitSql);
+                statement.execute(logsInitSql);
                 statement.execute(facilitiesInitSql);
                 statement.execute(missionsInitSql);
                 statement.execute(briefsInitSql);
@@ -165,9 +184,9 @@ public class SQLiteDataStore implements DataStoreInterface, AutoCloseable {
         }
     }
 
-    public void importDatasetTsv(String fileName, String table, String... cols){
+    public void importDatasetTsv(String fileName, String table, String... cols) {
         //checking if table is empty. if empty, import tsv
-        String sql = "SELECT COUNT(*) FROM " +  table;
+        String sql = "SELECT COUNT(*) FROM " + table;
         try (Statement statement = connection.createStatement();
              ResultSet results = statement.executeQuery(sql)) {
 
@@ -193,7 +212,7 @@ public class SQLiteDataStore implements DataStoreInterface, AutoCloseable {
         try (BufferedReader reader = new BufferedReader(
                 new InputStreamReader(input, StandardCharsets.UTF_8))) {
 
-        importTsvReader(reader, table, cols);
+            importTsvReader(reader, table, cols);
 
 
         } catch (IOException e) {
@@ -201,7 +220,6 @@ public class SQLiteDataStore implements DataStoreInterface, AutoCloseable {
                     "Failed to import the default tsv " + fileName, e);
         }
     }
-
 
 
     //replaced by importDatasetTsv
@@ -226,8 +244,6 @@ public class SQLiteDataStore implements DataStoreInterface, AutoCloseable {
 //                    "Failed to import the default Facilities TSV.", e);
 //        }
 //    }
-
-
 
 
     // replaced by importDatasetTsv ----> delete
@@ -256,9 +272,9 @@ public class SQLiteDataStore implements DataStoreInterface, AutoCloseable {
         }
 
         String insertSql = """
-            INSERT INTO %s (%s)
-            VALUES (%s)
-            """.formatted(
+                INSERT INTO %s (%s)
+                VALUES (%s)
+                """.formatted(
                 table,
                 String.join(", ", cols),
                 String.join(", ", java.util.Collections.nCopies(cols.length, "?"))
@@ -288,7 +304,7 @@ public class SQLiteDataStore implements DataStoreInterface, AutoCloseable {
 
 
                     for (String field : fields) {
-                        if (field.isEmpty()){
+                        if (field.isEmpty()) {
                             throw new IllegalArgumentException(
                                     "TSV row contains an empty field: " + line);
                         }
@@ -298,8 +314,8 @@ public class SQLiteDataStore implements DataStoreInterface, AutoCloseable {
                         statement.setString(i, fields[i - 1]);
                     }
 
-                    if (fields.length< cols.length) {
-                        for (int i = fields.length+1; i <= cols.length; i++) {
+                    if (fields.length < cols.length) {
+                        for (int i = fields.length + 1; i <= cols.length; i++) {
                             statement.setString(i, null);
                         }
                     }
@@ -513,9 +529,138 @@ public class SQLiteDataStore implements DataStoreInterface, AutoCloseable {
      * @return {@code List<Log>}
      */
     @Override
-    public List<Log> listLogs() {
-        return List.of();
+    public List<LoggedAction> listLogs() {
+        List<LoggedAction> logs = new ArrayList<>();
+
+        String sql = """
+                SELECT * FROM logs
+                """;
+
+        try (PreparedStatement statement =
+                     connection.prepareStatement(sql);
+             ResultSet results = statement.executeQuery()) {
+
+            while (results.next()) {
+                int userID = results.getInt("user_ID");
+                User user = getUser(userID);
+
+                logs.add(new LoggedAction(
+//                        results.getInt("log_ID"),
+                        results.getInt("action"),
+                        user,
+                        results.getString("time"),
+                        results.getString("record")
+                ));
+            }
+
+            return logs;
+
+        } catch (SQLException e) {
+            throw new IllegalStateException(
+                    "Failed to retrieve missions.", e);
+        }
     }
+
+    /**
+     * return the list of logs for a given userID from the database
+     *
+     * @param userID user id of the desired user for users table in Database
+     * @return {@code List<LoggedAction>}
+     */
+    @Override
+    public List<LoggedAction> listLogs(int userID) {
+        String sql = """
+                SELECT * FROM logs WHERE user_ID = ?;
+                """;
+
+        List<LoggedAction> logs = new ArrayList<>();
+
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setInt(1, userID);
+
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    User user = getUser(userID);
+
+                    logs.add(new LoggedAction(
+//                        results.getInt("log_ID"),
+                            rs.getInt("action"),
+                            user,
+                            rs.getString("time"),
+                            rs.getString("record")
+                    ));
+                }
+
+                return logs;
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Error retrieving user with ID: " + userID, e);
+        }
+
+    }
+
+    /**
+     * get all users from database
+     *
+     * @return
+     */
+    @Override
+    public List<User> listUsers() {
+        List<User> users = new ArrayList<>();
+
+        String sql = """
+                SELECT * FROM users
+                """;
+
+        try (PreparedStatement stmt = connection.prepareStatement(sql);
+             ResultSet rs = stmt.executeQuery()) {
+
+            while (rs.next()) {
+                User user = new User(
+                        rs.getInt("user_ID"),
+                        rs.getString("username")
+                );
+
+                users.add(user);
+            }
+
+        } catch (SQLException e) {
+            throw new RuntimeException("Error retrieving users from database", e);
+        }
+
+        return users;
+    }
+
+    /**
+     * get the user from database with the given user_ID
+     *
+     * @param userID
+     * @return User or null if it does not exist
+     */
+    @Override
+    public User getUser(int userID) {
+        String sql = """
+                SELECT * FROM users WHERE user_ID = ?;
+                """;
+
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setInt(1, userID);
+
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    return new User(
+                            rs.getInt("user_ID"),
+                            rs.getString("username")
+                    );
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Error retrieving user with ID: " + userID, e);
+        }
+
+        return null;
+    }
+
     @Override
     public List<Mission> listMissions() {
         List<Mission> missions = new ArrayList<>();
