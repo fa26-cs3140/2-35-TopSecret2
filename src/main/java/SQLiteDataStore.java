@@ -35,10 +35,10 @@ public class SQLiteDataStore implements DataStoreInterface, AutoCloseable {
         initDatabase();
 //        importDefaultTsvIfEmpty(); // delete this
 
-        importDatasetTsv("facilities.tsv", "facilities", "name", "abbreviation");
-        importDatasetTsv("missions.tsv", "missions", "facility_ID", "title");
-        importDatasetTsv("briefs.tsv", "briefs", "mission_ID", "title", "date", "content");
-        importDatasetTsv("agents.tsv", "agents", "mission_ID", "facility_ID", "name", "date_of_birth", "date_of_death", "notes");
+        importDatasetTsv("facilities.tsv", "facilities");
+        importDatasetTsv("missions.tsv", "missions");
+        importDatasetTsv("briefs.tsv", "briefs");
+        importDatasetTsv("agents.tsv", "agents");
     }
 
     @Override
@@ -60,7 +60,7 @@ public class SQLiteDataStore implements DataStoreInterface, AutoCloseable {
             String usersInitSql = """
                     CREATE TABLE IF NOT EXISTS users (
                         user_ID INTEGER PRIMARY KEY AUTOINCREMENT,
-                        username TEXT NOT NULL,
+                        username TEXT NOT NULL
                     )
                     """;
 
@@ -184,7 +184,7 @@ public class SQLiteDataStore implements DataStoreInterface, AutoCloseable {
         }
     }
 
-    public void importDatasetTsv(String fileName, String table, String... cols) {
+    public void importDatasetTsv(String fileName, String table) {
         //checking if table is empty. if empty, import tsv
         String sql = "SELECT COUNT(*) FROM " + table;
         try (Statement statement = connection.createStatement();
@@ -212,7 +212,7 @@ public class SQLiteDataStore implements DataStoreInterface, AutoCloseable {
         try (BufferedReader reader = new BufferedReader(
                 new InputStreamReader(input, StandardCharsets.UTF_8))) {
 
-            importTsvReader(reader, table, cols);
+            importTsvReader(reader, table);
 
 
         } catch (IOException e) {
@@ -264,12 +264,13 @@ public class SQLiteDataStore implements DataStoreInterface, AutoCloseable {
     }
 
 
-    private void importTsvReader(BufferedReader reader, String table, String... cols) throws IOException {
+    private void importTsvReader(BufferedReader reader, String table) throws IOException {
         String header = reader.readLine();
 
         if (header == null) {
             throw new IllegalArgumentException("The TSV file is empty.");
         }
+        String[] cols = header.split("\t");
 
         String insertSql = """
                 INSERT INTO %s (%s)

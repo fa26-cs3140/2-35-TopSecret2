@@ -1,10 +1,11 @@
-1	1	Vanguard	June 14, 1985
-2	2	Ghost	November 22, 1992
-1	1	Mirage	March 03, 1988
-1	1	Cinder	September 12, 1995
-2	2	Falcon	January 30, 1982
-2	2	Siren	July 19, 1990
-1	1	Echo	May 05, 1987
-2	2	Wraith	December 08, 1993
-2	2	Oracle	October 25, 1984
-1	1	Jackal	February 11, 1991
+name	date_of_birth	facility_ID	mission_ID
+Vanguard	1985-06-14	1	1
+Ghost	1992-11-22	4	10
+Mirage	1988-03-03	6	12
+Cinder	1995-09-12	2	20
+Falcon	1982-01-30	2	32
+Siren	1990-07-19	6	35
+Echo	1987-05-05	5	45
+Wraith	1993-12-08	4	48
+Oracle	1984-10-25	3	51
+Jackal	1991-02-11	4	58
