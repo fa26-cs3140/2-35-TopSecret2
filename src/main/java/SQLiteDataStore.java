@@ -60,7 +60,7 @@ public class SQLiteDataStore implements DataStoreInterface, AutoCloseable {
             String usersInitSql = """
                     CREATE TABLE IF NOT EXISTS users (
                         user_ID INTEGER PRIMARY KEY AUTOINCREMENT,
-                        username TEXT NOT NULL
+                        username TEXT NOT NULL UNIQUE
                     )
                     """;
 
@@ -77,8 +77,8 @@ public class SQLiteDataStore implements DataStoreInterface, AutoCloseable {
             String facilitiesInitSql = """
                     CREATE TABLE IF NOT EXISTS facilities (
                         facility_ID INTEGER PRIMARY KEY AUTOINCREMENT,
-                        name TEXT NOT NULL,
-                        abbreviation TEXT NOT NULL
+                        name TEXT NOT NULL UNIQUE,
+                        abbreviation TEXT NOT NULL UNIQUE
                     )
                     """;
 
@@ -160,6 +160,21 @@ public class SQLiteDataStore implements DataStoreInterface, AutoCloseable {
         } catch (IOException e) {
             throw new IllegalStateException(
                     "Failed to import missions from " + path, e);
+        }
+    }
+
+    /**
+     * adds a new mission to DB
+     *
+     * @param mission
+     * @throws IllegalArgumentException when facility does not exist in DB
+     */
+    @Override
+    public void addMission(Mission mission) {
+        try {
+            throw new SQLException();
+        } catch (SQLException e) {
+            throw new IllegalStateException("Failed to add mission. facility may not exist", e);
         }
     }
 
@@ -496,10 +511,16 @@ public class SQLiteDataStore implements DataStoreInterface, AutoCloseable {
      *
      * @param agent
      * @return the final Agent representation in the database
+     * @throws IllegalArgumentException when mission or facility may not exist, or mission's facility does not match agent's facility
      */
     @Override
     public Agent addAgent(Agent agent) {
-        return null;
+        try {
+            throw new SQLException();
+        } catch (SQLException e) {
+            throw new IllegalArgumentException("Failed to add Agent. mission or facility may not exist," +
+                    " or mission's facility does not match agent's facility", e);
+        }
     }
 
     /**
@@ -507,10 +528,15 @@ public class SQLiteDataStore implements DataStoreInterface, AutoCloseable {
      *
      * @param facility
      * @return the final Facility entry representation in the database
+     * @throws IllegalArgumentException when facility name or abbreviation already exists
      */
     @Override
     public Facility addFacility(Facility facility) {
-        return null;
+        try{
+            throw  new SQLException();
+        }catch (SQLException e){
+            throw new IllegalArgumentException("Failed to add facility. facility name or abbreviation already exists", e);
+        }
     }
 
     /**
@@ -518,10 +544,15 @@ public class SQLiteDataStore implements DataStoreInterface, AutoCloseable {
      *
      * @param brief
      * @return the final Bief entry representation in the database
+     * @throws IllegalArgumentException when mission does not exist
      */
     @Override
     public Brief addBrief(Brief brief) {
-        return null;
+        try {
+            throw new SQLException();
+        } catch (SQLException e) {
+            throw new IllegalArgumentException("Failed to add Breif. mission may not exist", e);
+        }
     }
 
     /**
@@ -601,6 +632,21 @@ public class SQLiteDataStore implements DataStoreInterface, AutoCloseable {
     }
 
     /**
+     * add a log to DB
+     *
+     * @param log
+     * @throws IllegalArgumentException when user may not exist in DB
+     */
+    @Override
+    public void addLog(LoggedAction log) {
+        try {
+            throw new SQLException();
+        } catch (SQLException e) {
+            throw new IllegalArgumentException("Failed to add log. User may not exist", e);
+        }
+    }
+
+    /**
      * get all users from database
      *
      * @return
@@ -660,6 +706,21 @@ public class SQLiteDataStore implements DataStoreInterface, AutoCloseable {
         }
 
         return null;
+    }
+
+    /**
+     * add a User to DB
+     *
+     * @param user
+     * @throws IllegalArgumentException when user may already exist.
+     */
+    @Override
+    public void addUser(User user) {
+        try {
+            throw new SQLException();
+        } catch (SQLException e) {
+            throw new IllegalArgumentException("Failed to add user. User may already exist.", e);
+        }
     }
 
     @Override

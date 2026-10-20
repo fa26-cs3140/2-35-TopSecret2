@@ -14,6 +14,11 @@ public interface DataStoreInterface {
     void importTsv(String path);
 
 
+    /**
+     * adds a new mission to DB
+     * @param mission
+     */
+    void addMission(Mission mission);
 
     /**
      * query database to get all agents and return them as {@code List<Agent>}
@@ -89,6 +94,12 @@ public interface DataStoreInterface {
      */
     List<LoggedAction> listLogs(int userID);
 
+    /**
+     * add a log to DB
+     * @param log
+     */
+    void addLog(LoggedAction log);
+
 
     /**
      * get all users from database
@@ -102,6 +113,12 @@ public interface DataStoreInterface {
      * @return User or null if it does not exist
      */
     User getUser(int userID);
+
+    /**
+     * add a User to DB
+     * @param user
+     */
+    void addUser(User user);
 
 
 
