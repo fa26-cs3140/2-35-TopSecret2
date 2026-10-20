@@ -332,17 +332,58 @@ public class UserInterface implements UserInterfaceInterface {
 
     @Override
     public void createUser() {
-        // TODO
+        System.out.println("New username: ");
+        String newUsername = sc.hasNextLine()? sc.nextLine() : null;
+        try {
+            users.createUser(newUsername);
+        } catch (TopSecretException e) {
+            System.out.println(e.getMessage());
+        }
     }
 
     @Override
     public void manageAccess() {
-        // TODO
+        System.out.println("Manageable Users");
+        for (String name : users.listUsernames()) {
+            if (!name.equals(currentUser)) {
+                System.out.println(name);
+            }
+        }
+        System.out.print("Enter \"Promote\" or \"Demote\"");
+        String promOrDemo = sc.hasNextLine()? sc.nextLine() : null;
+        System.out.print("Which user? ");
+        String changedUser = sc.hasNextLine()? sc.nextLine() : null;
+        if (promOrDemo == null || changedUser == null){
+            return;
+        }
+        boolean noerror;
+        if (promOrDemo.equalsIgnoreCase("promote")){
+            noerror = access.promoteUser(currentUser, changedUser);
+        } else if (promOrDemo.equalsIgnoreCase("demote")){
+            noerror = access.demoteUser(currentUser, changedUser);
+        } else {
+            System.out.println("Invalid option");
+            return;
+        }
+        System.out.println(noerror ? changedUser + " was " + promOrDemo.toLowerCase() + "d": "Not allowed");
+
     }
 
     @Override
     public void searchMissions() {
-        // TODO
+        System.out.print("Search phrase: ");
+        String searchingFor = sc.hasNextLine() ? sc.nextLine() : null;
+        if (searchingFor == null) {
+            return;
+        }
+        List<Mission> results = new Search(store).search(searchingFor);
+        for (Mission m : results) {
+            System.out.println(m.getId() + " : " + m.getTitle());
+        }
+        if (results.isEmpty()) {
+            System.out.println("No matches.");
+        }
+
     }
 
 }
