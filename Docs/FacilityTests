@@ -1,0 +1,14 @@
+Scenario: facilityTest1 | User creates a facility with an explicit facility ID
+GIVEN user creates a Facility with facility ID 1, name "Startrek", and abbreviation "SK"
+WHEN the Facility object is initialized
+THEN the facility contains the expected facility ID, name, and abbreviation
+
+Scenario: facilityTest2 | User creates a facility without an explicit facility ID
+GIVEN user creates a Facility with name "Startrek" and abbreviation "SK"
+WHEN the Facility object is initialized
+THEN the facility's ID is -1, and it contains the expected name and abbreviation
+
+Scenario: facilityTest3 | User creates multiple facilities with different details
+GIVEN user creates two Facility objects with different IDs, names, and abbreviations
+WHEN both Facility objects are initialized
+THEN each facility contains its own expected facility ID, name, and abbreviation independently

@@ -4,7 +4,8 @@ import java.time.format.DateTimeParseException;
 import java.time.format.ResolverStyle;
 
 public class Agent {
-    private int agentID, missionID, facilityID;
+    private int agentID,  facilityID;
+    private Integer missionID;
     private String name, date_of_birth, date_of_death, notes;
 
     /**
@@ -14,7 +15,7 @@ public class Agent {
      * @param date_of_death
      * @param notes
      */
-    public Agent(int missionID, int facilityID, String name, String date_of_birth, String date_of_death, String notes) {
+    public Agent(Integer missionID, int facilityID, String name, String date_of_birth, String date_of_death, String notes) {
         this(-1, missionID, facilityID, name, date_of_birth, date_of_death, notes);
     }
 
@@ -28,7 +29,7 @@ public class Agent {
      * @param date_of_death
      * @param notes
      */
-    public Agent(int agentID, int missionID, int facilityID, String name, String date_of_birth, String date_of_death, String notes) {
+    public Agent(int agentID, Integer missionID, int facilityID, String name, String date_of_birth, String date_of_death, String notes) {
         this.agentID = agentID;
         this.missionID = missionID;
         this.facilityID = facilityID;
@@ -43,7 +44,7 @@ public class Agent {
     }
 
 
-    public int getMissionID() {
+    public Integer getMissionID() {
         return missionID;
     }
 

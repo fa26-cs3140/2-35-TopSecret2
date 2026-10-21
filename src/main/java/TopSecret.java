@@ -1,11 +1,14 @@
+import javax.xml.crypto.Data;
+
 public class TopSecret {
     public static void main(String[] args) {
 
-        ProgramControlInterface control = new ProgramControl();
-        UserInterface userInterface = new UserInterface(control);
-        int exitCode = userInterface.run(args);
-        if (exitCode != 0){
-            System.exit(exitCode);
+        DataStoreInterface store = new SQLiteDataStore();
+        UserManagerInterface users = null; //to be completed
+        AccessControlInterface access = null;
+        AuditLogInterface audit = null;
+        UserInterface ui = new UserInterface(users, access, store, audit);
+        System.exit(ui.run());
         }
     }
-}
+

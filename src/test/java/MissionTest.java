@@ -6,16 +6,33 @@ class MissionTest {
 
     @Test
     void constructorStoresMissionFields() {
-        Mission mission = new Mission(
-                1,
-                "Test Mission",
-                "2026-10-09",
-                "This is a test mission brief."
-        );
+        Mission m1 = new  Mission("Mission 1", 1);
 
-        assertEquals(1, mission.getId());
-        assertEquals("Test Mission", mission.getTitle());
-        assertEquals("2026-10-09", mission.getDate());
-        assertEquals("This is a test mission brief.", mission.getBrief());
+        assertEquals(-1, m1.getMissionID());
+        assertEquals("Mission 1", m1.getTitle());
+        assertEquals(1, m1.getFacilityID());
+    }
+
+    @Test
+    void constructorStoresMissionFields1() {
+        Mission m1 = new  Mission(5,"Mission 1", 1);
+
+        assertEquals(5, m1.getMissionID());
+        assertEquals("Mission 1", m1.getTitle());
+        assertEquals(1, m1.getFacilityID());
+    }
+
+    @Test
+    void constructorStoresMissionFields2() {
+        Mission m1 = new Mission("Mission 1", 1);
+        Mission m3 = new Mission("Mission 2", 3);
+
+        assertEquals(-1, m1.getMissionID());
+        assertEquals("Mission 1", m1.getTitle());
+        assertEquals(1, m1.getFacilityID());
+
+        assertEquals(-1, m3.getMissionID());
+        assertEquals("Mission 2", m3.getTitle());
+        assertEquals(3, m3.getFacilityID());
     }
 }

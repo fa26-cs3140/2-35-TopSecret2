@@ -12,9 +12,6 @@ import java.io.PrintStream;
 import java.util.Arrays;
 import java.util.List;
 
-import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
 
 //Unit tests for the UserInterface
 //Uses mock-ups for UserManagementInterface, AuditLogInterface,
@@ -143,7 +140,7 @@ public class UserInterfaceTest {
         UserInterface ui = ui("tester\nPass123\n9\n");
         assertTrue(ui.loginStep());
         ui.showMainMenu();
-        assertTrue(out().contains("Create new user"));
+        assertTrue(out().contains("Create a new user"));
         assertTrue(out().contains("Promote"));
         assertTrue(out().contains("audit log"));
     }
@@ -156,7 +153,7 @@ public class UserInterfaceTest {
         UserInterface ui = ui("tester\nPass123\n9\n");
         assertTrue(ui.loginStep());
         ui.showMainMenu();
-        assertFalse(out().contains("Create new user"));
+        assertFalse(out().contains("Create a new user"));
         assertFalse(out().contains("Promote"));
         assertFalse(out().contains("audit log"));
     }
@@ -181,7 +178,7 @@ public class UserInterfaceTest {
     @Test
     void listEntriesPrintsAllAgents() {
         when(store.listAgents()).thenReturn(
-                Arrays.asList(new Agent(1, 1, 1, "Ames", "1990-01-01", "", "notes")));
+                Arrays.asList(new Agent(1, 1, 1, "Ames", "1990-01-01", "2020-06-15", "notes")));
         ui("").listEntries("agents");
         assertTrue(out().contains("Ames"));
     }
@@ -201,7 +198,7 @@ public class UserInterfaceTest {
                 && "tester".equals(a.getUser().getUsername())));
     }
 
-    // readEntry(): unknown id -> "Record not found.", no audit
+    // readEntry(): unknown id -> "No brief found with this id", no audit
     @Test
     void readEntryHandlesUnknownId() {
         when(store.getBrief(99)).thenReturn(null);
@@ -209,7 +206,7 @@ public class UserInterfaceTest {
         loginAs("tester");
         assertTrue(ui.loginStep());
         ui.readEntry("briefs");
-        assertTrue(out().contains("Record not found."));
+        assertTrue(out().contains("No brief found with this id"));
         verify(audit, never()).log(any());
     }
 
@@ -284,10 +281,10 @@ public class UserInterfaceTest {
         assertTrue(ui.loginStep());
         ui.manageAccess();
         verify(access).promoteUser("tester", "alice");
-        assertTrue(out().contains("Done."));
+        assertTrue(out().contains("alice was promoted"));
     }
 
-    // manageAccess(): demote path delegates; "Not allowed." on false
+    // manageAccess(): demote path delegates; "Not allowed" on false
     @Test
     void manageAccessDemotesUser() {
         when(users.listUsernames()).thenReturn(Arrays.asList("alice", "bob"));
@@ -297,7 +294,7 @@ public class UserInterfaceTest {
         assertTrue(ui.loginStep());
         ui.manageAccess();
         verify(access).demoteUser("tester", "tester");
-        assertTrue(out().contains("Not allowed."));
+        assertTrue(out().contains("Not allowed"));
     }
 
     // searchMissions(): real Search over mocked store finds the match

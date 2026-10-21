@@ -1,17 +1,30 @@
 SQLiteDataStore
-------------------------------
--DATABASE_URL:String
--TSV_RESOURCE:String
--databaseUrl:String
--connection:Connection
-------------------------------
-+SQLiteDataStore()
-~SQLiteDataStore(databaseUrl:String)
-+initDatabase():void
-+listMissions():List<Mission>
-+getMission(id:int):Mission
-+importTsv(path:String):void
-+importDefaultTsv():void
--importDefaultTsvIfEmpty():void
--importTsvReader(reader:BufferedReader):void
-+close():void
+-----------------------------------------------------
+- DATABASE_URL: String {static, final}
+- databaseUrl: String
+- connection: Connection
+-----------------------------------------------------
++ SQLiteDataStore()
+- SQLiteDataStore(databaseUrl: String)
++ initDatabase(): void
++ importDatasetTsv(fileName: String, table: String): void
++ close(): void
++ addMission(mission: Mission): void
++ listMissions(): List<Mission>
++ getMission(id: int): Mission
++ listAgents(): List<Agent>
++ getAgent(id: int): Agent
++ addAgent(agent: Agent): Agent
++ listFacilities(): List<Facility>
++ getFacility(id: int): Facility
++ addFacility(facility: Facility): Facility
++ listBriefs(): List<Brief>
++ getBrief(id: int): Brief
++ addBrief(brief: Brief): Brief
++ listLogs(): List<LoggedAction>
++ listLogs(userID: int): List<LoggedAction>
++ addLog(log: LoggedAction): void
++ listUsers(): List<User>
++ getUser(userID: int): User
++ addUser(user: User): void
+- importTsvReader(reader: BufferedReader, table: String): void

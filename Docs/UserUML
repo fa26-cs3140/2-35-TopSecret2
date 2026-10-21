@@ -1,0 +1,8 @@
+User
+-----------------------------------------------------
+- userID: int
+- username: String
+-----------------------------------------------------
++ User(userID: int, username: String)
++ getUserID(): int
++ getUsername(): String

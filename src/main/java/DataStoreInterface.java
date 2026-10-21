@@ -1,45 +1,47 @@
 import java.util.List;
 
 public interface DataStoreInterface {
-    //must delete this for now (view ERD for more info)
     List<Mission> listMissions();
-    //must delete this for now (view ERD for more info)
+
     Mission getMission(int id);
 
 
-
-
-
     void initDatabase();
-    void importTsv(String path);
+
+    void importDatasetTsv(String fileName, String table);
 
 
     /**
      * adds a new mission to DB
+     *
      * @param mission
      */
-    void addMission(Mission mission);
+    Mission addMission(Mission mission);
 
     /**
      * query database to get all agents and return them as {@code List<Agent>}
+     *
      * @return List<Agent>
      */
     List<Agent> listAgents();
 
     /**
      * query database to get all facilites and return them as {@code List<Facility>}
+     *
      * @return List<Facility>
      */
     List<Facility> listFacilities();
 
     /**
      * query database to get all Briefs and return them as {@code List<Brief>}
+     *
      * @return List<Brief>
      */
     List<Brief> listBriefs();
 
     /**
      * get an agent from database by id
+     *
      * @param id the id of the agent to get
      * @return Agent object representing the queried Agent null if no agent found
      */
@@ -47,6 +49,7 @@ public interface DataStoreInterface {
 
     /**
      * get a Facility from database by id
+     *
      * @param id the id of the Facility to get
      * @return Facility object representing the queried Facility null if no Facility found
      */
@@ -54,6 +57,7 @@ public interface DataStoreInterface {
 
     /**
      * get a Brief from database by id
+     *
      * @param id the id of the Brief to get
      * @return Brief object representing the queried Brief null if no Brief found
      */
@@ -61,6 +65,7 @@ public interface DataStoreInterface {
 
     /**
      * adds an Agent to the database, the agentID will be ignored and automatically assigned by the database
+     *
      * @param agent
      * @return the final Agent representation in the database
      */
@@ -68,6 +73,7 @@ public interface DataStoreInterface {
 
     /**
      * add a facility to the database, the facilityID will be ignored and automatically assigned by the database
+     *
      * @param facility
      * @return the final Facility entry representation in the database
      */
@@ -75,6 +81,7 @@ public interface DataStoreInterface {
 
     /**
      * add a Brief to the database, the briefID will be ignored and automatically assigned by the database
+     *
      * @param brief
      * @return the final Bief entry representation in the database
      */
@@ -83,12 +90,14 @@ public interface DataStoreInterface {
 
     /**
      * gets the list of logs from database
+     *
      * @return {@code List<LoggedAction>}
      */
     List<LoggedAction> listLogs();
 
     /**
      * return the list of logs for a given userID from the database
+     *
      * @param userID user id of the desired user for users table in Database
      * @return {@code List<LoggedAction>}
      */
@@ -96,19 +105,22 @@ public interface DataStoreInterface {
 
     /**
      * add a log to DB
+     *
      * @param log
      */
-    void addLog(LoggedAction log);
+    LoggedAction addLog(LoggedAction log);
 
 
     /**
      * get all users from database
+     *
      * @return
      */
     List<User> listUsers();
 
     /**
      * get the user from database with the given user_ID
+     *
      * @param userID
      * @return User or null if it does not exist
      */
@@ -116,12 +128,10 @@ public interface DataStoreInterface {
 
     /**
      * add a User to DB
+     *
      * @param user
      */
-    void addUser(User user);
-
-
-
+    User addUser(User user);
 
 
 }

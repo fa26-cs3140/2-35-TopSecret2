@@ -12,7 +12,7 @@ import java.nio.file.Files;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-public class UserInterfaceSQLiteDataStoreIntegrationTest {
+public class    UserInterfaceSQLiteDataStoreIntegrationTest {
     private SQLiteDataStore realStore;
     private UserManagerInterface users;
     private AccessControlInterface access;
@@ -75,11 +75,11 @@ public class UserInterfaceSQLiteDataStoreIntegrationTest {
         assertTrue(out().isEmpty() || !out().contains("Exception"));
     }
 
-    // readEntry against the stubbed getBrief: "Record not found.", no audit.
+    // readEntry against the stubbed getBrief: "No brief found with this id", no audit.
     @Test
     void readEntryNotFoundOnStubbedStore() {
         ui("1\n").readEntry("briefs");
-        assertTrue(out().contains("Record not found."));
+        assertTrue(out().contains("No brief found with this id"));
         verify(audit, never()).log(any());
     }
 }
