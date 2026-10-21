@@ -1,29 +1,43 @@
 public class Mission {
-    private int id;
+    private int missionID, facilityID;
     private String title;
-    private String date;
-    private String brief;
 
-    public Mission(int id, String title, String date, String brief) {
-        this.id = id;
-        this.title = title;
-        this.date = date;
-        this.brief = brief;
+    /**
+     * for creation of a new Mission.
+     *
+     * @param title
+     * @param facilityID
+     */
+    public Mission(String title, int facilityID) {
+        this(-1,title,facilityID);
     }
 
-    public int getId() {
-        return id;
+
+    /**
+     * for storage of existing mission.
+     *
+     * @param missionID
+     * @param title
+     * @param facilityID
+     */
+    public Mission(int missionID, String title, int facilityID) {
+        this.missionID = missionID;
+        this.title = title;
+        this.facilityID = facilityID;
+    }
+
+    public int getMissionID() {
+        return  this.missionID;
     }
 
     public String getTitle() {
-        return title;
+        return this.title;
     }
 
-    public String getDate() {
-        return date;
+    public int getFacilityID() {
+        return this.facilityID;
     }
 
-    public String getBrief() {
-        return brief;
-    }
+
+
 }

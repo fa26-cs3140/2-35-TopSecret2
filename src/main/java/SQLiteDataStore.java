@@ -5,12 +5,7 @@ import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -20,7 +15,7 @@ public class SQLiteDataStore implements DataStoreInterface, AutoCloseable {
 
 
     private static final String DATABASE_URL = "jdbc:sqlite:data.db";
-    private static final String TSV_RESOURCE = "dataset/mission_briefs.tsv";
+//    private static final String TSV_RESOURCE = "dataset/mission_briefs.tsv";
 
     private final String databaseUrl;
     private Connection connection;
@@ -33,7 +28,6 @@ public class SQLiteDataStore implements DataStoreInterface, AutoCloseable {
     SQLiteDataStore(String databaseUrl) {
         this.databaseUrl = databaseUrl;
         initDatabase();
-//        importDefaultTsvIfEmpty(); // delete this
 
         importDatasetTsv("facilities.tsv", "facilities");
         importDatasetTsv("missions.tsv", "missions");
@@ -47,15 +41,6 @@ public class SQLiteDataStore implements DataStoreInterface, AutoCloseable {
             if (connection == null || connection.isClosed()) {
                 connection = DriverManager.getConnection(databaseUrl);
             }
-
-//            String sql = """
-//                    CREATE TABLE IF NOT EXISTS missions (
-//                        id INTEGER PRIMARY KEY AUTOINCREMENT,
-//                        title TEXT NOT NULL,
-//                        date TEXT NOT NULL,
-//                        brief TEXT NOT NULL
-//                    )
-//                    """;
 
             String usersInitSql = """
                     CREATE TABLE IF NOT EXISTS users (
@@ -135,7 +120,6 @@ public class SQLiteDataStore implements DataStoreInterface, AutoCloseable {
             try (Statement statement = connection.createStatement()) {
                 statement.execute("PRAGMA foreign_keys = ON");
 
-//                statement.execute(sql);
                 statement.execute(usersInitSql);
                 statement.execute(logsInitSql);
                 statement.execute(facilitiesInitSql);
@@ -150,55 +134,8 @@ public class SQLiteDataStore implements DataStoreInterface, AutoCloseable {
         }
     }
 
+
     @Override
-    public void importTsv(String path) {
-        try (BufferedReader reader = Files.newBufferedReader(
-                Path.of(path), StandardCharsets.UTF_8)) {
-
-            importTsvReader(reader);
-
-        } catch (IOException e) {
-            throw new IllegalStateException(
-                    "Failed to import missions from " + path, e);
-        }
-    }
-
-    /**
-     * adds a new mission to DB
-     *
-     * @param mission
-     * @throws IllegalArgumentException when facility does not exist in DB
-     */
-    @Override
-    public void addMission(Mission mission) {
-        try {
-            throw new SQLException();
-        } catch (SQLException e) {
-            throw new IllegalStateException("Failed to add mission. facility may not exist", e);
-        }
-    }
-
-    public void importDefaultTsv() {
-        InputStream input = getClass()
-                .getClassLoader()
-                .getResourceAsStream(TSV_RESOURCE);
-
-        if (input == null) {
-            throw new IllegalStateException(
-                    "Could not find resource: " + TSV_RESOURCE);
-        }
-
-        try (BufferedReader reader = new BufferedReader(
-                new InputStreamReader(input, StandardCharsets.UTF_8))) {
-
-            importTsvReader(reader);
-
-        } catch (IOException e) {
-            throw new IllegalStateException(
-                    "Failed to import the default mission TSV.", e);
-        }
-    }
-
     public void importDatasetTsv(String fileName, String table) {
         //checking if table is empty. if empty, import tsv
         String sql = "SELECT COUNT(*) FROM " + table;
@@ -236,49 +173,6 @@ public class SQLiteDataStore implements DataStoreInterface, AutoCloseable {
         }
     }
 
-
-    //replaced by importDatasetTsv
-//    public void importFacilitiesTsv(){
-//        InputStream input = getClass()
-//                .getClassLoader()
-//                .getResourceAsStream("dataset/mission_briefs.tsv");
-//
-//        if (input == null) {
-//            throw new IllegalStateException(
-//                    "Could not find resource: dataset/mission_briefs.tsv");
-//        }
-//
-//        try (BufferedReader reader = new BufferedReader(
-//                new InputStreamReader(input, StandardCharsets.UTF_8))) {
-//
-//
-//
-//
-//        } catch (IOException e) {
-//            throw new IllegalStateException(
-//                    "Failed to import the default Facilities TSV.", e);
-//        }
-//    }
-
-
-    // replaced by importDatasetTsv ----> delete
-    private void importDefaultTsvIfEmpty() {
-        String sql = "SELECT COUNT(*) FROM missions";
-
-        try (Statement statement = connection.createStatement();
-             ResultSet results = statement.executeQuery(sql)) {
-
-            if (results.next() && results.getInt(1) == 0) {
-                importDefaultTsv();
-            }
-
-        } catch (SQLException e) {
-            throw new IllegalStateException(
-                    "Failed to check the mission database.", e);
-        }
-    }
-
-
     private void importTsvReader(BufferedReader reader, String table) throws IOException {
         String header = reader.readLine();
 
@@ -311,13 +205,6 @@ public class SQLiteDataStore implements DataStoreInterface, AutoCloseable {
                     }
 
                     String[] fields = line.split("\t", cols.length);
-
-                    //delete this
-//                    if (fields.length != cols.length) {
-//                        throw new IllegalArgumentException(
-//                                "Invalid TSV row: " + line);
-//                    }
-
 
                     for (String field : fields) {
                         if (field.isEmpty()) {
@@ -360,76 +247,6 @@ public class SQLiteDataStore implements DataStoreInterface, AutoCloseable {
         }
     }
 
-    //replaced by importTsvReader(BufferedReader reader, String table, String... cols)  ---------> delete
-    private void importTsvReader(BufferedReader reader) throws IOException {
-        String header = reader.readLine();
-
-        if (header == null) {
-            throw new IllegalArgumentException("The TSV file is empty.");
-        }
-
-        String insertSql = """
-                INSERT INTO missions (title, date, brief)
-                VALUES (?, ?, ?)
-                """;
-
-        try {
-            boolean originalAutoCommit = connection.getAutoCommit();
-            connection.setAutoCommit(false);
-
-            try (PreparedStatement statement =
-                         connection.prepareStatement(insertSql)) {
-
-                String line;
-
-                while ((line = reader.readLine()) != null) {
-                    if (line.isBlank()) {
-                        continue;
-                    }
-
-                    String[] fields = line.split("\t", 3);
-
-                    if (fields.length != 3) {
-                        throw new IllegalArgumentException(
-                                "Invalid TSV row: " + line);
-                    }
-
-                    String title = fields[0].trim();
-                    String date = fields[1].trim();
-                    String brief = fields[2].trim();
-
-                    if (title.isEmpty() || date.isEmpty() || brief.isEmpty()) {
-                        throw new IllegalArgumentException(
-                                "TSV row contains an empty field: " + line);
-                    }
-
-                    statement.setString(1, title);
-                    statement.setString(2, date);
-                    statement.setString(3, brief);
-                    statement.executeUpdate();
-                }
-
-                connection.commit();
-
-            } catch (Exception e) {
-                connection.rollback();
-                throw e;
-
-            } finally {
-                connection.setAutoCommit(originalAutoCommit);
-            }
-
-        } catch (SQLException e) {
-            throw new IllegalStateException(
-                    "Failed to import TSV data into the database.", e);
-        } catch (RuntimeException e) {
-            throw e;
-        } catch (Exception e) {
-            throw new IllegalStateException(
-                    "Failed to import TSV data.", e);
-        }
-    }
-
     @Override
     public void close() {
         try {
@@ -444,13 +261,66 @@ public class SQLiteDataStore implements DataStoreInterface, AutoCloseable {
 
 
     /**
+     * adds a new mission to DB
+     *
+     * @param mission
+     * @throws IllegalArgumentException when facility does not exist in DB
+     */
+    @Override
+    public void addMission(Mission mission) {
+        String sql = """
+                INSERT INTO missions (title, facility_ID)
+                VALUES (?, ?)
+                """;
+        try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
+            pstmt.setString(1, mission.getTitle());
+            pstmt.setInt(2, mission.getFacilityID());
+
+            pstmt.executeUpdate();
+        } catch (SQLException e) {
+            throw new IllegalStateException(
+                    "Failed to add mission. Facility may not exist", e);
+        }
+    }
+
+
+    /**
      * query database to get all agents and return them as {@code List<Agent>}
      *
      * @return List<Agent>
      */
     @Override
     public List<Agent> listAgents() {
-        return List.of();
+        String sql = """
+                SELECT * FROM agents
+                """;
+
+        List<Agent> agents = new ArrayList<>();
+
+        try (PreparedStatement pstmt = connection.prepareStatement(sql);
+             ResultSet rs = pstmt.executeQuery()) {
+
+            while (rs.next()) {
+                Integer missionIDValue = rs.getInt("mission_ID");
+                missionIDValue = rs.wasNull() ? null : missionIDValue;
+                Agent agent = new Agent(
+                        rs.getInt("agent_ID"),
+                        missionIDValue,
+                        rs.getInt("facility_ID"),
+                        rs.getString("name"),
+                        rs.getString("date_of_birth"),
+                        rs.getString("date_of_death"),
+                        rs.getString("notes")
+                );
+
+                agents.add(agent);
+            }
+
+        } catch (SQLException e) {
+            throw new IllegalStateException("Failed to retrieve agents", e);
+        }
+
+        return agents;
     }
 
     /**
@@ -460,7 +330,30 @@ public class SQLiteDataStore implements DataStoreInterface, AutoCloseable {
      */
     @Override
     public List<Facility> listFacilities() {
-        return List.of();
+        String sql = """
+                SELECT * FROM facilities
+                """;
+
+        List<Facility> facilities = new ArrayList<>();
+
+        try (PreparedStatement pstmt = connection.prepareStatement(sql);
+             ResultSet rs = pstmt.executeQuery()) {
+
+            while (rs.next()) {
+                Facility facility = new Facility(
+                        rs.getInt("facility_ID"),
+                        rs.getString("name"),
+                        rs.getString("abbreviation")
+                );
+
+                facilities.add(facility);
+            }
+
+        } catch (SQLException e) {
+            throw new IllegalStateException("Failed to retrieve facilities", e);
+        }
+
+        return facilities;
     }
 
     /**
@@ -470,17 +363,72 @@ public class SQLiteDataStore implements DataStoreInterface, AutoCloseable {
      */
     @Override
     public List<Brief> listBriefs() {
-        return List.of();
+        String sql = """
+                SELECT * FROM briefs
+                """;
+
+        List<Brief> briefs = new ArrayList<>();
+
+        try (PreparedStatement pstmt = connection.prepareStatement(sql);
+             ResultSet rs = pstmt.executeQuery()) {
+
+            while (rs.next()) {
+                Brief brief = new Brief(
+                        rs.getInt("brief_ID"),
+                        rs.getInt("mission_ID"),
+                        rs.getString("title"),
+                        rs.getString("date"),
+                        rs.getString("content")
+                );
+
+                briefs.add(brief);
+            }
+
+        } catch (SQLException e) {
+            throw new IllegalStateException("Failed to retrieve briefs", e);
+        }
+
+        return briefs;
     }
 
+
     /**
-     * get an Agent from database by id
+     * get an Agent from database by id.
      *
      * @param id the id of the Agent to get
      * @return Agent object representing the queried Agent null if no Agent found
+     *
      */
     @Override
     public Agent getAgent(int id) {
+        String sql = """
+                SELECT * FROM agents
+                WHERE agent_ID = ?
+                """;
+
+        try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
+            pstmt.setInt(1, id);
+
+            try (ResultSet rs = pstmt.executeQuery()) {
+                if (rs.next()) {
+                    int missionIDValue = rs.getInt("mission_ID");
+                    Integer missionID = rs.wasNull() ? null : missionIDValue;
+
+                    return new Agent(
+                            rs.getInt("agent_ID"),
+                            missionID,
+                            rs.getInt("facility_ID"),
+                            rs.getString("name"),
+                            rs.getString("date_of_birth"),
+                            rs.getString("date_of_death"),
+                            rs.getString("notes")
+                    );
+                }
+            }
+        } catch (SQLException e) {
+            throw new IllegalStateException("Failed to retrieve agent with ID: " + id, e);
+        }
+
         return null;
     }
 
@@ -492,6 +440,28 @@ public class SQLiteDataStore implements DataStoreInterface, AutoCloseable {
      */
     @Override
     public Facility getFacility(int id) {
+        String sql = """
+                SELECT * FROM facilities
+                WHERE facility_ID = ?
+                """;
+
+        try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
+            pstmt.setInt(1, id);
+
+            try (ResultSet rs = pstmt.executeQuery()) {
+                if (rs.next()) {
+                    return new Facility(
+                            rs.getInt("facility_ID"),
+                            rs.getString("name"),
+                            rs.getString("abbreviation")
+                    );
+                }
+            }
+        } catch (SQLException e) {
+            throw new IllegalStateException(
+                    "Failed to retrieve facility with ID: " + id, e);
+        }
+
         return null;
     }
 
@@ -503,6 +473,30 @@ public class SQLiteDataStore implements DataStoreInterface, AutoCloseable {
      */
     @Override
     public Brief getBrief(int id) {
+        String sql = """
+                SELECT * FROM briefs
+                WHERE brief_ID = ?
+                """;
+
+        try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
+            pstmt.setInt(1, id);
+
+            try (ResultSet rs = pstmt.executeQuery()) {
+                if (rs.next()) {
+                    return new Brief(
+                            rs.getInt("brief_ID"),
+                            rs.getInt("mission_ID"),
+                            rs.getString("title"),
+                            rs.getString("date"),
+                            rs.getString("text")
+                    );
+                }
+            }
+        } catch (SQLException e) {
+            throw new IllegalStateException(
+                    "Failed to retrieve brief with ID: " + id, e);
+        }
+
         return null;
     }
 
@@ -515,11 +509,44 @@ public class SQLiteDataStore implements DataStoreInterface, AutoCloseable {
      */
     @Override
     public Agent addAgent(Agent agent) {
-        try {
-            throw new SQLException();
+        String sql = """
+                INSERT INTO agents (mission_ID, facility_ID, name,
+                                    date_of_birth, date_of_death, notes)
+                VALUES (?, ?, ?, ?, ?, ?)
+                """;
+
+        try (PreparedStatement pstmt = connection.prepareStatement(
+                sql, Statement.RETURN_GENERATED_KEYS)) {
+
+            pstmt.setObject(1, agent.getMissionID(), Types.INTEGER);
+            pstmt.setInt(2, agent.getFacilityID());
+            pstmt.setString(3, agent.getName());
+            pstmt.setString(4, agent.getDate_of_birth());
+            pstmt.setString(5, agent.getDate_of_death());
+            pstmt.setString(6, agent.getNotes());
+
+            pstmt.executeUpdate();
+
+            try (ResultSet keys = pstmt.getGeneratedKeys()) {
+                if (keys.next()) {
+                    return new Agent(
+                            keys.getInt(1),
+                            agent.getMissionID(),
+                            agent.getFacilityID(),
+                            agent.getName(),
+                            agent.getDate_of_birth(),
+                            agent.getDate_of_death(),
+                            agent.getNotes()
+                    );
+                }
+            }
+
+            throw new SQLException("Failed to retrieve generated agent ID");
+
         } catch (SQLException e) {
-            throw new IllegalArgumentException("Failed to add Agent. mission or facility may not exist," +
-                    " or mission's facility does not match agent's facility", e);
+            throw new IllegalArgumentException(
+                    "Failed to add Agent. Mission or facility may not exist, "
+                            + "or mission's facility does not match agent's facility", e);
         }
     }
 
@@ -532,10 +559,34 @@ public class SQLiteDataStore implements DataStoreInterface, AutoCloseable {
      */
     @Override
     public Facility addFacility(Facility facility) {
-        try{
-            throw  new SQLException();
-        }catch (SQLException e){
-            throw new IllegalArgumentException("Failed to add facility. facility name or abbreviation already exists", e);
+        String sql = """
+                INSERT INTO facilities (name, abbreviation)
+                VALUES (?, ?)
+                """;
+
+        try (PreparedStatement pstmt = connection.prepareStatement(
+                sql, Statement.RETURN_GENERATED_KEYS)) {
+
+            pstmt.setString(1, facility.getName());
+            pstmt.setString(2, facility.getAbbreviation());
+
+            pstmt.executeUpdate();
+
+            try (ResultSet keys = pstmt.getGeneratedKeys()) {
+                if (keys.next()) {
+                    return new Facility(
+                            keys.getInt(1),
+                            facility.getName(),
+                            facility.getAbbreviation()
+                    );
+                }
+            }
+
+            throw new SQLException("Failed to retrieve generated facility ID");
+
+        } catch (SQLException e) {
+            throw new IllegalArgumentException(
+                    "Failed to add facility. Facility name or abbreviation already exists", e);
         }
     }
 
@@ -548,12 +599,41 @@ public class SQLiteDataStore implements DataStoreInterface, AutoCloseable {
      */
     @Override
     public Brief addBrief(Brief brief) {
-        try {
-            throw new SQLException();
+        String sql = """
+                INSERT INTO briefs (mission_ID, title, date, text)
+                VALUES (?, ?, ?, ?)
+                """;
+
+        try (PreparedStatement pstmt = connection.prepareStatement(
+                sql, Statement.RETURN_GENERATED_KEYS)) {
+
+            pstmt.setInt(1, brief.getMissionID());
+            pstmt.setString(2, brief.getTitle());
+            pstmt.setString(3, brief.getDate());
+            pstmt.setString(4, brief.getContent());
+
+            pstmt.executeUpdate();
+
+            try (ResultSet keys = pstmt.getGeneratedKeys()) {
+                if (keys.next()) {
+                    return new Brief(
+                            keys.getInt(1),
+                            brief.getMissionID(),
+                            brief.getTitle(),
+                            brief.getDate(),
+                            brief.getContent()
+                    );
+                }
+            }
+
+            throw new SQLException("Failed to retrieve generated brief ID");
+
         } catch (SQLException e) {
-            throw new IllegalArgumentException("Failed to add Breif. mission may not exist", e);
+            throw new IllegalArgumentException(
+                    "Failed to add Brief. Mission may not exist", e);
         }
     }
+
 
     /**
      * gets the list of logs from database
@@ -639,10 +719,22 @@ public class SQLiteDataStore implements DataStoreInterface, AutoCloseable {
      */
     @Override
     public void addLog(LoggedAction log) {
-        try {
-            throw new SQLException();
+        String sql = """
+            INSERT INTO logs (user_ID, action, record, time)
+            VALUES (?, ?, ?, ?)
+            """;
+
+        try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
+            pstmt.setInt(1, log.getUser().getUserID());
+            pstmt.setInt(2, log.getAction());
+            pstmt.setString(3, log.getRecord());
+            pstmt.setString(4, log.getDateTime());
+
+            pstmt.executeUpdate();
+
         } catch (SQLException e) {
-            throw new IllegalArgumentException("Failed to add log. User may not exist", e);
+            throw new IllegalArgumentException(
+                    "Failed to add log. User may not exist", e);
         }
     }
 
@@ -716,74 +808,84 @@ public class SQLiteDataStore implements DataStoreInterface, AutoCloseable {
      */
     @Override
     public void addUser(User user) {
-        try {
-            throw new SQLException();
+        String sql = """
+            INSERT INTO users (username)
+            VALUES (?)
+            """;
+
+        try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
+            pstmt.setString(1, user.getUsername());
+            pstmt.executeUpdate();
+
         } catch (SQLException e) {
-            throw new IllegalArgumentException("Failed to add user. User may already exist.", e);
+            throw new IllegalArgumentException(
+                    "Failed to add user. User may already exist.", e);
         }
     }
 
+    /**
+     * get a list of all missions in DB
+     * @return {@code List<Mission>}
+     */
     @Override
     public List<Mission> listMissions() {
+        String sql = """
+            SELECT * FROM missions
+            """;
+
         List<Mission> missions = new ArrayList<>();
 
-        String sql = """
-                SELECT id, title, date, brief
-                FROM missions
-                ORDER BY id
-                """;
+        try (PreparedStatement pstmt = connection.prepareStatement(sql);
+             ResultSet rs = pstmt.executeQuery()) {
 
-        try (PreparedStatement statement =
-                     connection.prepareStatement(sql);
-             ResultSet results = statement.executeQuery()) {
+            while (rs.next()) {
+                Mission mission = new Mission(
+                        rs.getInt("mission_ID"),
+                        rs.getString("title"),
+                        rs.getInt("facility_ID")
+                );
 
-            while (results.next()) {
-                missions.add(new Mission(
-                        results.getInt("id"),
-                        results.getString("title"),
-                        results.getString("date"),
-                        results.getString("brief")
-                ));
+                missions.add(mission);
             }
 
-            return missions;
-
         } catch (SQLException e) {
-            throw new IllegalStateException(
-                    "Failed to retrieve missions.", e);
+            throw new IllegalStateException("Failed to retrieve missions", e);
         }
+
+        return missions;
     }
 
+    /**
+     * get the desired mission from DB based on its mission_ID
+     * @param id id of the mission
+     * @return the Mission object
+     */
     @Override
     public Mission getMission(int id) {
         String sql = """
-                SELECT id, title, date, brief
-                FROM missions
-                WHERE id = ?
-                """;
+            SELECT * FROM missions
+            WHERE mission_ID = ?
+            """;
 
-        try (PreparedStatement statement =
-                     connection.prepareStatement(sql)) {
+        try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
+            pstmt.setInt(1, id);
 
-            statement.setInt(1, id);
-
-            try (ResultSet results = statement.executeQuery()) {
-                if (results.next()) {
+            try (ResultSet rs = pstmt.executeQuery()) {
+                if (rs.next()) {
                     return new Mission(
-                            results.getInt("id"),
-                            results.getString("title"),
-                            results.getString("date"),
-                            results.getString("brief")
+                            rs.getInt("mission_ID"),
+                            rs.getString("title"),
+                            rs.getInt("facility_ID")
                     );
                 }
-
-                return null;
             }
 
         } catch (SQLException e) {
             throw new IllegalStateException(
-                    "Failed to retrieve mission with ID " + id, e);
+                    "Failed to retrieve mission with ID: " + id, e);
         }
+
+        return null;
     }
 
 }
