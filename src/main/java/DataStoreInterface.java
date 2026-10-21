@@ -1,10 +1,8 @@
 import java.util.List;
 
 public interface DataStoreInterface {
-    //must delete this for now (view ERD for more info)
     List<Mission> listMissions();
 
-    //must delete this for now (view ERD for more info)
     Mission getMission(int id);
 
 
