@@ -1,0 +1,11 @@
+Mission
+-----------------------------------------------------
+- missionID: int
+- facilityID: int
+- title: String
+-----------------------------------------------------
++ Mission(title: String, facilityID: int)
++ Mission(missionID: int, title: String, facilityID: int)
++ getMissionID(): int
++ getTitle(): String
++ getFacilityID(): int
