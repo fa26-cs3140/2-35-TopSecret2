@@ -89,6 +89,7 @@ public class UserInterface implements UserInterfaceInterface {
         String password = sc.hasNextLine() ? sc.nextLine() : null;
         if (!users.verifyLogin(username, password)){
             System.out.println("Incorrect username or password");
+            return false;
         }
         currentUser = username;
         currentUserObj = users.getUserByUsername(username);
@@ -223,7 +224,7 @@ public class UserInterface implements UserInterfaceInterface {
                 System.out.println("Title: " + requested.getTitle());
                 System.out.println("Date: " + requested.getDate());
                 System.out.println("Content: " + requested.getContent());
-                audit.log(new LoggedAction(LoggedAction.READ, currentUserObj, LocalDateTime.now().toString(), itemType + " : " + choice));
+                audit.log(new LoggedAction(LoggedAction.READ, currentUserObj, LocalDateTime.now().toString(), itemType + " " + choice));
             } else {
                 System.out.println("No brief found with this id");
             }
@@ -234,7 +235,7 @@ public class UserInterface implements UserInterfaceInterface {
                 System.out.println("DoB: " + requested.getDate_of_birth());
                 System.out.println("DoDeath: " + requested.getDate_of_death());
                 System.out.println("Notes: " + requested.getNotes());
-                audit.log(new LoggedAction(LoggedAction.READ, currentUserObj, LocalDateTime.now().toString(), itemType + " : " + choice));
+                audit.log(new LoggedAction(LoggedAction.READ, currentUserObj, LocalDateTime.now().toString(), itemType + " " + choice));
             } else {
                 System.out.println("No agent found with this id");
             }
@@ -243,7 +244,7 @@ public class UserInterface implements UserInterfaceInterface {
             if (requested != null) {
                 System.out.println("Name: " + requested.getName());
                 System.out.println("DoB: " + requested.getAbbreviation());
-                audit.log(new LoggedAction(LoggedAction.READ, currentUserObj, LocalDateTime.now().toString(), itemType + " : " + choice));
+                audit.log(new LoggedAction(LoggedAction.READ, currentUserObj, LocalDateTime.now().toString(), itemType + " " + choice));
 
             } else {
                 System.out.println("No facility found with this id");
@@ -272,7 +273,7 @@ public class UserInterface implements UserInterfaceInterface {
                 Brief newBrief = store.addBrief(new Brief(Integer.parseInt(id.trim()),title,date,content));
                 audit.log(new LoggedAction(LoggedAction.CREATE, currentUserObj,
                         LocalDateTime.now().toString(), "briefs " + newBrief.getBriefID()));
-            } else if (itemType.equals("Agent")){
+            } else if (itemType.equals("agents")){
                 System.out.print("Mission ID: ");
                 String mid = sc.hasNextLine() ? sc.nextLine() : null;
                 System.out.print("Facility ID: ");
@@ -294,7 +295,7 @@ public class UserInterface implements UserInterfaceInterface {
                 System.out.print("Abbrievation: ");
                 String abrev = sc.hasNextLine() ? sc.nextLine(): null;
                 Facility newFacility = store.addFacility(new Facility(name, abrev));
-                audit.log(new LoggedAction(LoggedAction.CREATE, currentUserObj, LocalDateTime.now().toString(), "facilites " + newFacility.getFacilityID()));
+                audit.log(new LoggedAction(LoggedAction.CREATE, currentUserObj, LocalDateTime.now().toString(), "facilities " + newFacility.getFacilityID()));
             }
             else {
                 System.out.println("This really should never happen, \n but just in case you passed a impossible itemType");
