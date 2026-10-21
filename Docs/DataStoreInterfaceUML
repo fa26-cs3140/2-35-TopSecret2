@@ -1,0 +1,24 @@
+<<interface>>
+DataStoreInterface
+-----------------------------------------------------
+-----------------------------------------------------
++ initDatabase(): void
++ importDatasetTsv(fileName: String, table: String): void
++ addMission(mission: Mission): void
++ listMissions(): List<Mission>
++ getMission(id: int): Mission
++ listAgents(): List<Agent>
++ getAgent(id: int): Agent
++ addAgent(agent: Agent): Agent
++ listFacilities(): List<Facility>
++ getFacility(id: int): Facility
++ addFacility(facility: Facility): Facility
++ listBriefs(): List<Brief>
++ getBrief(id: int): Brief
++ addBrief(brief: Brief): Brief
++ listLogs(): List<LoggedAction>
++ listLogs(userID: int): List<LoggedAction>
++ addLog(log: LoggedAction): void
++ listUsers(): List<User>
++ getUser(userID: int): User
++ addUser(user: User): void
