@@ -243,7 +243,7 @@ public class UserInterface implements UserInterfaceInterface {
             Facility requested = store.getFacility(choice);
             if (requested != null) {
                 System.out.println("Name: " + requested.getName());
-                System.out.println("DoB: " + requested.getAbbreviation());
+                System.out.println("Abbreviation: " + requested.getAbbreviation());
                 audit.log(new LoggedAction(LoggedAction.READ, currentUserObj, LocalDateTime.now().toString(), itemType + " " + choice));
 
             } else {
@@ -266,10 +266,14 @@ public class UserInterface implements UserInterfaceInterface {
                 String id = sc.hasNextLine() ? sc.nextLine() : null;
                 System.out.print("Title: ");
                 String title = sc.hasNextLine() ? sc.nextLine() : null;
-                System.out.println("Date: ");
+                System.out.print("Date: ");
                 String date = sc.hasNextLine() ? sc.nextLine() : null;
                 System.out.print("Content: ");
                 String content = sc.hasNextLine() ? sc.nextLine() : null;
+                if (id == null || title == null || date == null || content == null){
+                    return;
+                }
+
                 Brief newBrief = store.addBrief(new Brief(Integer.parseInt(id.trim()),title,date,content));
                 audit.log(new LoggedAction(LoggedAction.CREATE, currentUserObj,
                         LocalDateTime.now().toString(), "briefs " + newBrief.getBriefID()));
@@ -286,14 +290,19 @@ public class UserInterface implements UserInterfaceInterface {
                 String dod = sc.hasNextLine() ? sc.nextLine() : null;
                 System.out.print("Notes: ");
                 String notes = sc.hasNextLine() ? sc.nextLine() : null;
-
+                if (mid == null || fid == null || name == null || dob == null || dod == null || notes == null){
+                    return;
+                }
                 Agent newAgent = store.addAgent(new Agent(Integer.parseInt(mid.trim()), Integer.parseInt(fid.trim()), name, dob, dod, notes));
                 audit.log(new LoggedAction(LoggedAction.CREATE, currentUserObj, LocalDateTime.now().toString(), "agents " + newAgent.getAgentID()));
             }else if (itemType.equals("facilities")) {
                 System.out.print("Name: ");
                 String name = sc.hasNextLine() ? sc.nextLine(): null;
-                System.out.print("Abbrievation: ");
+                System.out.print("Abbreviation: ");
                 String abrev = sc.hasNextLine() ? sc.nextLine(): null;
+                if (name == null || abrev == null){
+                    return;
+                }
                 Facility newFacility = store.addFacility(new Facility(name, abrev));
                 audit.log(new LoggedAction(LoggedAction.CREATE, currentUserObj, LocalDateTime.now().toString(), "facilities " + newFacility.getFacilityID()));
             }
