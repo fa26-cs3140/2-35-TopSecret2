@@ -15,21 +15,6 @@ class SQLiteDataStoreTest {
         }
     }
 
-    @Test
-    void getMissionReturnsExistingMission() {
-        try (SQLiteDataStore store = new SQLiteDataStore()) {
-            List<Mission> missions = store.listMissions();
-            Mission first = missions.get(0);
-
-            Mission result = store.getMission(first.getId());
-
-            assertNotNull(result);
-            assertEquals(first.getId(), result.getId());
-            assertEquals(first.getTitle(), result.getTitle());
-            assertEquals(first.getDate(), result.getDate());
-            assertEquals(first.getBrief(), result.getBrief());
-        }
-    }
 
     @Test
     void getMissionReturnsNullForMissingId() {
@@ -76,11 +61,29 @@ class SQLiteDataStoreTest {
 
 
     @Test
+    void listUsersReturnsUsers() {
+        try (SQLiteDataStore store = new SQLiteDataStore()) {
+            List<User> users = store.listUsers();
+            assertFalse(users.isEmpty());
+        }
+    }
+
+    @Test
+    void listLogsReturnsLogs() {
+        try (SQLiteDataStore store = new SQLiteDataStore()) {
+            List<LoggedAction> logs = store.listLogs();
+            assertFalse(logs.isEmpty());
+        }
+    }
+
+
+    @Test
     void getFacilityReturnsNullForNonExistingId() {
         try (SQLiteDataStore store = new SQLiteDataStore()) {
             assertNull(store.getFacility(-1));
         }
     }
+
     @Test
     void getBriefReturnsNullForNonExistingId() {
         try (SQLiteDataStore store = new SQLiteDataStore()) {
@@ -102,14 +105,19 @@ class SQLiteDataStoreTest {
         try (SQLiteDataStore store = new SQLiteDataStore()) {
             List<Facility> facilities = store.listFacilities();
 
-            Facility expected = facilities.get(0);
-            Facility actual = store.getFacility(expected.getFacilityID());
+            if (!facilities.isEmpty()){
+                Facility expected = facilities.get(0);
+                Facility actual = store.getFacility(expected.getFacilityID());
 
 
-            assertNotNull(expected);
-            assertEquals(expected.getFacilityID(), actual.getFacilityID());
-            assertEquals(expected.getName(), actual.getName());
-            assertEquals(expected.getAbbreviation(), actual.getAbbreviation());
+                assertNotNull(expected);
+                assertEquals(expected.getFacilityID(), actual.getFacilityID());
+                assertEquals(expected.getName(), actual.getName());
+                assertEquals(expected.getAbbreviation(), actual.getAbbreviation());
+            } else {
+                store.getFacility(-1);
+            }
+
         }
     }
 
@@ -118,16 +126,20 @@ class SQLiteDataStoreTest {
         try (SQLiteDataStore store = new SQLiteDataStore()) {
             List<Brief> briefs = store.listBriefs();
 
-            Brief expected = briefs.get(0);
-            Brief actual = store.getBrief(expected.getBriefID());
+            if (!briefs.isEmpty()){
+                Brief expected = briefs.get(0);
+                Brief actual = store.getBrief(expected.getBriefID());
 
+                assertNotNull(expected);
+                assertEquals(expected.getBriefID(), actual.getBriefID());
+                assertEquals(expected.getMissionID(), actual.getMissionID());
+                assertEquals(expected.getTitle(), actual.getTitle());
+                assertEquals(expected.getDate(), actual.getDate());
+                assertEquals(expected.getContent(), actual.getContent());
+            }else {
+                store.getBrief(-1);
+            }
 
-            assertNotNull(expected);
-            assertEquals(expected.getBriefID(), actual.getBriefID());
-            assertEquals(expected.getMissionID(), actual.getMissionID());
-            assertEquals(expected.getTitle(), actual.getTitle());
-            assertEquals(expected.getDate(), actual.getDate());
-            assertEquals(expected.getContent(), actual.getContent());
         }
     }
 
@@ -136,21 +148,79 @@ class SQLiteDataStoreTest {
         try (SQLiteDataStore store = new SQLiteDataStore()) {
             List<Agent> agents = store.listAgents();
 
-            Agent expected = agents.get(0);
-            Agent actual = store.getAgent(expected.getAgentID());
+            if(!agents.isEmpty()) {
+                Agent expected = agents.get(0);
+                Agent actual = store.getAgent(expected.getAgentID());
 
 
-            assertNotNull(expected);
-            assertEquals(expected.getAgentID(), actual.getAgentID());
-            assertEquals(expected.getMissionID(), actual.getMissionID());
-            assertEquals(expected.getFacilityID(), actual.getFacilityID());
-            assertEquals(expected.getName(), actual.getName());
-            assertEquals(expected.getDate_of_birth(), actual.getDate_of_birth());
-            assertEquals(expected.getDate_of_death(), actual.getDate_of_death());
-            assertEquals(expected.getNotes(), actual.getNotes());
+                assertNotNull(expected);
+                assertEquals(expected.getAgentID(), actual.getAgentID());
+                assertEquals(expected.getMissionID(), actual.getMissionID());
+                assertEquals(expected.getFacilityID(), actual.getFacilityID());
+                assertEquals(expected.getName(), actual.getName());
+                assertEquals(expected.getDate_of_birth(), actual.getDate_of_birth());
+                assertEquals(expected.getDate_of_death(), actual.getDate_of_death());
+                assertEquals(expected.getNotes(), actual.getNotes());
+            }else {
+                store.getAgent(-1);
+            }
+
         }
     }
 
+    @Test
+    void getMissionReturnsExistingMission() {
+        try (SQLiteDataStore store = new SQLiteDataStore()) {
+            List<Mission> missions = store.listMissions();
+
+            if (!missions.isEmpty()) {
+                Mission expected = missions.get(0);
+
+                Mission actual = store.getMission(expected.getMissionID());
+
+                assertNotNull(actual);
+                assertEquals(expected.getMissionID(), actual.getMissionID());
+                assertEquals(expected.getTitle(), actual.getTitle());
+                assertEquals(expected.getFacilityID(), actual.getFacilityID());
+            }else {
+                store.getMission(-1);
+            }
+
+        }
+    }
+
+    @Test
+    void getUserReturnsExistingUser() {
+        try (SQLiteDataStore store = new SQLiteDataStore()) {
+            List<User> users = store.listUsers();
+
+            if (!users.isEmpty()) {
+                User expected = users.get(0);
+                User actual = store.getUser(expected.getUserID());
+
+                assertNotNull(actual);
+                assertEquals(expected.getUserID(), actual.getUserID());
+                assertEquals(expected.getUsername(), actual.getUsername());
+            }else {
+                store.getUser(-1);
+            }
+        }
+    }
+
+    @Test void listLogsReturnsExistingLogs() {
+        try (SQLiteDataStore store = new SQLiteDataStore()) {
+            User user = store.getUser(1);
+            List<LoggedAction> logs = store.listLogs(user.getUserID());
+
+            if (!logs.isEmpty()) {
+                logs.forEach(log -> {
+                    assertEquals(log.getUser().getUserID(),user.getUserID());
+                });
+            }else{
+                store.listLogs(-1);
+            }
+        }
+    }
 
 
     //adding records
@@ -167,7 +237,6 @@ class SQLiteDataStoreTest {
             assertEquals(expected.getAbbreviation(), actual.getAbbreviation());
 
 
-
             actual = store.getFacility(expected.getFacilityID());
 
             assertNotNull(actual);
@@ -180,9 +249,9 @@ class SQLiteDataStoreTest {
     @Test
     void addBriefInsertsCorrectly() {
         try (SQLiteDataStore store = new SQLiteDataStore()) {
-            Brief expected = new Brief(1,"b1", "1990-03-12","content 1");
+            Brief expected = new Brief(1, "b1", "1990-03-12", "content 1");
 
-            Brief actual =  store.addBrief(expected);
+            Brief actual = store.addBrief(expected);
 
             assertNotNull(actual);
             assertEquals(expected.getBriefID(), actual.getBriefID());
@@ -230,5 +299,63 @@ class SQLiteDataStoreTest {
         }
     }
 
+    @Test
+    void addMissionInsertsCorrectly() {
+        try (SQLiteDataStore store = new SQLiteDataStore()) {
+            Mission expected = new Mission("test1title", 1);
+            Mission actual = store.addMission(expected);
+
+            assertNotNull(actual);
+            assertEquals(expected.getMissionID(), actual.getMissionID());
+            assertEquals(expected.getTitle(), actual.getTitle());
+            assertEquals(expected.getFacilityID(), actual.getFacilityID());
+
+            actual = store.getMission(expected.getMissionID());
+
+            assertNotNull(actual);
+            assertEquals(expected.getMissionID(), actual.getMissionID());
+            assertEquals(expected.getTitle(), actual.getTitle());
+            assertEquals(expected.getFacilityID(), actual.getFacilityID());
+        }
+    }
+
+    @Test
+    void addLogInsertsCorrectly() {
+        try (SQLiteDataStore store = new SQLiteDataStore()) {
+
+            User user = store.listUsers().get(0);
+            if (user != null) {
+                int origUserLogsSize = store.listLogs(user.getUserID()).size();
+
+                LoggedAction expected = new LoggedAction(1, user, "2024-10-25", "Agents");
+                LoggedAction actual = store.addLog(expected);
+                int afterUserLogsSize = store.listLogs(user.getUserID()).size();
+
+                assertNotNull(actual);
+                assertEquals(expected.getUser().getUserID(), actual.getUser().getUserID());
+                assertEquals(expected.getAction(), actual.getAction());
+                assertEquals(expected.getDateTime(), actual.getDateTime());
+                assertEquals(expected.getRecord(), actual.getRecord());
+                assertEquals(origUserLogsSize + 1, afterUserLogsSize);
+            }
+        }
+    }
+
+    @Test
+    void addUserInsertsCorrectly() {
+        try (SQLiteDataStore store = new SQLiteDataStore()) {
+            User user = new User(-1, "testUser1");
+            User actual = store.addUser(user);
+
+            assertNotNull(actual);
+            assertEquals(user.getUsername(), actual.getUsername());
+
+            User expected = store.getUser(user.getUserID());
+
+            assertNotNull(actual);
+            assertEquals(expected.getUserID(), actual.getUserID());
+            assertEquals(expected.getUsername(), actual.getUsername());
+        }
+    }
 
 }

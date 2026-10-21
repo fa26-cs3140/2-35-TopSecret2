@@ -16,7 +16,7 @@ public interface DataStoreInterface {
      *
      * @param mission
      */
-    void addMission(Mission mission);
+    Mission addMission(Mission mission);
 
     /**
      * query database to get all agents and return them as {@code List<Agent>}
@@ -108,7 +108,7 @@ public interface DataStoreInterface {
      *
      * @param log
      */
-    void addLog(LoggedAction log);
+    LoggedAction addLog(LoggedAction log);
 
 
     /**
@@ -131,7 +131,7 @@ public interface DataStoreInterface {
      *
      * @param user
      */
-    void addUser(User user);
+    User addUser(User user);
 
 
 }

@@ -264,21 +264,38 @@ public class SQLiteDataStore implements DataStoreInterface, AutoCloseable {
      * adds a new mission to DB
      *
      * @param mission
+     * @return the created Mission
      * @throws IllegalArgumentException when facility does not exist in DB
      */
     @Override
-    public void addMission(Mission mission) {
+    public Mission addMission(Mission mission) {
         String sql = """
-                INSERT INTO missions (title, facility_ID)
-                VALUES (?, ?)
-                """;
-        try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
+            INSERT INTO missions (title, facility_ID)
+            VALUES (?, ?)
+            """;
+
+        try (PreparedStatement pstmt = connection.prepareStatement(
+                sql, Statement.RETURN_GENERATED_KEYS)) {
+
             pstmt.setString(1, mission.getTitle());
             pstmt.setInt(2, mission.getFacilityID());
 
             pstmt.executeUpdate();
+
+            try (ResultSet keys = pstmt.getGeneratedKeys()) {
+                if (keys.next()) {
+                    return new Mission(
+                            keys.getInt(1),
+                            mission.getTitle(),
+                            mission.getFacilityID()
+                    );
+                }
+            }
+
+            throw new SQLException("Failed to retrieve generated mission ID");
+
         } catch (SQLException e) {
-            throw new IllegalStateException(
+            throw new IllegalArgumentException(
                     "Failed to add mission. Facility may not exist", e);
         }
     }
@@ -712,17 +729,18 @@ public class SQLiteDataStore implements DataStoreInterface, AutoCloseable {
     }
 
     /**
-     * add a log to DB
+     * Adds a log to the database.
      *
-     * @param log
-     * @throws IllegalArgumentException when user may not exist in DB
+     * @param log the log to add
+     * @return the created LoggedAction
+     * @throws IllegalArgumentException when the user may not exist in the database
      */
     @Override
-    public void addLog(LoggedAction log) {
+    public LoggedAction addLog(LoggedAction log) {
         String sql = """
-            INSERT INTO logs (user_ID, action, record, time)
-            VALUES (?, ?, ?, ?)
-            """;
+        INSERT INTO logs (user_ID, action, record, time)
+        VALUES (?, ?, ?, ?)
+        """;
 
         try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
             pstmt.setInt(1, log.getUser().getUserID());
@@ -731,6 +749,8 @@ public class SQLiteDataStore implements DataStoreInterface, AutoCloseable {
             pstmt.setString(4, log.getDateTime());
 
             pstmt.executeUpdate();
+
+            return log;
 
         } catch (SQLException e) {
             throw new IllegalArgumentException(
@@ -801,21 +821,34 @@ public class SQLiteDataStore implements DataStoreInterface, AutoCloseable {
     }
 
     /**
-     * add a User to DB
+     * Adds a user to the database.
      *
-     * @param user
-     * @throws IllegalArgumentException when user may already exist.
+     * @param user the user to add
+     * @return the created User with its generated ID
+     * @throws IllegalArgumentException when the user may already exist
      */
     @Override
-    public void addUser(User user) {
+    public User addUser(User user) {
         String sql = """
-            INSERT INTO users (username)
-            VALUES (?)
-            """;
+        INSERT INTO users (username)
+        VALUES (?)
+        """;
 
-        try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
+        try (PreparedStatement pstmt = connection.prepareStatement(
+                sql, Statement.RETURN_GENERATED_KEYS)) {
             pstmt.setString(1, user.getUsername());
             pstmt.executeUpdate();
+
+            try (ResultSet keys = pstmt.getGeneratedKeys()) {
+                if (keys.next()) {
+                    return new User(
+                            keys.getInt(1),
+                            user.getUsername()
+                    );
+                }
+            }
+
+            throw new SQLException("Failed to retrieve generated user ID");
 
         } catch (SQLException e) {
             throw new IllegalArgumentException(
