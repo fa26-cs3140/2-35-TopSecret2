@@ -23,10 +23,10 @@ public class Search implements SearchInterface {
     @Override
     public List<Mission> search(String phrase) {
         List<Mission> missions = dataStore.listMissions();
-
-        return missions.stream()
-                .filter(mission -> mission.getBrief()
-                        .matches("(?i).*\\b" + phrase + "\\b.*"))
-                .toList();
+        return missions;
+//        return missions.stream()
+//                .filter(mission -> mission.getBrief()
+//                        .matches("(?i).*\\b" + phrase + "\\b.*"))
+//                .toList();
     }
 }

@@ -1,0 +1,14 @@
+Scenario: constructorStoresMissionFields | User creates a mission without an explicit mission ID
+GIVEN user creates a Mission with title "Mission 1" and facility ID 1
+WHEN the Mission object is initialized
+THEN the mission's ID is -1, and it contains the expected title and facility ID
+
+Scenario: constructorStoresMissionFields1 | User creates a mission with an explicit mission ID
+GIVEN user creates a Mission with mission ID 5, title "Mission 1", and facility ID 1
+WHEN the Mission object is initialized
+THEN the mission contains the expected mission ID, title, and facility ID
+
+Scenario: constructorStoresMissionFields2 | User creates multiple missions with different details
+GIVEN user creates two Mission objects with titles "Mission 1" and "Mission 2" and facility IDs 1 and 3, respectively
+WHEN both Mission objects are initialized
+THEN each mission contains its expected mission ID of -1, title, and facility ID independently
