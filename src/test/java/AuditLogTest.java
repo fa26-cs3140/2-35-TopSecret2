@@ -33,8 +33,8 @@ class AuditLogTest {
                 "February 22, 2002 8:15 PM",
                 "Drinking Hat Manual");
 
-        verify(mockDataStore).addLog(sampleAction);
         assertEquals(sampleAction, testedAuditLog.log(sampleAction));
+        verify(mockDataStore).addLog(sampleAction);
     }
 
     @Test
@@ -49,8 +49,8 @@ class AuditLogTest {
                 "Drinking Hat Manual"
         );
 
-        verify(mockDataStore).addLog(sampleAction);
         assertEquals(sampleAction, testedAuditLog.log(sampleAction));
+        verify(mockDataStore).addLog(sampleAction);
     }
 
     @Test
@@ -66,8 +66,8 @@ class AuditLogTest {
                 "Secret Recipes"
         );
 
-        verify(mockDataStore).addLog(sampleAction);
         assertEquals(sampleAction, testedAuditLog.log(sampleAction));
+        verify(mockDataStore).addLog(sampleAction);
     }
 
     @Test
@@ -83,8 +83,8 @@ class AuditLogTest {
                 "Secret Recipes"
         );
 
-        verify(mockDataStore).addLog(sampleAction);
         assertEquals(sampleAction, testedAuditLog.log(sampleAction));
+        verify(mockDataStore).addLog(sampleAction);
     }
 
     @Test
