@@ -59,8 +59,8 @@ public class UserInterfaceTest {
     }
     private List<Mission> twoMissions() {
         return Arrays.asList(
-                new Mission(1, "Alpha", "2024-01-01", "Alpha brief text"),
-                new Mission(2, "Beta", "2024-02-02", "Beta brief text"));
+                new Mission(1, "Alpha", 1),
+                new Mission(2, "Beta", 1));
     }
     //Stubbing  the login
     private void loginAs(String name){

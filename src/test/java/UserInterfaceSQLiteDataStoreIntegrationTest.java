@@ -62,7 +62,7 @@ public class    UserInterfaceSQLiteDataStoreIntegrationTest {
         Files.writeString(tsv.toPath(),
                 "Title\tDate\tText\nAlpha\t2024-01-01\tAlpha text\n",
                 StandardCharsets.UTF_8);
-        realStore.importTsv(tsv.getAbsolutePath());
+        realStore.addMission(new Mission("Alpha", 1));
         ui("alpha\n").searchMissions();
         assertTrue(out().contains("Alpha"));
     }

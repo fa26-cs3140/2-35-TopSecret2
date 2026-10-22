@@ -388,7 +388,7 @@ public class UserInterface implements UserInterfaceInterface {
         }
         List<Mission> results = new Search(store).search(searchingFor);
         for (Mission m : results) {
-            System.out.println(m.getId() + " : " + m.getTitle());
+            System.out.println(m.getMissionID() + " : " + m.getTitle());
         }
         if (results.isEmpty()) {
             System.out.println("No matches.");
