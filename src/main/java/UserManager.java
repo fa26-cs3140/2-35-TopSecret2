@@ -114,7 +114,16 @@ public class UserManager {
     }
 
     User getUserByUsername(String username) {
-        // TODO: Implement user fetch
+        List<User> usersList = dataStore.listUsers();
+
+        for (int currIdx = 0; currIdx < usersList.size(); currIdx++) {
+            User currUser = usersList.get(currIdx);
+
+            if (username.equals(currUser.getUsername())) {
+                return currUser;
+            }
+        }
+
         return null;
     }
 
