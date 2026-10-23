@@ -104,14 +104,13 @@ public class UserInterface implements UserInterfaceInterface {
             System.out.println("1. Browse briefs");
             System.out.println("2. Browse agents");
             System.out.println("3. Browse facilities");
-            System.out.println("4. Search Missions");
-            System.out.println("5. Change Password");
+            System.out.println("4. Change Password");
             if (admin) {
-                System.out.println("6. Create a new user");
-                System.out.println("7. Promote or Demote users");
-                System.out.println("8. Review audit log");
+                System.out.println("5. Create a new user");
+                System.out.println("6. Promote or Demote users");
+                System.out.println("7. Review audit log");
             }
-            System.out.println("9. Exit/logout");
+            System.out.println("8. Exit/logout");
             System.out.print("Enter an option number:");
             String entered = sc.hasNextLine() ? sc.nextLine() : null;
             int choice;
@@ -131,17 +130,15 @@ public class UserInterface implements UserInterfaceInterface {
             }else if (choice == 3) {
                 browseMenu("facilities");
             }else if (choice == 4) {
-                searchMissions();
-            }else if (choice == 5) {
                 changePassword();
             }
-            else if (choice == 6 && admin){
+            else if (choice == 5 && admin){
                 createUser();
-            }else if (choice ==7 && admin){
+            }else if (choice ==6 && admin){
                 manageAccess();
-            }else if (choice == 8 && admin){
+            }else if (choice == 7 && admin){
                 reviewAuditLog();
-            }else if (choice == 9){
+            }else if (choice == 8){
                 return;
             }else {
                 System.out.println("Invalid Option, try again.");
@@ -379,21 +376,5 @@ public class UserInterface implements UserInterfaceInterface {
 
     }
 
-    @Override
-    public void searchMissions() {
-        System.out.print("Search phrase: ");
-        String searchingFor = sc.hasNextLine() ? sc.nextLine() : null;
-        if (searchingFor == null) {
-            return;
-        }
-        List<Mission> results = new Search(store).search(searchingFor);
-        for (Mission m : results) {
-            System.out.println(m.getMissionID() + " : " + m.getTitle());
-        }
-        if (results.isEmpty()) {
-            System.out.println("No matches.");
-        }
-
-    }
 
 }

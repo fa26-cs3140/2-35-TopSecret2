@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 import java.util.List;
 
 public class AuditLog implements AuditLogInterface {
@@ -22,7 +23,7 @@ public class AuditLog implements AuditLogInterface {
             List<LoggedAction> logList = dataStore.listLogs();
             return logList;
         } catch (IllegalStateException e) {
-            return null;
+            return new ArrayList<>();
         }
     }
 

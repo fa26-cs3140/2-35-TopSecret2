@@ -10,5 +10,4 @@ public interface UserInterfaceInterface {
     void changePassword();
     void createUser();
     void manageAccess();
-    void searchMissions();
 }

@@ -505,7 +505,7 @@ public class SQLiteDataStore implements DataStoreInterface, AutoCloseable {
                             rs.getInt("mission_ID"),
                             rs.getString("title"),
                             rs.getString("date"),
-                            rs.getString("text")
+                            rs.getString("content")
                     );
                 }
             }
@@ -617,7 +617,7 @@ public class SQLiteDataStore implements DataStoreInterface, AutoCloseable {
     @Override
     public Brief addBrief(Brief brief) {
         String sql = """
-                INSERT INTO briefs (mission_ID, title, date, text)
+                INSERT INTO briefs (mission_ID, title, date, content)
                 VALUES (?, ?, ?, ?)
                 """;
 
