@@ -12,7 +12,14 @@ import java.util.Set;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+// Member B (Sebastian) -- HW5 integration tests: UI + access control.
+// Uses A's REAL AccessControl class (fully implemented), constructed
+// with the in-memory 2-arg constructor, so no roles file is touched.
+// The user manager, store and audit log are Mockito mocks; their UI
+// integrations live in their own test files.
 public class UserInterfaceAccessControlIntegrationTest {
+
     private UserManagerInterface users;
     private AccessControl access;
     private DataStoreInterface store;
@@ -60,21 +67,21 @@ public class UserInterfaceAccessControlIntegrationTest {
     // Real isAdmin = true shows the admin options.
     @Test
     void adminSeesAdminOptions() {
-        assertEquals(0, ui("boss\nx\n9\n").run());
-        assertTrue(out().contains("Create new user"));
+        assertEquals(0, ui("boss\nx\n8\n").run());
+        assertTrue(out().contains("Create a new user"));
     }
 
     // Real isAdmin = false doesn't show the admin options.
     @Test
     void nonAdminNoAdminOptions() {
-        assertEquals(0, ui("worker\nx\n9\n").run());
-        assertFalse(out().contains("Create new user"));
+        assertEquals(0, ui("worker\nx\n8\n").run());
+        assertFalse(out().contains("Create a new user"));
     }
 
     // Promoting a worker switches their status.
     @Test
     void promoteCarriesThrough() {
-        assertEquals(0, ui("boss\nx\n7\npromote\nworker\n9\n").run());
+        assertEquals(0, ui("boss\nx\n6\npromote\nworker\n8\n").run());
         assertTrue(access.isAdmin("worker"));
     }
 
@@ -82,16 +89,15 @@ public class UserInterfaceAccessControlIntegrationTest {
     @Test
     void demoteCarriesThrough() {
         access.promoteUser("boss", "worker"); // precondition: worker is admin
-        assertEquals(0, ui("boss\nx\n7\ndemote\nworker\n9\n").run());
+        assertEquals(0, ui("boss\nx\n6\ndemote\nworker\n8\n").run());
         assertFalse(access.isAdmin("worker"));
     }
 
     // Admin can't demote themselves.
     @Test
     void NoSelfDemote() {
-        assertEquals(0, ui("boss\nx\n7\ndemote\nboss\n9\n").run());
+        assertEquals(0, ui("boss\nx\n6\ndemote\nboss\n8\n").run());
         assertTrue(access.isAdmin("boss"));
-        assertTrue(out().contains("Not allowed."));
+        assertTrue(out().contains("Not allowed"));
     }
-
 }

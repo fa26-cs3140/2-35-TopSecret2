@@ -1,17 +1,16 @@
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.AfterEach;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-import java.io.ByteArrayOutputStream;
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.io.PrintStream;
 import java.util.Arrays;
 import java.util.List;
 
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 //Unit tests for the UserInterface
 //Uses mock-ups for UserManagementInterface, AuditLogInterface,
@@ -57,11 +56,6 @@ public class UserInterfaceTest {
                 new Brief(1, 1, "Alpha", "2024-01-01", "Alpha content"),
                 new Brief(2, 1, "Beta", "2024-02-02", "Beta content"));
     }
-    private List<Mission> twoMissions() {
-        return Arrays.asList(
-                new Mission(1, "Alpha", 1),
-                new Mission(2, "Beta", 1));
-    }
     //Stubbing  the login
     private void loginAs(String name){
         when(users.hasUser()).thenReturn(true);
@@ -74,7 +68,7 @@ public class UserInterfaceTest {
     void runExitsCleanlyAfterLogin() {
         loginAs("tester");
         when(access.isAdmin("tester")).thenReturn(false);
-        assertEquals(0, ui("tester\nPass123\n9\n").run());
+        assertEquals(0, ui("tester\nPass123\n8\n").run());
     }
 
     // run(): bad login -> 1, menu never shows
@@ -137,7 +131,7 @@ public class UserInterfaceTest {
     void adminSeesAdminOptions() {
         loginAs("tester");
         when(access.isAdmin("tester")).thenReturn(true);
-        UserInterface ui = ui("tester\nPass123\n9\n");
+        UserInterface ui = ui("tester\nPass123\n8\n");
         assertTrue(ui.loginStep());
         ui.showMainMenu();
         assertTrue(out().contains("Create a new user"));
@@ -150,7 +144,7 @@ public class UserInterfaceTest {
     void standardUserSeesNoAdminOptions() {
         loginAs("tester");
         when(access.isAdmin("tester")).thenReturn(false);
-        UserInterface ui = ui("tester\nPass123\n9\n");
+        UserInterface ui = ui("tester\nPass123\n8\n");
         assertTrue(ui.loginStep());
         ui.showMainMenu();
         assertFalse(out().contains("Create a new user"));
@@ -241,7 +235,7 @@ public class UserInterfaceTest {
 
     // changePassword(): prompts twice, delegates to users
     @Test
-    void changePasswordDelegatesToUsers() throws Exception{
+    void changePasswordDelegatesToUsers() throws Exception {
         UserInterface ui = ui("tester\nPass123\nNewPass1\nNewPass1\n");
         loginAs("tester");
         assertTrue(ui.loginStep());
@@ -295,14 +289,6 @@ public class UserInterfaceTest {
         ui.manageAccess();
         verify(access).demoteUser("tester", "tester");
         assertTrue(out().contains("Not allowed"));
-    }
-
-    // searchMissions(): real Search over mocked store finds the match
-    @Test
-    void searchMissionsFindsMatch() {
-        when(store.listMissions()).thenReturn(twoMissions());
-        ui("alpha\n").searchMissions();
-        assertTrue(out().contains("Alpha"));
     }
 
     // browseMenu(): option 1 lists, then back
