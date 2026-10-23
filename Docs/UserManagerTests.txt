@@ -1,0 +1,58 @@
+UserManager Tests
+-----------------
+Unit Tests:
+
+hasUserTracksCreates
+hasUser is false on an empty store and true after a create
+
+createUserReturnsSequentialUsers
+createUser returns the new user; IDs count up from 1
+
+createUserRejectsInvalidUsernames
+Too-short, spaced and null usernames throw TopSecretException
+
+createUserRejectsDuplicate
+A duplicate username throws TopSecretException
+
+usernameValidationRules
+3+ chars, letters/numbers/hyphens/underscores only, uppercase allowed
+
+passwordValidationRules
+5+ chars with an uppercase and a lowercase letter
+
+getUserByIDFindsAndMisses
+Finds the user by ID; a missing ID returns null
+
+getUserByUsernameFindsAndMisses
+Finds the user by name; missing or null returns null
+
+listUsernamesReturnsAll
+Every created username, in creation order
+
+needsPasswordSetupUntilPasswordSet
+True for a fresh account, false once a password is set
+
+changePasswordThenVerifyLogin
+The set password logs in; wrong password and unknown user don't
+
+changePasswordReplacesOldPassword
+Changing the password again replaces the old one
+
+verifyLoginFalseWithNoCredentialsFile
+No credentials file at all means no login
+
+changePasswordRejectsMismatch
+Mismatched confirmation throws TopSecretException
+
+changePasswordRejectsInvalidPassword
+A password breaking the rules throws TopSecretException
+
+changePasswordRejectsUnknownUser
+An unknown user throws TopSecretException
+
+Notes:
+Code: UserManagerTest.java.
+Run: .\gradlew test --tests "UserManagerTest"
+The store is a Mockito mock backed by a real list. Passwords use the
+real credentials.cip in the working directory, deleted before and
+after each test.
