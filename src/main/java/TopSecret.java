@@ -7,6 +7,6 @@ public class TopSecret {
         AuditLogInterface audit = null;
         UserInterface ui = new UserInterface(users, access, store, audit);
         System.exit(ui.run());
-        }
     }
+}
 
