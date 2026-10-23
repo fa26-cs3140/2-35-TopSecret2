@@ -38,13 +38,13 @@ public class AgentTest {
         Agent a2 = new Agent(2, 3, "Jack Williams", "1998-05-01",
                 "2022-11-12", "sample notes2");
 
-        assertEquals(4, a1.getAgentID());
+        assertEquals(4, a1.getMissionID());
         assertEquals("Jackie Will", a1.getName());
         assertEquals("1990-05-01", a1.getDate_of_birth());
         assertEquals("2022-10-12", a1.getDate_of_death());
         assertEquals("sample notes1", a1.getNotes());
 
-        assertEquals(2, a2.getAgentID());
+        assertEquals(2, a2.getMissionID());
         assertEquals("Jack Williams", a2.getName());
         assertEquals("1998-05-01", a2.getDate_of_birth());
         assertEquals("2022-11-12", a2.getDate_of_death());

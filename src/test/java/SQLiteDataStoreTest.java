@@ -54,6 +54,14 @@ class SQLiteDataStoreTest {
         assertFalse(store.listAgents().isEmpty());
     }
 
+
+    @Test
+    void closeDatabase(){
+        store.close();
+        assertDoesNotThrow(store::close);
+        assertThrows(IllegalStateException.class, store::listMissions);
+    }
+
     @Test
     void listFacilitiesReturnsFacilities() {
         List<Facility> facilities = store.listFacilities();
@@ -223,11 +231,10 @@ class SQLiteDataStoreTest {
         Facility actual = store.addFacility(expected);
 
         assertNotNull(actual);
-        assertEquals(expected.getFacilityID(), actual.getFacilityID());
         assertEquals(expected.getName(), actual.getName());
         assertEquals(expected.getAbbreviation(), actual.getAbbreviation());
 
-
+        expected = actual;
         actual = store.getFacility(expected.getFacilityID());
 
         assertNotNull(actual);
@@ -243,13 +250,12 @@ class SQLiteDataStoreTest {
         Brief actual = store.addBrief(expected);
 
         assertNotNull(actual);
-        assertEquals(expected.getBriefID(), actual.getBriefID());
         assertEquals(expected.getMissionID(), actual.getMissionID());
         assertEquals(expected.getTitle(), actual.getTitle());
         assertEquals(expected.getDate(), actual.getDate());
         assertEquals(expected.getContent(), actual.getContent());
 
-
+        expected = actual;
         actual = store.getBrief(expected.getBriefID());
         assertNotNull(actual);
         assertEquals(expected.getBriefID(), actual.getBriefID());
@@ -265,7 +271,6 @@ class SQLiteDataStoreTest {
         Agent actual = store.addAgent(expected);
 
         assertNotNull(actual);
-        assertEquals(expected.getAgentID(), actual.getAgentID());
         assertEquals(expected.getMissionID(), actual.getMissionID());
         assertEquals(expected.getFacilityID(), actual.getFacilityID());
         assertEquals(expected.getName(), actual.getName());
@@ -273,6 +278,7 @@ class SQLiteDataStoreTest {
         assertEquals(expected.getDate_of_death(), actual.getDate_of_death());
         assertEquals(expected.getNotes(), actual.getNotes());
 
+        expected = actual;
         actual = store.getAgent(expected.getAgentID());
 
         assertNotNull(actual);

@@ -15,7 +15,6 @@ public class SQLiteDataStore implements DataStoreInterface, AutoCloseable {
 
 
     private static final String DATABASE_URL = "jdbc:sqlite:data.db";
-//    private static final String TSV_RESOURCE = "dataset/mission_briefs.tsv";
 
     private final String databaseUrl;
     private Connection connection;
