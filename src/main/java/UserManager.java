@@ -3,9 +3,13 @@ import java.util.List;
 
 public class UserManager {
     private DataStoreInterface dataStore;
+    private Cipher cipher;
+    private FileHandler fileHandler;
 
-    public UserManager(DataStoreInterface dataStore) {
+    public UserManager(DataStoreInterface dataStore, Cipher cipher, FileHandler fileHandler) {
         this.dataStore = dataStore;
+        this.cipher = cipher;
+        this.fileHandler = fileHandler;
     }
 
     private int getNextUserID() {
@@ -109,8 +113,24 @@ public class UserManager {
     }
 
     boolean needsPasswordSetup(String username) {
-        // TODO: Implement password status
-        return false;
+        List<String> credentialLines = fileHandler.getFileLinesList(
+                        "credentials.cip",
+                        FileHandler.FileTypes.DATA);
+
+        for (int currLineIdx = 0;
+             currLineIdx < credentialLines.size();
+             currLineIdx++) {
+            String currLine = credentialLines.get(currLineIdx);
+
+            if (currLine.startsWith("username" + ":")) {
+                String[] splitLine = currLine.split(":");
+
+                if (splitLine.length == 2) {
+                    return false;
+                }
+            }
+        }
+        return true;
     }
 
     User getUserByUsername(String username) {
