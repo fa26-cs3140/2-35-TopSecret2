@@ -63,6 +63,10 @@ public class Agent {
     }
 
     public void setDate_of_death(String date_of_death) {
+        if (date_of_death == null) {
+            this.date_of_death = null;
+            return;
+        }
         DateTimeFormatter formatter = DateTimeFormatter
                 .ofPattern("uuuu-MM-dd")
                 .withResolverStyle(ResolverStyle.STRICT);

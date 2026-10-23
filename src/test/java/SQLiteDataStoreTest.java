@@ -20,8 +20,10 @@ class SQLiteDataStoreTest {
                 "jdbc:sqlite:" + tempDir.resolve("test.db");
 
         store = new SQLiteDataStore(databaseUrl);
-        store.addUser(new User(1,"user1"));
-
+        User user = store.addUser(new User(-1,"user1")); //just to test i can retrieve a user
+        User user2 = store.addUser(new User(-1,"user2"));  //just to test i can retrieve a user
+        store.addLog(new LoggedAction(1, user, "date1", "record1")); //just to test i can retrieve a Log
+        store.addLog(new LoggedAction(0, user, "date2", "record2")); //just to test i can retrieve a log
     }
 
     @AfterEach
