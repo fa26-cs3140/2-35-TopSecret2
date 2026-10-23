@@ -91,8 +91,12 @@ public class UserManager {
     }
 
     User getUserByID(int userID) {
-        // TODO: Implement user fetch
-        return null;
+        try {
+            User retrievedUser = dataStore.getUser(userID);
+            return retrievedUser;
+        } catch (RuntimeException e) {
+            return null;
+        }
     }
 
     boolean verifyLogin(String username, String Password) {
