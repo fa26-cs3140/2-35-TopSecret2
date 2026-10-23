@@ -1,9 +1,6 @@
 Data Store UI Integration Test
 ---------------------------------
 
-searchMissionsFindsRealMission
-Search finds a real row imported through the database
-
 listEntriesAsksRealStore
 Listing briefs will access and display real store
 

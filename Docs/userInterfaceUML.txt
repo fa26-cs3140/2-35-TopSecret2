@@ -18,7 +18,6 @@ UserInterface
 -addEntry(String): void
 -reviewAuditLog(): void
 -changePassword(): void
--searchMissions(): void
 
 The user interface displays and holds all the control logic for the program, after login
 all information is routed to the other classes, which return values which the UI displays
@@ -46,5 +45,3 @@ CreateUser() prompts for a new username and passes it to accounts
 manageAccess() lists all existing users and prompts for promote/demote and user and passes to accounts
 
 reviewAuditLog() prints all audits, returned from audit log
-
-SearchMissions prompts for string and passes to Search

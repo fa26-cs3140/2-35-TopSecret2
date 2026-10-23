@@ -61,8 +61,8 @@ Promote path calls access.promoteUser with the current admin and target
 manageAccessDemotesUser
 Demote path calls access.demoteUser; a false result prints "Not allowed."
 
-searchMissionsFindsMatch
-Search runs against the store and prints matching missions
+listEntriesPrintsAllAgents
+Listing entries option prints all agents
 
 browseMenuListsThenBack
 Type menu option 1 lists entries and option 4 goes back

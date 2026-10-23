@@ -1,24 +1,33 @@
-TopSecret
+opSecret
 
-TopSecret is an interactive command-line utility for securely accessing and searching secret mission briefs stored in a SQLite database.
-It provides an authenticated interface for browsing mission records, viewing brief contents, and searching for specific words or phrases.
+TopSecret is an interactive command-line utility for storing and reviewing secret
+mission data -- briefs, agents, and facilities -- in a SQLite database.
+It supports multiple user accounts with standard and admin access levels, and it
+keeps an audit log of every record that is read or created.
 
 Features:
-    Authenticates users with a username and password
-    Supports creating credentials on the first run and changing passwords
-    Stores mission briefs in a SQLite database
-    Lists available mission briefs with corresponding numbers
-    Displays the contents of a selected mission brief
-    Searches mission briefs by word or phrase, ignoring case
-    Returns a message when no search matches are found
-    Provides an interactive menu that remains active until the user exits
-    Supports encrypted credential files using the default cipher key
-    Supports an alternate cipher key when specified
+    Supports multiple user accounts
+    The first account created is automatically an admin; later accounts are
+        standard users by default
+    Admins can create entries, create new users, promote or demote users,
+        and review the audit log
+    Standard users can browse and read entries and change their own password
+    Users only see the menu options they have access to
+    Browse, list, and read briefs, agents, and facilities; admins can add
+        new entries, which are immediately visible in the lists
+    Every read and create is written to an audit log stored in the database,
+        recording the user, the action, the record, and the time
+    Passwords are stored ciphered in a credentials file; only the account
+        owner can set or change their password
+    Usernames must be at least 3 characters and may contain letters, numbers,
+        hyphens, and underscores
+    Passwords must be at least 5 characters and include uppercase and
+        lowercase letters
     Runs through Gradle or as a standalone JAR
 
 Requirements:
     Java
-    Gradle
+    Gradle (the Gradle wrapper is included)
 
 Usage
     Run with Gradle
@@ -28,48 +37,63 @@ Usage
         .\gradlew run
 
     Run the JAR
+        ./gradlew build
         java -jar TopSecret.jar
 
+    First run:
+        If no accounts exist, the program prompts you to create the first
+        account (username, then a new password entered twice). This first
+        account is an admin. Users created later by an admin set their own
+        password the first time they log in.
 
+    Main menu:
+        1. Browse briefs
+        2. Browse agents
+        3. Browse facilities
+        4. Change Password
+        5. Create a new user        (admin only)
+        6. Promote or Demote users   (admin only)
+        7. Review audit log          (admin only)
+        8. Exit
 
-    Options:
-        1. Run the program without arguments to display the available options:
-            Available Options:
+        Admin-only options are not shown to standard users.
 
-            1. List missions
-            2. Search missions
-            3. View mission
-            4. Change password
-            5. Exit
-            ------------------------------
-        *. enter option number 1 to list the missions.
-        *. enter option number 2 to search for a particular phrase in the mission briefs
-        *. enter option number 3 to view a mission by entering the Id in the following prompt
-        *. enter option number 4 to change password
+    Browse menu (for each of briefs, agents, facilities):
+        1. List entries
+        2. Read an entry by ID
+        3. Add an entry              (admin only)
+        4. Back
 
-        *. enter option number 5 to exit program
-
-
-
+    Record properties:
+        Briefs:     title, date, text
+        Agents:     name, date of birth, date of death, notes
+        Facilities: name, abbreviation
 
 Project Structure:
-    Mission briefs are stored in a SQLite database, initialized automatically if it does not exist.
-    User credentials are stored in a separate encrypted .cip file
-    Cipher keys are stored in the ciphers directory:  src/main/resources/ciphers
-    documentations are stored in the Docs directory at the project level
-    Tests are in src/test/java/
-
+    Source code is in src/main/java/ and tests are in src/test/java/
+    Briefs, agents, facilities, users, and audit log records are stored in a
+        SQLite database, created automatically on first run and seeded with
+        the sample dataset in src/main/resources/dataset/
+    User passwords are stored ciphered in credentials.cip in the working
+        directory, using the cipher key in src/main/resources/ciphers/
+    Admin and standard roles are stored in roles.txt in the working
+        directory, so promotions and demotions persist between runs
+    Documentation is in the docs directory, including team.txt (team members,
+        roles, and GitHub IDs), the system UML class diagram, and the
+        database ERD
 
 Testing:
-    The project uses JUnit for automated unit testing.
+    The project uses JUnit and Mockito for unit tests and integration tests.
 
     Run the test suite with:
         ./gradlew test
+
+    On Windows:
+        .\gradlew test
 
 Build:
     Create the JAR with:
         ./gradlew build
 
-    The generated JAR can then be run using:
+    The generated JAR contains all dependencies and can then be run using:
         java -jar TopSecret.jar
-

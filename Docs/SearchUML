@@ -1,6 +1,0 @@
-Search
------------------------------------------------------
-- dataStore: DataStoreInterface
------------------------------------------------------
-+ Search(dataStoreObj: DataStoreInterface)
-+ search(phrase: String): List<Mission>
