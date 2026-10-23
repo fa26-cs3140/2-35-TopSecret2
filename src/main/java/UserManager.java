@@ -103,9 +103,30 @@ public class UserManager {
         }
     }
 
-    boolean verifyLogin(String username, String Password) {
-        // TODO: Implement credential check
-        return true;
+    boolean verifyLogin(String username, String password){
+        List<String> credentialLines = fileHandler.getFileLinesList(
+                "credentials.cip",
+                FileHandler.FileTypes.DATA);
+
+        for (int currLineIdx = 0;
+             currLineIdx < credentialLines.size();
+             currLineIdx++) {
+            String currLine = credentialLines.get(currLineIdx);
+
+            if (currLine.startsWith("username" + ":")) {
+                String[] splitLine = currLine.split(":");
+
+                if (splitLine.length == 2) {
+                    if (splitLine[0].equals(username) & splitLine[1].equals(password)) {
+                        return true;
+                    } else {
+                        return false;
+                    }
+                }
+            }
+        }
+
+        return false;
     }
 
     void changePassword(String username, String newPassword1, String newPasswordConfirmation) {
@@ -130,6 +151,7 @@ public class UserManager {
                 }
             }
         }
+
         return true;
     }
 
