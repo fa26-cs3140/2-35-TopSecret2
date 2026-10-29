@@ -1,0 +1,13 @@
+Package: controller
+---------------------------------------------
+Controller implements ControllerInterface
+------------------------------------------------
+-users: UserManagerInterface
+-access: AccessControlInterface
+-store: DataStoreInterface
+-audit: AuditLogInterface
+-messages: MessageInterface
+------------------------------
++Controller(users: UserManagerInterface, access: AccessControlInterface, store: DataStoreInterface, audit: AuditLogInterface, messages: MessageInterface)
+[Everything else from ControllerInterface]
+------------------------------
