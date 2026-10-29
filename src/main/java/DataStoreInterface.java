@@ -5,6 +5,49 @@ public interface DataStoreInterface {
 
     Mission getMission(int id);
 
+    /**
+     * assigns an agent to a mission (joint operations: an agent may be on many missions,
+     * and may come from any facility)
+     *
+     * @param agentID   id of the agent to assign
+     * @param missionID id of the mission to assign the agent to
+     * @throws IllegalArgumentException when the agent or mission does not exist, or the agent is already assigned to the mission
+     */
+    void assignAgentToMission(int agentID, int missionID);
+
+    /**
+     * removes an agent's assignment to a mission
+     *
+     * @param agentID   id of the agent to unassign
+     * @param missionID id of the mission to remove the agent from
+     * @throws IllegalArgumentException when the agent is not assigned to the mission
+     */
+    void unassignAgentFromMission(int agentID, int missionID);
+
+    /**
+     * get every mission a given agent is assigned to
+     *
+     * @param agentID id of the agent
+     * @return {@code List<Mission>}, empty if the agent has no missions
+     */
+    List<Mission> listMissionsForAgent(int agentID);
+
+    /**
+     * get every agent assigned to a given mission, regardless of the agent's facility
+     *
+     * @param missionID id of the mission
+     * @return {@code List<Agent>}, empty if the mission has no agents
+     */
+    List<Agent> listAgentsForMission(int missionID);
+
+    /**
+     * get every brief belonging to a given mission
+     *
+     * @param missionID id of the mission
+     * @return {@code List<Brief>}, empty if the mission has no briefs
+     */
+    List<Brief> listBriefsForMission(int missionID);
+
 
     void initDatabase();
 

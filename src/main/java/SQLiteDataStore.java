@@ -919,5 +919,29 @@ public class SQLiteDataStore implements DataStoreInterface, AutoCloseable {
 
         return null;
     }
+    @Override
+    public void assignAgentToMission(int agentID, int missionID) {
+        throw new UnsupportedOperationException("Not implemented yet");
+    }
+
+    @Override
+    public void unassignAgentFromMission(int agentID, int missionID) {
+        throw new UnsupportedOperationException("Not implemented yet");
+    }
+
+    @Override
+    public List<Mission> listMissionsForAgent(int agentID) {
+        throw new UnsupportedOperationException("Not implemented yet");
+    }
+
+    @Override
+    public List<Agent> listAgentsForMission(int missionID) {
+        throw new UnsupportedOperationException("Not implemented yet");
+    }
+
+    @Override
+    public List<Brief> listBriefsForMission(int missionID) {
+        throw new UnsupportedOperationException("Not implemented yet");
+    }
 
 }
