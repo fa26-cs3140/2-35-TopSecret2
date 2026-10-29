@@ -9,9 +9,14 @@ SQLiteDataStore
 + initDatabase(): void
 + importDatasetTsv(fileName: String, table: String): void
 + close(): void
-+ addMission(mission: Mission): void
++ addMission(mission: Mission): Mission
 + listMissions(): List<Mission>
 + getMission(id: int): Mission
++ assignAgentToMission(agentID: int, missionID: int): void
++ unassignAgentFromMission(agentID: int, missionID: int): void
++ listMissionsForAgent(agentID: int): List<Mission>
++ listAgentsForMission(missionID: int): List<Agent>
++ listBriefsForMission(missionID: int): List<Brief>
 + listAgents(): List<Agent>
 + getAgent(id: int): Agent
 + addAgent(agent: Agent): Agent
@@ -23,8 +28,8 @@ SQLiteDataStore
 + addBrief(brief: Brief): Brief
 + listLogs(): List<LoggedAction>
 + listLogs(userID: int): List<LoggedAction>
-+ addLog(log: LoggedAction): void
++ addLog(log: LoggedAction): LoggedAction
 + listUsers(): List<User>
 + getUser(userID: int): User
-+ addUser(user: User): void
++ addUser(user: User): User
 - importTsvReader(reader: BufferedReader, table: String): void
