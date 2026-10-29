@@ -1,4 +1,5 @@
-import model.FileHandler;
+package model;
+
 import org.junit.jupiter.api.Test;
 
 import java.io.File;

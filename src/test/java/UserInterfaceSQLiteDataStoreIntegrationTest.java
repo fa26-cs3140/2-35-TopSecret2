@@ -15,7 +15,7 @@ import org.junit.jupiter.api.io.TempDir;
 
 // Member B (Sebastian) -- HW5 integration tests: UI + data store.
 // Uses C's REAL model.SQLiteDataStore on a throwaway test database (@TempDir,
-// the pattern from C's SQLiteDataStoreTest). The user manager, access
+// the pattern from C's model.SQLiteDataStoreTest). The user manager, access
 // control and audit log are Mockito mocks; their UI integrations live in
 // their own test files.
 public class UserInterfaceSQLiteDataStoreIntegrationTest {

@@ -51,8 +51,8 @@ changePasswordRejectsUnknownUser
 An unknown user throws TopSecretException
 
 Notes:
-Code: UserManagerTest.java.
-Run: .\gradlew test --tests "UserManagerTest"
+Code: model.UserManagerTest.java.
+Run: .\gradlew test --tests "model.UserManagerTest"
 The store is a Mockito mock backed by a real list. Passwords use the
 real credentials.cip in the working directory, deleted before and
 after each test.
