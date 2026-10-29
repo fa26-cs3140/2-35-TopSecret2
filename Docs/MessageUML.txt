@@ -1,0 +1,8 @@
+Message
+
+contents: String
+recipient: User
+—————————
++Message(recipient: User, contents: String)
++getMessageContents(): String
++getRecipient(): User
