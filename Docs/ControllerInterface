@@ -1,0 +1,21 @@
+Package: Controller
+-----------------------
+Controller Interface
+----------------------
++hasUsers(): boolean
++verifyLogin(String username, String password): boolean
++needsPasswordSetup(String username): boolean
++createFirstAccount(String username, String pass1, String passConfirm): String
++changePassword(String username, String pass1, String passConfirm): String
++createUser(String adminUser, String newUser): String
++manageAccess(String adminUser, String targetUser, String action): String
++isAdmin(String username): boolean
++showMainMenu(String username): String
++browseMainMenu(String username, String itemType): string
++listEntries(String username, String itemType): string
++readEntry(String username, String itemType, int id): string
++addEntry(String username, String, String<> fields): string
++reviewAuditLog(String username): String
++assignAgentToMission(String username, Int agentID, Int missionID): String
++sendMessage(String username, String agentName, String message): String
++viewMessages(String username): String
