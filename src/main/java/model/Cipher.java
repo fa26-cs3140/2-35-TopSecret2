@@ -1,3 +1,5 @@
+package model;
+
 import java.util.HashMap;
 import java.util.ArrayList;
 import java.util.Map;
@@ -14,7 +16,7 @@ public class Cipher {
 
         // Cannot decipher without a key
         if (keyLines == null) {
-            throw new TopSecretException("Cipher key does not exist");
+            throw new TopSecretException("model.Cipher key does not exist");
         }
 
         // Valid key should have 2 lines

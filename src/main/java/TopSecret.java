@@ -1,3 +1,5 @@
+import model.*;
+
 import java.util.HashSet;
 import java.util.Set;
 import java.nio.file.Paths;

@@ -1,9 +1,11 @@
+package model;
+
 public class Mission {
     private int missionID, facilityID;
     private String title;
 
     /**
-     * for creation of a new Mission.
+     * for creation of a new model.Mission.
      *
      * @param title
      * @param facilityID

@@ -1,3 +1,5 @@
+package model;
+
 public class Facility {
     private int facilityID;
     private String name, abbreviation;

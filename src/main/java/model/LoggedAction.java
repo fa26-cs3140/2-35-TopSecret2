@@ -1,3 +1,5 @@
+package model;
+
 public class LoggedAction {
     // Action constants
     public static final int READ = 0;

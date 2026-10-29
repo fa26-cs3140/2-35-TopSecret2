@@ -1,6 +1,7 @@
+import model.*;
+
 import java.time.LocalDateTime;
 import java.util.Scanner;
-import java.util.List;
 
 // Command-line interface for TopSecret.
 public class UserInterface implements UserInterfaceInterface {
@@ -64,7 +65,7 @@ public class UserInterface implements UserInterfaceInterface {
                 return false;
             }
         }
-        System.out.print("Enter your username:"); //User enters username
+        System.out.print("Enter your username:"); //model.User enters username
         String username = sc.hasNextLine() ? sc.nextLine() : null;
         if (username == null){
             return false;
@@ -259,7 +260,7 @@ public class UserInterface implements UserInterfaceInterface {
     public void addEntry(String itemType) {
         try{
             if (itemType.equals("briefs")){
-                System.out.print("Mission ID: ");
+                System.out.print("model.Mission ID: ");
                 String id = sc.hasNextLine() ? sc.nextLine() : null;
                 System.out.print("Title: ");
                 String title = sc.hasNextLine() ? sc.nextLine() : null;
@@ -275,9 +276,9 @@ public class UserInterface implements UserInterfaceInterface {
                 audit.log(new LoggedAction(LoggedAction.CREATE, currentUserObj,
                         LocalDateTime.now().toString(), "briefs " + newBrief.getBriefID()));
             } else if (itemType.equals("agents")){
-                System.out.print("Mission ID: ");
+                System.out.print("model.Mission ID: ");
                 String mid = sc.hasNextLine() ? sc.nextLine() : null;
-                System.out.print("Facility ID: ");
+                System.out.print("model.Facility ID: ");
                 String fid = sc.hasNextLine() ? sc.nextLine() : null;
                 System.out.print("Name: ");
                 String name = sc.hasNextLine() ? sc.nextLine() : null;

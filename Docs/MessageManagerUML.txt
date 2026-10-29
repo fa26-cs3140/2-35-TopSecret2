@@ -1,6 +1,6 @@
 MessageManager
 
-+MessageManager(userAccess: UserManagerInterface, dataStore: DataStoreInterface)
++MessageManager(userAccess: model.UserManagerInterface, dataStore: model.DataStoreInterface)
 
 +createMessage(message: Message)
-+retrieveMessages(user: User): List<Message>
++retrieveMessages(user: model.User): List<Message>

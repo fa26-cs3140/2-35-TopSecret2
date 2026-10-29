@@ -1,4 +1,4 @@
-UserManager Tests
+model.UserManager Tests
 -----------------
 Unit Tests:
 

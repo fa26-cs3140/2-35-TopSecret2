@@ -1,4 +1,4 @@
-UserManager and UI integration tests
+model.UserManager and UI integration tests
 --------------------------------------
 firstRunCreatesUserAndExits
 First run creates the account through UI and exits cleanly

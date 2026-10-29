@@ -1,3 +1,5 @@
+package model;
+
 public interface AccessControlInterface {
 
     boolean isAdmin(String username);

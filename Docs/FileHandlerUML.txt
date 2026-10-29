@@ -1,4 +1,4 @@
-FileHandler
+model.FileHandler
 -----------------
 -----------------
 + getFileLinesList(fileName:String, fileType:fileTypes):ArrayList<String>

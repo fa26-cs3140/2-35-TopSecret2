@@ -1,4 +1,4 @@
-User Interface Audit Log Integration Tests
+model.User Interface Audit Log Integration Tests
 --------------------------------------
 readEntryLogsReadAction
 reading a brief stores a READ logged action for the item

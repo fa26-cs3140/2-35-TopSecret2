@@ -1,13 +1,13 @@
-Class: AccessControl
+Class: model.AccessControl
 
-Implements: AccessControlInterface
+Implements: model.AccessControlInterface
 
 Fields:
 - admins: Set<String>
 - users: Set<String>
 
 Constructor:
-+ AccessControl(admins: Set<String>, users: Set<String>)
++ model.AccessControl(admins: Set<String>, users: Set<String>)
 
 Methods:
 + isAdmin(username: String): boolean

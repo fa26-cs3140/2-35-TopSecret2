@@ -1,14 +1,14 @@
-Scenario: testAgent1 | User creates an agent with an explicit agent ID
-GIVEN user creates an Agent with agent ID 1, mission ID 2, facility ID 3, name "Jack Williams", date of birth "1998-05-01", date of death "2022-11-12", and notes "sample notes1"
-WHEN the Agent object is initialized
+Scenario: testAgent1 | model.User creates an agent with an explicit agent ID
+GIVEN user creates an model.Agent with agent ID 1, mission ID 2, facility ID 3, name "Jack Williams", date of birth "1998-05-01", date of death "2022-11-12", and notes "sample notes1"
+WHEN the model.Agent object is initialized
 THEN the agent contains the expected agent ID, mission ID, facility ID, name, date of birth, date of death, and notes
 
-Scenario: testAgent2 | User creates an agent without an explicit agent ID
-GIVEN user creates an Agent with mission ID 2, facility ID 3, name "Jack Williams", date of birth "1998-05-01", date of death "2022-11-12", and notes "sample notes1"
-WHEN the Agent object is initialized
+Scenario: testAgent2 | model.User creates an agent without an explicit agent ID
+GIVEN user creates an model.Agent with mission ID 2, facility ID 3, name "Jack Williams", date of birth "1998-05-01", date of death "2022-11-12", and notes "sample notes1"
+WHEN the model.Agent object is initialized
 THEN the agent's ID is -1, and it contains the expected mission ID, facility ID, name, date of birth, date of death, and notes
 
-Scenario: testAgent3 | User creates multiple agents with different details
-GIVEN user creates two Agent objects with different IDs, names, dates of birth, dates of death, and notes
-WHEN both Agent objects are initialized
+Scenario: testAgent3 | model.User creates multiple agents with different details
+GIVEN user creates two model.Agent objects with different IDs, names, dates of birth, dates of death, and notes
+WHEN both model.Agent objects are initialized
 THEN each agent contains its own expected agent ID, name, date of birth, date of death, and notes independently

@@ -1,3 +1,5 @@
+package model;
+
 import java.util.List;
 
 public interface DataStoreInterface {
@@ -28,7 +30,7 @@ public interface DataStoreInterface {
      * get every mission a given agent is assigned to
      *
      * @param agentID id of the agent
-     * @return {@code List<Mission>}, empty if the agent has no missions
+     * @return {@code List<model.Mission>}, empty if the agent has no missions
      */
     List<Mission> listMissionsForAgent(int agentID);
 
@@ -36,7 +38,7 @@ public interface DataStoreInterface {
      * get every agent assigned to a given mission, regardless of the agent's facility
      *
      * @param missionID id of the mission
-     * @return {@code List<Agent>}, empty if the mission has no agents
+     * @return {@code List<model.Agent>}, empty if the mission has no agents
      */
     List<Agent> listAgentsForMission(int missionID);
 
@@ -44,7 +46,7 @@ public interface DataStoreInterface {
      * get every brief belonging to a given mission
      *
      * @param missionID id of the mission
-     * @return {@code List<Brief>}, empty if the mission has no briefs
+     * @return {@code List<model.Brief>}, empty if the mission has no briefs
      */
     List<Brief> listBriefsForMission(int missionID);
 
@@ -62,23 +64,23 @@ public interface DataStoreInterface {
     Mission addMission(Mission mission);
 
     /**
-     * query database to get all agents and return them as {@code List<Agent>}
+     * query database to get all agents and return them as {@code List<model.Agent>}
      *
-     * @return List<Agent>
+     * @return List<model.Agent>
      */
     List<Agent> listAgents();
 
     /**
-     * query database to get all facilites and return them as {@code List<Facility>}
+     * query database to get all facilites and return them as {@code List<model.Facility>}
      *
-     * @return List<Facility>
+     * @return List<model.Facility>
      */
     List<Facility> listFacilities();
 
     /**
-     * query database to get all Briefs and return them as {@code List<Brief>}
+     * query database to get all Briefs and return them as {@code List<model.Brief>}
      *
-     * @return List<Brief>
+     * @return List<model.Brief>
      */
     List<Brief> listBriefs();
 
@@ -86,31 +88,31 @@ public interface DataStoreInterface {
      * get an agent from database by id
      *
      * @param id the id of the agent to get
-     * @return Agent object representing the queried Agent null if no agent found
+     * @return model.Agent object representing the queried model.Agent null if no agent found
      */
     Agent getAgent(int id);
 
     /**
-     * get a Facility from database by id
+     * get a model.Facility from database by id
      *
-     * @param id the id of the Facility to get
-     * @return Facility object representing the queried Facility null if no Facility found
+     * @param id the id of the model.Facility to get
+     * @return model.Facility object representing the queried model.Facility null if no model.Facility found
      */
     Facility getFacility(int id);
 
     /**
-     * get a Brief from database by id
+     * get a model.Brief from database by id
      *
-     * @param id the id of the Brief to get
-     * @return Brief object representing the queried Brief null if no Brief found
+     * @param id the id of the model.Brief to get
+     * @return model.Brief object representing the queried model.Brief null if no model.Brief found
      */
     Brief getBrief(int id);
 
     /**
-     * adds an Agent to the database, the agentID will be ignored and automatically assigned by the database
+     * adds an model.Agent to the database, the agentID will be ignored and automatically assigned by the database
      *
      * @param agent
-     * @return the final Agent representation in the database
+     * @return the final model.Agent representation in the database
      */
     Agent addAgent(Agent agent);
 
@@ -118,12 +120,12 @@ public interface DataStoreInterface {
      * add a facility to the database, the facilityID will be ignored and automatically assigned by the database
      *
      * @param facility
-     * @return the final Facility entry representation in the database
+     * @return the final model.Facility entry representation in the database
      */
     Facility addFacility(Facility facility);
 
     /**
-     * add a Brief to the database, the briefID will be ignored and automatically assigned by the database
+     * add a model.Brief to the database, the briefID will be ignored and automatically assigned by the database
      *
      * @param brief
      * @return the final Bief entry representation in the database
@@ -134,7 +136,7 @@ public interface DataStoreInterface {
     /**
      * gets the list of logs from database
      *
-     * @return {@code List<LoggedAction>}
+     * @return {@code List<model.LoggedAction>}
      */
     List<LoggedAction> listLogs();
 
@@ -142,7 +144,7 @@ public interface DataStoreInterface {
      * return the list of logs for a given userID from the database
      *
      * @param userID user id of the desired user for users table in Database
-     * @return {@code List<LoggedAction>}
+     * @return {@code List<model.LoggedAction>}
      */
     List<LoggedAction> listLogs(int userID);
 
@@ -165,12 +167,12 @@ public interface DataStoreInterface {
      * get the user from database with the given user_ID
      *
      * @param userID
-     * @return User or null if it does not exist
+     * @return model.User or null if it does not exist
      */
     User getUser(int userID);
 
     /**
-     * add a User to DB
+     * add a model.User to DB
      *
      * @param user
      */

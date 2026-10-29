@@ -6,14 +6,17 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
+import model.DataStoreInterface;
+import model.User;
+import model.UserManager;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-// Member D (Jaime) -- HW5 unit tests: UserManager.
+// Member D (Jaime) -- HW5 unit tests: model.UserManager.
 // The store is a Mockito mock backed by a real list, so user records
 // behave like the database without touching one. Passwords use the
-// real credentials.cip in the working directory (the UserManager
+// real credentials.cip in the working directory (the model.UserManager
 // design), deleted before and after each test so nothing leaks.
 class UserManagerTest {
 

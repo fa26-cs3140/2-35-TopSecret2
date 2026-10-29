@@ -1,35 +1,35 @@
-SQLiteDataStore
+model.SQLiteDataStore
 -----------------------------------------------------
 - DATABASE_URL: String {static, final}
 - databaseUrl: String
 - connection: Connection
 -----------------------------------------------------
-+ SQLiteDataStore()
-- SQLiteDataStore(databaseUrl: String)
++ model.SQLiteDataStore()
+- model.SQLiteDataStore(databaseUrl: String)
 + initDatabase(): void
 + importDatasetTsv(fileName: String, table: String): void
 + close(): void
-+ addMission(mission: Mission): Mission
-+ listMissions(): List<Mission>
-+ getMission(id: int): Mission
++ addMission(mission: model.Mission): model.Mission
++ listMissions(): List<model.Mission>
++ getMission(id: int): model.Mission
 + assignAgentToMission(agentID: int, missionID: int): void
 + unassignAgentFromMission(agentID: int, missionID: int): void
-+ listMissionsForAgent(agentID: int): List<Mission>
-+ listAgentsForMission(missionID: int): List<Agent>
-+ listBriefsForMission(missionID: int): List<Brief>
-+ listAgents(): List<Agent>
-+ getAgent(id: int): Agent
-+ addAgent(agent: Agent): Agent
-+ listFacilities(): List<Facility>
-+ getFacility(id: int): Facility
-+ addFacility(facility: Facility): Facility
-+ listBriefs(): List<Brief>
-+ getBrief(id: int): Brief
-+ addBrief(brief: Brief): Brief
-+ listLogs(): List<LoggedAction>
-+ listLogs(userID: int): List<LoggedAction>
-+ addLog(log: LoggedAction): LoggedAction
-+ listUsers(): List<User>
-+ getUser(userID: int): User
-+ addUser(user: User): User
++ listMissionsForAgent(agentID: int): List<model.Mission>
++ listAgentsForMission(missionID: int): List<model.Agent>
++ listBriefsForMission(missionID: int): List<model.Brief>
++ listAgents(): List<model.Agent>
++ getAgent(id: int): model.Agent
++ addAgent(agent: model.Agent): model.Agent
++ listFacilities(): List<model.Facility>
++ getFacility(id: int): model.Facility
++ addFacility(facility: model.Facility): model.Facility
++ listBriefs(): List<model.Brief>
++ getBrief(id: int): model.Brief
++ addBrief(brief: model.Brief): model.Brief
++ listLogs(): List<model.LoggedAction>
++ listLogs(userID: int): List<model.LoggedAction>
++ addLog(log: model.LoggedAction): model.LoggedAction
++ listUsers(): List<model.User>
++ getUser(userID: int): model.User
++ addUser(user: model.User): model.User
 - importTsvReader(reader: BufferedReader, table: String): void

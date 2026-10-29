@@ -7,13 +7,14 @@ import java.io.InputStream;
 import java.io.PrintStream;
 import java.nio.file.Path;
 
+import model.*;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
 // Member B (Sebastian) -- HW5 integration tests: UI + data store.
-// Uses C's REAL SQLiteDataStore on a throwaway test database (@TempDir,
+// Uses C's REAL model.SQLiteDataStore on a throwaway test database (@TempDir,
 // the pattern from C's SQLiteDataStoreTest). The user manager, access
 // control and audit log are Mockito mocks; their UI integrations live in
 // their own test files.

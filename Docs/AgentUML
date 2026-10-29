@@ -1,4 +1,4 @@
-Agent
+model.Agent
 -----------------------------------------------------
 - agentID: int
 - facilityID: int
@@ -8,9 +8,9 @@ Agent
 - date_of_death: String
 - notes: String
 -----------------------------------------------------
-+ Agent(missionID: Integer, facilityID: int, name: String,
++ model.Agent(missionID: Integer, facilityID: int, name: String,
         date_of_birth: String, date_of_death: String, notes: String)
-+ Agent(agentID: int, missionID: Integer, facilityID: int, name: String,
++ model.Agent(agentID: int, missionID: Integer, facilityID: int, name: String,
         date_of_birth: String, date_of_death: String, notes: String)
 + getFacilityID(): int
 + getMissionID(): Integer

@@ -1,4 +1,4 @@
-Access controller User Interface Integration Tests
+Access controller model.User Interface Integration Tests
 ----------------------------------------------
 adminSeesAdminOptions
 Real isAdmin = true shows the admin options

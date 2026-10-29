@@ -1,4 +1,4 @@
-Brief
+model.Brief
 -----------------------------------------------------
 - briefID: int
 - missionID: int
@@ -6,8 +6,8 @@ Brief
 - date: String
 - content: String
 -----------------------------------------------------
-+ Brief(missionID: int, title: String, date: String, content: String)
-+ Brief(briefID: int, missionID: int, title: String, date: String, content: String)
++ model.Brief(missionID: int, title: String, date: String, content: String)
++ model.Brief(briefID: int, missionID: int, title: String, date: String, content: String)
 + getContent(): String
 + getDate(): String
 - setDate(date: String): void

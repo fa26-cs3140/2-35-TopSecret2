@@ -1,15 +1,13 @@
+package model;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.sql.*;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class SQLiteDataStore implements DataStoreInterface, AutoCloseable {
 
@@ -263,7 +261,7 @@ public class SQLiteDataStore implements DataStoreInterface, AutoCloseable {
      * adds a new mission to DB
      *
      * @param mission
-     * @return the created Mission
+     * @return the created model.Mission
      * @throws IllegalArgumentException when facility does not exist in DB
      */
     @Override
@@ -295,15 +293,15 @@ public class SQLiteDataStore implements DataStoreInterface, AutoCloseable {
 
         } catch (SQLException e) {
             throw new IllegalArgumentException(
-                    "Failed to add mission. Facility may not exist", e);
+                    "Failed to add mission. model.Facility may not exist", e);
         }
     }
 
 
     /**
-     * query database to get all agents and return them as {@code List<Agent>}
+     * query database to get all agents and return them as {@code List<model.Agent>}
      *
-     * @return List<Agent>
+     * @return List<model.Agent>
      */
     @Override
     public List<Agent> listAgents() {
@@ -340,9 +338,9 @@ public class SQLiteDataStore implements DataStoreInterface, AutoCloseable {
     }
 
     /**
-     * query database to get all facilites and return them as {@code List<Facility>}
+     * query database to get all facilites and return them as {@code List<model.Facility>}
      *
-     * @return List<Facility>
+     * @return List<model.Facility>
      */
     @Override
     public List<Facility> listFacilities() {
@@ -373,9 +371,9 @@ public class SQLiteDataStore implements DataStoreInterface, AutoCloseable {
     }
 
     /**
-     * query database to get all Briefs and return them as {@code List<Brief>}
+     * query database to get all Briefs and return them as {@code List<model.Brief>}
      *
-     * @return List<Brief>
+     * @return List<model.Brief>
      */
     @Override
     public List<Brief> listBriefs() {
@@ -409,10 +407,10 @@ public class SQLiteDataStore implements DataStoreInterface, AutoCloseable {
 
 
     /**
-     * get an Agent from database by id.
+     * get an model.Agent from database by id.
      *
-     * @param id the id of the Agent to get
-     * @return Agent object representing the queried Agent null if no Agent found
+     * @param id the id of the model.Agent to get
+     * @return model.Agent object representing the queried model.Agent null if no model.Agent found
      *
      */
     @Override
@@ -449,10 +447,10 @@ public class SQLiteDataStore implements DataStoreInterface, AutoCloseable {
     }
 
     /**
-     * get a Facility from database by id
+     * get a model.Facility from database by id
      *
-     * @param id the id of the Facility to get
-     * @return Facility object representing the queried Facility null if no Facility found
+     * @param id the id of the model.Facility to get
+     * @return model.Facility object representing the queried model.Facility null if no model.Facility found
      */
     @Override
     public Facility getFacility(int id) {
@@ -482,10 +480,10 @@ public class SQLiteDataStore implements DataStoreInterface, AutoCloseable {
     }
 
     /**
-     * get a Brief from database by id
+     * get a model.Brief from database by id
      *
-     * @param id the id of the Brief to get
-     * @return Brief object representing the queried Brief null if no Brief found
+     * @param id the id of the model.Brief to get
+     * @return model.Brief object representing the queried model.Brief null if no model.Brief found
      */
     @Override
     public Brief getBrief(int id) {
@@ -517,10 +515,10 @@ public class SQLiteDataStore implements DataStoreInterface, AutoCloseable {
     }
 
     /**
-     * adds an Agent to the database, the agentID will be ignored and automatically assigned by the database
+     * adds an model.Agent to the database, the agentID will be ignored and automatically assigned by the database
      *
      * @param agent
-     * @return the final Agent representation in the database
+     * @return the final model.Agent representation in the database
      * @throws IllegalArgumentException when mission or facility may not exist, or mission's facility does not match agent's facility
      */
     @Override
@@ -561,7 +559,7 @@ public class SQLiteDataStore implements DataStoreInterface, AutoCloseable {
 
         } catch (SQLException e) {
             throw new IllegalArgumentException(
-                    "Failed to add Agent. Mission or facility may not exist, "
+                    "Failed to add model.Agent. model.Mission or facility may not exist, "
                             + "or mission's facility does not match agent's facility", e);
         }
     }
@@ -570,7 +568,7 @@ public class SQLiteDataStore implements DataStoreInterface, AutoCloseable {
      * add a facility to the database, the facilityID will be ignored and automatically assigned by the database
      *
      * @param facility
-     * @return the final Facility entry representation in the database
+     * @return the final model.Facility entry representation in the database
      * @throws IllegalArgumentException when facility name or abbreviation already exists
      */
     @Override
@@ -602,12 +600,12 @@ public class SQLiteDataStore implements DataStoreInterface, AutoCloseable {
 
         } catch (SQLException e) {
             throw new IllegalArgumentException(
-                    "Failed to add facility. Facility name or abbreviation already exists", e);
+                    "Failed to add facility. model.Facility name or abbreviation already exists", e);
         }
     }
 
     /**
-     * add a Brief to the database, the briefID will be ignored and automatically assigned by the database
+     * add a model.Brief to the database, the briefID will be ignored and automatically assigned by the database
      *
      * @param brief
      * @return the final Bief entry representation in the database
@@ -646,7 +644,7 @@ public class SQLiteDataStore implements DataStoreInterface, AutoCloseable {
 
         } catch (SQLException e) {
             throw new IllegalArgumentException(
-                    "Failed to add Brief. Mission may not exist", e);
+                    "Failed to add model.Brief. model.Mission may not exist", e);
         }
     }
 
@@ -693,7 +691,7 @@ public class SQLiteDataStore implements DataStoreInterface, AutoCloseable {
      * return the list of logs for a given userID from the database
      *
      * @param userID user id of the desired user for users table in Database
-     * @return {@code List<LoggedAction>}
+     * @return {@code List<model.LoggedAction>}
      */
     @Override
     public List<LoggedAction> listLogs(int userID) {
@@ -731,7 +729,7 @@ public class SQLiteDataStore implements DataStoreInterface, AutoCloseable {
      * Adds a log to the database.
      *
      * @param log the log to add
-     * @return the created LoggedAction
+     * @return the created model.LoggedAction
      * @throws IllegalArgumentException when the user may not exist in the database
      */
     @Override
@@ -753,7 +751,7 @@ public class SQLiteDataStore implements DataStoreInterface, AutoCloseable {
 
         } catch (SQLException e) {
             throw new IllegalArgumentException(
-                    "Failed to add log. User may not exist", e);
+                    "Failed to add log. model.User may not exist", e);
         }
     }
 
@@ -793,7 +791,7 @@ public class SQLiteDataStore implements DataStoreInterface, AutoCloseable {
      * get the user from database with the given user_ID
      *
      * @param userID
-     * @return User or null if it does not exist
+     * @return model.User or null if it does not exist
      */
     @Override
     public User getUser(int userID) {
@@ -823,7 +821,7 @@ public class SQLiteDataStore implements DataStoreInterface, AutoCloseable {
      * Adds a user to the database.
      *
      * @param user the user to add
-     * @return the created User with its generated ID
+     * @return the created model.User with its generated ID
      * @throws IllegalArgumentException when the user may already exist
      */
     @Override
@@ -851,13 +849,13 @@ public class SQLiteDataStore implements DataStoreInterface, AutoCloseable {
 
         } catch (SQLException e) {
             throw new IllegalArgumentException(
-                    "Failed to add user. User may already exist.", e);
+                    "Failed to add user. model.User may already exist.", e);
         }
     }
 
     /**
      * get a list of all missions in DB
-     * @return {@code List<Mission>}
+     * @return {@code List<model.Mission>}
      */
     @Override
     public List<Mission> listMissions() {
@@ -890,7 +888,7 @@ public class SQLiteDataStore implements DataStoreInterface, AutoCloseable {
     /**
      * get the desired mission from DB based on its mission_ID
      * @param id id of the mission
-     * @return the Mission object
+     * @return the model.Mission object
      */
     @Override
     public Mission getMission(int id) {

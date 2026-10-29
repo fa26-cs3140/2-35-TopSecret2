@@ -2,13 +2,13 @@ UserInterface
 ------------------------------
 -scanner: Scanner
 -accounts: UserManagementInterface
--access: AccessControlInterface
--store: DataStoreInterface
--audit: AuditLogInterface
+-access: model.AccessControlInterface
+-store: model.DataStoreInterface
+-audit: model.AuditLogInterface
 -currentUser: String
--currentUserObj: User
+-currentUserObj: model.User
 ------------------------------
-+UserInterface(accounts: UserAccountInterface, store:DataStoreInterface, audit: AuditLogInterface)
++UserInterface(accounts: UserAccountInterface, store:model.DataStoreInterface, audit: model.AuditLogInterface)
 +run(): int
 -loginStep(): boolean
 -showMainMenu(): void

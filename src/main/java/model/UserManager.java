@@ -1,3 +1,5 @@
+package model;
+
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -8,7 +10,7 @@ import java.util.List;
 import java.util.Map;
 
 // Member D (Jaime) -- HW5 user accounts.
-// User records live in the database (through C's store); passwords live in
+// model.User records live in the database (through C's store); passwords live in
 // a ciphered file, credentials.cip in the working directory, one ciphered
 // "username:password" line per user -- the HW4 Authentication pattern,
 // extended to multiple users.
@@ -155,7 +157,7 @@ public class UserManager implements UserManagerInterface {
     public void changePassword(String username, String newPassword1,
                                String newPasswordConfirmation) throws TopSecretException {
         if (getUserByUsername(username) == null) {
-            throw new TopSecretException("User does not exist");
+            throw new TopSecretException("model.User does not exist");
         }
         if (newPassword1 == null
                 || !newPassword1.equals(newPasswordConfirmation)) {

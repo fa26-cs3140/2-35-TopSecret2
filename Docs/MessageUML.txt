@@ -1,8 +1,8 @@
 Message
 
 contents: String
-recipient: User
+recipient: model.User
 —————————
-+Message(recipient: User, contents: String)
++Message(recipient: model.User, contents: String)
 +getMessageContents(): String
-+getRecipient(): User
++getRecipient(): model.User

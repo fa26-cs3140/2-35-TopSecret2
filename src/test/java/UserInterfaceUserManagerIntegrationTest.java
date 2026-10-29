@@ -9,17 +9,21 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
+import model.AccessControlInterface;
+import model.AuditLogInterface;
+import model.SQLiteDataStore;
+import model.UserManager;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
 // Member B (Sebastian) -- HW5 integration tests: UI + user accounts.
-// Uses D's REAL UserManager over C's REAL SQLiteDataStore on a throwaway
+// Uses D's REAL model.UserManager over C's REAL model.SQLiteDataStore on a throwaway
 // test database (@TempDir). Passwords go to the real credentials.cip in
-// the working directory (the UserManager design), deleted before and
+// the working directory (the model.UserManager design), deleted before and
 // after each test so no stray file leaks between tests.
-// AccessControl and the audit log are Mockito mocks here; their UI
+// model.AccessControl and the audit log are Mockito mocks here; their UI
 // integrations live in their own test files.
 public class UserInterfaceUserManagerIntegrationTest {
 

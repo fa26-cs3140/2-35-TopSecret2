@@ -1,3 +1,5 @@
+package model;
+
 import java.io.File;
 import java.io.InputStream;
 import java.net.JarURLConnection;

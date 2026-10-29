@@ -1,12 +1,12 @@
-Cipher
+model.Cipher
 ------------------
 -substitutions:HashMap<Character, Character>
 ------------------
-+Cipher(keyFileName: String)
++model.Cipher(keyFileName: String)
 +decipher(cipherText: String):String
 +encipher(plainText: String): String
 A map of character substitutions is stored in the property substitutions.
-This map is filled using a key named keyFileName loaded from FileHandler upon
+This map is filled using a key named keyFileName loaded from model.FileHandler upon
 initialization.
 
 The decipher method accepts a String cipherText and returns a String of
