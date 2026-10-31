@@ -4,5 +4,5 @@ contents: String
 recipient: model.User
 —————————
 +Message(recipient: model.User, contents: String)
-+getMessageContents(): String
++getMessageContent(): String
 +getRecipient(): model.User

@@ -1,0 +1,8 @@
+An object containing a string and its recipient agent (whether or not they have a user account)
+
+Recipient and message string are set in the constructor
+
+Methods:
+
+getRecipient -> Agent - Returns the agent that the message is intended for
+getMessageContent -> String - Returns the actual message string
