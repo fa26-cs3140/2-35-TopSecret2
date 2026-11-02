@@ -11,6 +11,9 @@ public interface View {
     String formatRecord(String title, String record);
 
     // Display errors
+
+
+
     String formatError(String error);
 
 //    /**
