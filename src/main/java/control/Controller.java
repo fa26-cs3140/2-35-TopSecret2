@@ -4,7 +4,6 @@ import java.util.List;
 import model.AccessControlInterface;
 import model.AuditLogInterface;
 import model.DataStoreInterface;
-import model.MessageInterface;
 import model.UserManagerInterface;
 
 // Week-1 stub of the controller. The four one-line delegations
@@ -18,11 +17,11 @@ public class Controller implements ControllerInterface {
     private final AccessControlInterface access;
     private final DataStoreInterface store;
     private final AuditLogInterface audit;
-    private final MessageInterface messages;
+    private final MessageManager messages;
 
     public Controller(UserManagerInterface users, AccessControlInterface access,
                       DataStoreInterface store, AuditLogInterface audit,
-                      MessageInterface messages) {
+                      MessageManager messages) {
         this.users = users;
         this.access = access;
         this.store = store;
