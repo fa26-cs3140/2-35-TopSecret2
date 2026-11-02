@@ -74,7 +74,7 @@ Project Structure:
     Briefs, agents, facilities, users, and audit log records are stored in a
         SQLite database, created automatically on first run and seeded with
         the sample dataset in src/main/resources/dataset/
-    User passwords are stored ciphered in credentials.cip in the working
+    model.User passwords are stored ciphered in credentials.cip in the working
         directory, using the cipher key in src/main/resources/ciphers/
     Admin and standard roles are stored in roles.txt in the working
         directory, so promotions and demotions persist between runs

@@ -1,0 +1,13 @@
+Package: controller
+---------------------------------------------
+controller implements ControllerInterface
+------------------------------------------------
+-users: model.UserManagerInterface
+-access: model.AccessControlInterface
+-store: model.DataStoreInterface
+-audit: model.AuditLogInterface
+-messages: MessageInterface
+------------------------------
++controller(users: model.UserManagerInterface, access: model.AccessControlInterface, store: model.DataStoreInterface, audit: model.AuditLogInterface, messages: MessageInterface)
+[Everything else from ControllerInterface]
+------------------------------

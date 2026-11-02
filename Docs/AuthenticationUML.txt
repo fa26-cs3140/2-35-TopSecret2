@@ -23,7 +23,7 @@ Authentication
 
 The authentication class creates, verifies, and changes login credentials.
 Credentials are stored as ciphered strings in the format "username:password" using the default cipher
-All ciphering is handled by the Cipher class.
+All ciphering is handled by the model.Cipher class.
 
 createCredentials checks for valid inputs (using isValidUsername and isValidPassword)
 then writes the ciphered file with the credentials

@@ -1,24 +1,24 @@
-Scenario: briefTest1 | User creates a brief without an explicit brief ID
-GIVEN user creates a Brief with mission ID 1, title "t1", date "1990-12-30", and content "con1"
-WHEN the Brief object is initialized
+Scenario: briefTest1 | model.User creates a brief without an explicit brief ID
+GIVEN user creates a model.Brief with mission ID 1, title "t1", date "1990-12-30", and content "con1"
+WHEN the model.Brief object is initialized
 THEN the brief's ID is -1, and it contains the expected mission ID, title, date, and content
 
-Scenario: briefTest2 | User creates a brief with an explicit brief ID
-GIVEN user creates a Brief with brief ID 25, mission ID 1, title "t1", date "1990-12-30", and content "con1"
-WHEN the Brief object is initialized
+Scenario: briefTest2 | model.User creates a brief with an explicit brief ID
+GIVEN user creates a model.Brief with brief ID 25, mission ID 1, title "t1", date "1990-12-30", and content "con1"
+WHEN the model.Brief object is initialized
 THEN the brief contains the expected brief ID, mission ID, title, date, and content
 
-Scenario: invalidDateTest | User creates a brief with an invalid date format
-GIVEN user creates a Brief with mission ID 1, title "t1", date "22222-25-30", and content "con1"
-WHEN the Brief object is initialized
+Scenario: invalidDateTest | model.User creates a brief with an invalid date format
+GIVEN user creates a model.Brief with mission ID 1, title "t1", date "22222-25-30", and content "con1"
+WHEN the model.Brief object is initialized
 THEN an IllegalArgumentException is thrown
 
-Scenario: invalidDateTest2 | User creates a brief with a date using slashes instead of hyphens
-GIVEN user creates a Brief with mission ID 1, title "t1", date "1990/12/02", and content "con1"
-WHEN the Brief object is initialized
+Scenario: invalidDateTest2 | model.User creates a brief with a date using slashes instead of hyphens
+GIVEN user creates a model.Brief with mission ID 1, title "t1", date "1990/12/02", and content "con1"
+WHEN the model.Brief object is initialized
 THEN an IllegalArgumentException is thrown
 
-Scenario: validDateTest | User creates a brief with a valid date
-GIVEN user creates a Brief with mission ID 1, title "t1", date "1990-12-02", and content "con1"
-WHEN the Brief object is initialized
+Scenario: validDateTest | model.User creates a brief with a valid date
+GIVEN user creates a model.Brief with mission ID 1, title "t1", date "1990-12-02", and content "con1"
+WHEN the model.Brief object is initialized
 THEN no exception is thrown

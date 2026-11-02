@@ -9,12 +9,13 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
+import model.*;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 // Member B (Sebastian) -- HW5 integration tests: UI + access control.
-// Uses A's REAL AccessControl class (fully implemented), constructed
+// Uses A's REAL model.AccessControl class (fully implemented), constructed
 // with the in-memory 2-arg constructor, so no roles file is touched.
 // The user manager, store and audit log are Mockito mocks; their UI
 // integrations live in their own test files.

@@ -8,13 +8,14 @@ import java.io.PrintStream;
 import java.util.Arrays;
 import java.util.List;
 
+import model.*;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 //Unit tests for the UserInterface
-//Uses mock-ups for UserManagementInterface, AuditLogInterface,
-//AccessControlInterface, DataStoreInterface
+//Uses mock-ups for UserManagementInterface, model.AuditLogInterface,
+//model.AccessControlInterface, model.DataStoreInterface
 //Inputs are scripted via System.setIn
 public class UserInterfaceTest {
 

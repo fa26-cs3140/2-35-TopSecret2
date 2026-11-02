@@ -1,10 +1,10 @@
-Facility
+model.Facility
 -----------------------------------------------------
 - id: int
 - name: String
 - abbreviation: String
 -----------------------------------------------------
-+ Facility(id: int, name: String, abbreviation: String)
++ model.Facility(id: int, name: String, abbreviation: String)
 + getName(): String
 + getAbbreviation(): String
 + getId(): int

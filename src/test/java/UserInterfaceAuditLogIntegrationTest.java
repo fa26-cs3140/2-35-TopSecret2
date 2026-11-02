@@ -8,13 +8,14 @@ import java.io.PrintStream;
 import java.nio.file.Path;
 import java.util.List;
 
+import model.*;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
 // Member B (Sebastian) -- HW5 integration tests: UI + audit log.
-// Uses D's REAL AuditLog over C's REAL SQLiteDataStore on a throwaway
+// Uses D's REAL model.AuditLog over C's REAL model.SQLiteDataStore on a throwaway
 // test database (@TempDir), so logged actions are read back from the
 // database itself. The user manager and access control are Mockito
 // mocks; their UI integrations live in their own test files.
@@ -68,7 +69,7 @@ public class UserInterfaceAuditLogIntegrationTest {
         return outBuf.toString();
     }
 
-    // Reading through the UI leaves a READ LoggedAction in the database.
+    // Reading through the UI leaves a READ model.LoggedAction in the database.
     @Test
     void readEntryLogsReadAction() {
         UserInterface ui = ui("tester\nPass123\n1\n");
@@ -81,7 +82,7 @@ public class UserInterfaceAuditLogIntegrationTest {
         assertEquals("tester", a.getUser().getUsername());
     }
 
-    // Adding through the UI leaves a CREATE LoggedAction with the new id.
+    // Adding through the UI leaves a CREATE model.LoggedAction with the new id.
     @Test
     void addEntryLogsCreateAction() {
         UserInterface ui = ui("tester\nPass123\n1\nT\n2024-01-01\ntext\n");

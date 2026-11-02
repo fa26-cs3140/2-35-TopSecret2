@@ -1,4 +1,4 @@
-Interface: AccessControlInterface
+Interface: model.AccessControlInterface
 
 Methods:
 + isAdmin(username: String): boolean
