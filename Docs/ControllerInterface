@@ -15,6 +15,7 @@ control Interface
 +listEntries(String username, String itemType): string
 +readEntry(String username, String itemType, int id): string
 +addEntry(String username, String, String<> fields): string
++editEntry(String username, String itemType, int id, List<String> fields): String
 +reviewAuditLog(String username): String
 +assignAgentToMission(String username, Int agentID, Int missionID): String
 +sendMessage(String username, String agentName, String message): String
