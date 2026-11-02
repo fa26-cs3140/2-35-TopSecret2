@@ -62,6 +62,14 @@ public interface DataStoreInterface {
      * @param mission
      */
     Mission addMission(Mission mission);
+    /**
+     * updates an existing mission in DB, the missionID selects which row to overwrite
+     *
+     * @param mission
+     * @return the final model.Mission representation in the database
+     * @throws IllegalArgumentException when no mission with that id exists, or the facility does not exist
+     */
+    Mission updateMission(Mission mission);
 
     /**
      * query database to get all agents and return them as {@code List<model.Agent>}
@@ -122,7 +130,24 @@ public interface DataStoreInterface {
      * @param facility
      * @return the final model.Facility entry representation in the database
      */
+    /**
+     * updates an existing model.Agent in the database, the agentID selects which row to overwrite
+     *
+     * @param agent
+     * @return the final model.Agent representation in the database
+     * @throws IllegalArgumentException when no agent with that id exists, or the facility does not exist
+     */
+    Agent updateAgent(Agent agent);
+
     Facility addFacility(Facility facility);
+    /**
+     * updates an existing facility in the database, the facilityID selects which row to overwrite
+     *
+     * @param facility
+     * @return the final model.Facility entry representation in the database
+     * @throws IllegalArgumentException when no facility with that id exists
+     */
+    Facility updateFacility(Facility facility);
 
     /**
      * add a model.Brief to the database, the briefID will be ignored and automatically assigned by the database
@@ -132,6 +157,14 @@ public interface DataStoreInterface {
      */
     Brief addBrief(Brief brief);
 
+    /**
+     * updates an existing model.Brief in the database, the briefID selects which row to overwrite
+     *
+     * @param brief
+     * @return the final Brief entry representation in the database
+     * @throws IllegalArgumentException when no brief with that id exists, or the mission does not exist
+     */
+    Brief updateBrief(Brief brief);
 
     /**
      * gets the list of logs from database
