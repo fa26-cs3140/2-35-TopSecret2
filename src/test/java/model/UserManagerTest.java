@@ -68,7 +68,7 @@ class UserManagerTest {
         assertEquals(2, second.getUserID());
     }
 
-    // createUser(): bad usernames throw TopSecretException.
+    // createUser(): bad usernames throw model.TopSecretException.
     @Test
     void createUserRejectsInvalidUsernames() {
         assertThrows(TopSecretException.class, () -> users.createUser("ab"));
@@ -77,7 +77,7 @@ class UserManagerTest {
         assertThrows(TopSecretException.class, () -> users.createUser(null));
     }
 
-    // createUser(): a duplicate username throws TopSecretException.
+    // createUser(): a duplicate username throws model.TopSecretException.
     @Test
     void createUserRejectsDuplicate() throws Exception {
         users.createUser("boss");

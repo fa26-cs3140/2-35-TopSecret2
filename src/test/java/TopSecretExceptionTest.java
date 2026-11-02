@@ -1,8 +1,9 @@
 import static org.junit.jupiter.api.Assertions.*;
 
+import model.TopSecretException;
 import org.junit.jupiter.api.Test;
 
-// Unit tests for TopSecretException.
+// Unit tests for model.TopSecretException.
 class TopSecretExceptionTest {
 
     @Test

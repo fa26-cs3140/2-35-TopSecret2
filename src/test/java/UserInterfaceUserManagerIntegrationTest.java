@@ -97,7 +97,7 @@ public class UserInterfaceUserManagerIntegrationTest {
         assertEquals(0, ui("boss\nNewPass9\n8\n").run());
     }
 
-    // Duplicate username: D's TopSecretException is caught, UI keeps running.
+    // Duplicate username: D's model.TopSecretException is caught, UI keeps running.
     @Test
     void createUserRejectsDuplicateName() {
         assertEquals(0, ui("boss\nPass123\nPass123\n8\n").run());

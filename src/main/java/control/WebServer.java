@@ -1,6 +1,7 @@
 package control;
 
 import com.sun.net.httpserver.HttpServer;
+import view.WebView;
 import java.io.IOException;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -15,6 +16,7 @@ public class WebServer {
     private final Map<String, String> sessions = new ConcurrentHashMap<>();
     private final int port;
     private HttpServer server;
+    private final WebView view = new WebView();
 
     public WebServer(ControllerInterface controller, int port) {
         this.controller = controller;

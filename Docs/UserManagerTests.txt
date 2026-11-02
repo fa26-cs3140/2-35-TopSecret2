@@ -9,10 +9,10 @@ createUserReturnsSequentialUsers
 createUser returns the new user; IDs count up from 1
 
 createUserRejectsInvalidUsernames
-Too-short, spaced and null usernames throw TopSecretException
+Too-short, spaced and null usernames throw model.TopSecretException
 
 createUserRejectsDuplicate
-A duplicate username throws TopSecretException
+A duplicate username throws model.TopSecretException
 
 usernameValidationRules
 3+ chars, letters/numbers/hyphens/underscores only, uppercase allowed
@@ -42,13 +42,13 @@ verifyLoginFalseWithNoCredentialsFile
 No credentials file at all means no login
 
 changePasswordRejectsMismatch
-Mismatched confirmation throws TopSecretException
+Mismatched confirmation throws model.TopSecretException
 
 changePasswordRejectsInvalidPassword
-A password breaking the rules throws TopSecretException
+A password breaking the rules throws model.TopSecretException
 
 changePasswordRejectsUnknownUser
-An unknown user throws TopSecretException
+An unknown user throws model.TopSecretException
 
 Notes:
 Code: model.UserManagerTest.java.

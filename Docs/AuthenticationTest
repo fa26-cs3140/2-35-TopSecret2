@@ -12,7 +12,7 @@ createCredentialsCreatesFile
 Creating credentials creates a (non-empty) .cip file
 
 createCredentialsRejectsBadInput
-Invalid user or password will throw TopSecretException and doesn't create file
+Invalid user or password will throw model.TopSecretException and doesn't create file
 
 credentialsCheckStoredPair
 Correct user + password passes, all other combinations fail

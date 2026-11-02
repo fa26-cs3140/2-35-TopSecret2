@@ -254,7 +254,7 @@ public class UserInterfaceTest {
         verify(users).createUser("newguy");
     }
 
-    // createUser(): TopSecretException from D is printed, not thrown
+    // createUser(): model.TopSecretException from D is printed, not thrown
     @Test
     void createUserPrintsExceptionMessage() throws Exception {
         when(users.createUser("bad name"))
