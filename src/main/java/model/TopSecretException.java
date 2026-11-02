@@ -1,3 +1,5 @@
+package model;
+
 // Error used when something goes wrong, like a missing file or invalid key.
 // The message is shown to the user.
 public class TopSecretException extends Exception {
