@@ -6,8 +6,8 @@ control implements ControllerInterface
 -access: model.AccessControlInterface
 -store: model.DataStoreInterface
 -audit: model.AuditLogInterface
--messages: MessageInterface
+-messages: MessageManager
 ------------------------------
-+control(users: model.UserManagerInterface, access: model.AccessControlInterface, store: model.DataStoreInterface, audit: model.AuditLogInterface, messages: MessageInterface)
++control(users: model.UserManagerInterface, access: model.AccessControlInterface, store: model.DataStoreInterface, audit: model.AuditLogInterface, messages: MessageManager)
 [Everything else from ControllerInterface]
 ------------------------------
