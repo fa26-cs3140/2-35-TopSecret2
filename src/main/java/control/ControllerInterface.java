@@ -5,7 +5,7 @@ import java.util.List;
 // Shared control contract for TopSecret. Both the terminal view
 // and the web server call these methods, so control logic is
 // written once. Methods returning String return the text to
-// display, including error text. No TopSecretException escapes
+// display, including error text. No model.TopSecretException escapes
 // the controller; the implementation catches it and returns
 // the message. itemType is "briefs", "agents", "facilities",
 // or "missions". Field order for addEntry/editEntry matches
