@@ -3,6 +3,8 @@ package view;
 import model.*;
 import org.junit.jupiter.api.Test;
 
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class utilityTest {
@@ -104,6 +106,131 @@ class utilityTest {
                 Recepient Name: AgentName
                 Message: Message
                 """;
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    void missionsToStr() {
+        List<Mission> missions = List.of(
+                new Mission(1, "MissionTitle1", 2),
+                new Mission(2, "MissionTitle2", 3)
+        );
+
+        List<String> actual = utility.missionsToStr(missions);
+
+        List<String> expected = List.of(
+                utility.missionToStr(missions.get(0)),
+                utility.missionToStr(missions.get(1))
+        );
+
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    void facilitiesToStr() {
+        List<Facility> facilities = List.of(
+                new Facility(1, "FacilityName1", "FT"),
+                new Facility(2, "FacilityName2", "HQ")
+        );
+
+        List<String> actual = utility.facilitiesToStr(facilities);
+
+        List<String> expected = List.of(
+                utility.facilityToStr(facilities.get(0)),
+                utility.facilityToStr(facilities.get(1))
+        );
+
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    void briefsToStr() {
+        List<Brief> briefs = List.of(
+                new Brief(1, 2, "BriefTitle1", "1999-02-15", "Content1"),
+                new Brief(2, 3, "BriefTitle2", "2000-03-16", "Content2")
+        );
+
+        List<String> actual = utility.briefsToStr(briefs);
+
+        List<String> expected = List.of(
+                utility.briefToStr(briefs.get(0)),
+                utility.briefToStr(briefs.get(1))
+        );
+
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    void agentsToStr() {
+        List<Agent> agents = List.of(
+                new Agent(1, 2, 3, "AgentName1", "1999-02-23", null, "notes1"),
+                new Agent(2, 3, 4, "AgentName2", "2000-03-24", null, "notes2")
+        );
+
+        List<String> actual = utility.agentsToStr(agents);
+
+        List<String> expected = List.of(
+                utility.agentToStr(agents.get(0)),
+                utility.agentToStr(agents.get(1))
+        );
+
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    void usersToStr() {
+        List<User> users = List.of(
+                new User(1, "userName1"),
+                new User(2, "userName2")
+        );
+
+        List<String> actual = utility.usersToStr(users);
+
+        List<String> expected = List.of(
+                utility.userToStr(users.get(0)),
+                utility.userToStr(users.get(1))
+        );
+
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    void logsToStr() {
+        User user1 = new User(1, "userName1");
+        User user2 = new User(2, "userName2");
+
+        List<LoggedAction> logs = List.of(
+                new LoggedAction(1, user1, "1999-02-23", "record1"),
+                new LoggedAction(2, user2, "2000-03-24", "record2")
+        );
+
+        List<String> actual = utility.logsToStr(logs);
+
+        List<String> expected = List.of(
+                utility.logToStr(logs.get(0)),
+                utility.logToStr(logs.get(1))
+        );
+
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    void messagesToStr() {
+        Agent agent1 = new Agent(1, 2, 3, "AgentName1", "1999-02-23", null, "notes1");
+        Agent agent2 = new Agent(2, 3, 4, "AgentName2", "2000-03-24", null, "notes2");
+
+        List<Message> messages = List.of(
+                new Message(agent1, "Message1"),
+                new Message(agent2, "Message2")
+        );
+
+        List<String> actual = utility.messagesToStr(messages);
+
+        List<String> expected = List.of(
+                utility.messageToStr(messages.get(0)),
+                utility.messageToStr(messages.get(1))
+        );
+
         assertEquals(expected, actual);
     }
 }

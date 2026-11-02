@@ -2,6 +2,8 @@ package view;
 
 import model.*;
 
+import java.util.List;
+
 public class utility {
 
     static void main() {
@@ -77,6 +79,32 @@ public class utility {
                 Message: %s
                 """;
         return String.format(str, m.getRecipient().getAgentID(), m.getRecipient().getName(), m.getMessageContent());
+    }
+
+    public static List<String> missionsToStr(List<Mission> missions) {
+        return null;
+    }
+
+    public static List<String> facilitiesToStr(List<Facility> facilities) {
+        return null;
+    }
+
+    public static List<String> briefsToStr(List<Brief> briefs) {
+        return null;
+    }
+
+    public static List<String> agentsToStr(List<Agent> agents) {
+        return null;
+    }
+
+    public static List<String> usersToStr(List<User> users) {
+        return null;
+    }
+    public static List<String> logsToStr(List<LoggedAction> logs) {
+        return null;
+    }
+    public static List<String> messagesToStr(List<Message> messages) {
+        return null;
     }
 
 }
