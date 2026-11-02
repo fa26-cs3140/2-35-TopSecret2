@@ -157,33 +157,180 @@ public class Controller implements ControllerInterface {
     // Week 2: one "id : name/title" line per record from the store.
     @Override
     public String listEntries(String username, String itemType) {
-        return "";
+        List<String> lines = new ArrayList<>();
+        switch (itemType) {
+            case "briefs" -> {
+                for (Brief b : store.listBriefs()) {
+                    lines.add(b.getBriefID() + " : " + b.getTitle());
+                }
+            }
+            case "agents" -> {
+                for (Agent a : store.listAgents()) {
+                    lines.add(a.getAgentID() + " : " + a.getName());
+                }
+            }
+            case "facilities" -> {
+                for (Facility f : store.listFacilities()) {
+                    lines.add(f.getFacilityID() + " : " + f.getName());
+                }
+            }
+            case "missions" -> {
+                for (Mission m : store.listMissions()) {
+                    lines.add(m.getMissionID() + " : " + m.getTitle());
+                }
+            }
+            default -> {
+                return "Invalid option";
+            }
+        }
+        return String.join("\n", lines);
     }
 
     // Week 2: one full record from the store, plus a READ audit.
     @Override
-    public String readEntry(String username, String itemType, int id) {
-        return "";
+    public String readEntry(String username, String itemType,int id) {
+        if (!access.isAdmin(username)) {
+            return "Not allowed";
+        }
+        try {
+            switch (itemType) {
+                case "briefs" -> {
+                    Brief added = store.addBrief(new Brief(Integer.parseInt(fields.get(0)), fields.get(1), fields.get(2), fields.get(3)));
+                    User userObj = users.getUserByUsername(username);
+                    if (userObj != null) {
+                        audit.log(new LoggedAction(LoggedAction.CREATE, userObj, LocalDateTime.now().toString(), "briefs " + added.getBriefID()));
+                    }
+                }
+                case "agents" -> {
+                    Agent added = store.addAgent(new Agent(null, Integer.parseInt(fields.get(0)), fields.get(1), fields.get(2), fields.get(3), fields.get(4)));
+                    User userObj = users.getUserByUsername(username);
+                    if (userObj != null) {
+                        audit.log(new LoggedAction(LoggedAction.CREATE, userObj, LocalDateTime.now().toString(), "agents " + added.getAgentID()));
+                    }
+                }
+                case "facilities" -> {
+                    Facility added = store.addFacility(new Facility(fields.get(0), fields.get(1)));
+                    User userObj = users.getUserByUsername(username);
+                    if (userObj != null) {
+                        audit.log(new LoggedAction(LoggedAction.CREATE, userObj, LocalDateTime.now().toString(), "facilities " + added.getFacilityID()));
+                    }
+                }
+                case "missions" -> {
+                    Mission added = store.addMission(new Mission(fields.get(0), Integer.parseInt(fields.get(1))));
+                    User userObj = users.getUserByUsername(username);
+                    if (userObj != null) {
+                        audit.log(new LoggedAction(LoggedAction.CREATE, userObj, LocalDateTime.now().toString(), "missions " + added.getMissionID()));
+                    }
+                }
+                default -> {
+                    return "Invalid option";
+                }
+            }
+        } catch (IllegalArgumentException e) {
+            return e.getMessage();
+        }
+        return listEntries(username, itemType);
     }
 
     // Week 2: admin-gated store add, plus a CREATE audit and the
     // updated list text.
     @Override
-    public String addEntry(String username, String itemType, List<String> fields) {
-        return "";
+    public String addEntry(String username, String itemType, int id, List<String> fields) {
+        if (!access.isAdmin(username)) {
+            return "Not allowed";
+        }
+        try {
+            if (itemType.equals("briefs")) {
+                if (store.getBrief(id) == null) {
+                    return "No brief found with this id";
+                }
+                store.updateBrief(new Brief(id, Integer.parseInt(fields.get(0)), fields.get(1), fields.get(2), fields.get(3)));
+            } else if (itemType.equals("agents")) {
+                Agent existing = store.getAgent(id);
+                if (existing == null) {
+                    return "No agent found with this id";
+                }
+                store.updateAgent(new Agent(id, existing.getMissionID(), Integer.parseInt(fields.get(0)), fields.get(1), fields.get(2), fields.get(3), fields.get(4)));
+            } else if (itemType.equals("facilities")) {
+                if (store.getFacility(id) == null) {
+                    return "No facility found with this id";
+                }
+                store.updateFacility(new Facility(id, fields.get(0), fields.get(1)));
+            } else if (itemType.equals("missions")) {
+                if (store.getMission(id) == null) {
+                    return "No mission found with this id";
+                }
+                store.updateMission(new Mission(id, fields.get(0), Integer.parseInt(fields.get(1))));
+            } else {
+                return "Invalid option";
+            }
+        } catch (IllegalArgumentException e) {
+            return e.getMessage();
+        }
+        // No audit yet: LoggedAction has no EDIT value (D's call).
+        return listEntries(username, itemType);
     }
 
     // Stays a stub until C adds store update methods.
     @Override
     public String editEntry(String username, String itemType, int id, List<String> fields) {
-        return "";
+        if (!access.isAdmin(username)) {
+            return "Not allowed";
+        }
+        try {
+            if (itemType.equals("briefs")) {
+                Brief added = store.addBrief(new Brief(Integer.parseInt(fields.get(0)), fields.get(1), fields.get(2), fields.get(3)));
+                User userObj = users.getUserByUsername(username);
+                if (userObj != null) {
+                    audit.log(new LoggedAction(LoggedAction.CREATE, userObj, LocalDateTime.now().toString(), "briefs " + added.getBriefID()));
+                }
+            } else if (itemType.equals("agents")) {
+                Agent added = store.addAgent(new Agent(null, Integer.parseInt(fields.get(0)), fields.get(1), fields.get(2), fields.get(3), fields.get(4)));
+                User userObj = users.getUserByUsername(username);
+                if (userObj != null) {
+                    audit.log(new LoggedAction(LoggedAction.CREATE, userObj, LocalDateTime.now().toString(), "agents " + added.getAgentID()));
+                }
+            } else if (itemType.equals("facilities")) {
+                Facility added = store.addFacility(new Facility(fields.get(0), fields.get(1)));
+                User userObj = users.getUserByUsername(username);
+                if (userObj != null) {
+                    audit.log(new LoggedAction(LoggedAction.CREATE, userObj, LocalDateTime.now().toString(), "facilities " + added.getFacilityID()));
+                }
+            } else if (itemType.equals("missions")) {
+                Mission added = store.addMission(new Mission(fields.get(0), Integer.parseInt(fields.get(1))));
+                User userObj = users.getUserByUsername(username);
+                if (userObj != null) {
+                    audit.log(new LoggedAction(LoggedAction.CREATE, userObj, LocalDateTime.now().toString(), "missions " + added.getMissionID()));
+                }
+            } else {
+                return "Invalid option";
+            }
+        } catch (IllegalArgumentException e) {
+            return e.getMessage();
+        }
+        return listEntries(username, itemType);
     }
 
     // Week 2: admin-gated audit.getLog() formatted as
     // time : username : read/create : record.
     @Override
     public String reviewAuditLog(String username) {
-        return "";
+        if (!access.isAdmin(username)) {
+            return "Not allowed";
+        }
+        List<String> lines = new ArrayList<>();
+        for (LoggedAction log : audit.getLog()) {
+            String type;
+            if (log.getAction() == LoggedAction.READ) {
+                type = "read";
+            } else if (log.getAction() == LoggedAction.CREATE) {
+                type = "create";
+            } else {
+                type = "edit";
+            }
+            lines.add(log.getDateTime() + " : " + log.getUser().getUsername() + " : " + type + " : " + log.getRecord());
+        }
+        return String.join("\n", lines);
     }
 
     // Stays a stub until C implements the store methods and the
@@ -191,20 +338,57 @@ public class Controller implements ControllerInterface {
     // UnsupportedOperationException).
     @Override
     public String assignAgentToMission(String username, int agentId, int missionId) {
-        return "";
+        if (!access.isAdmin(username)) {
+            return "Not allowed";
+        }
+        try {
+            store.assignAgentToMission(agentId, missionId);
+        } catch (RuntimeException e) {
+            return e.getMessage();
+        }
+        return "Agent " + agentId + " assigned to mission " + missionId;
     }
 
     // Week 2: pass the message to the message store. Any
     // logged-in user may send one.
     @Override
     public String sendMessage(String username, String agentName, String message) {
-        return "";
-    }
+        Agent recipient = null;
+        for (Agent a : store.listAgents()) {
+            if (a.getName().equalsIgnoreCase(agentName)) {
+                recipient = a;
+                break;
+            }
+        }
+        if (recipient == null) {
+            return "No agent found with this name";
+        }
+        messages.createMessage(recipient, message);
+        return "Message sent to " + recipient.getName();
+    };
 
     // Week 2: only the caller's own messages, matched
     // case-insensitively. No admin permission needed.
     @Override
     public String viewMessages(String username) {
-        return "";
+        Agent self = null;
+        for (Agent a : store.listAgents()) {
+            if (a.getName().equalsIgnoreCase(username)) {
+                self = a;
+                break;
+            }
+        }
+        if (self == null) {
+            return "No messages";
+        }
+        List<Message> found = messages.retrieveMessages(self);
+        if (found.isEmpty()) {
+            return "No messages";
+        }
+        List<String> lines = new ArrayList<>();
+        for (Message m : found) {
+            lines.add(m.getMessageContent());
+        }
+        return String.join("\n", lines);
     }
 }
