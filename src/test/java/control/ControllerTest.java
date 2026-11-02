@@ -4,7 +4,6 @@ import java.util.List;
 import model.AccessControlInterface;
 import model.AuditLogInterface;
 import model.DataStoreInterface;
-import model.MessageInterface;
 import model.UserManagerInterface;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -33,7 +32,7 @@ public class ControllerTest {
         controller = new Controller(users, access,
                 mock(DataStoreInterface.class),
                 mock(AuditLogInterface.class),
-                mock(MessageInterface.class));
+                mock(MessageManager.class));
     }
 
     @Test

@@ -5,7 +5,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import model.AccessControlInterface;
 import model.AuditLogInterface;
-import model.MessageInterface;
 import model.SQLiteDataStore;
 import model.UserManager;
 import org.junit.jupiter.api.AfterEach;
@@ -43,7 +42,7 @@ public class ControllerIntegrationTest {
         store = new model.SQLiteDataStore(databaseUrl);
         users = new UserManager(store);
         controller = new Controller(users, mock(AccessControlInterface.class),
-                store, mock(AuditLogInterface.class), mock(MessageInterface.class));
+                store, mock(AuditLogInterface.class), mock(MessageManager.class));
     }
 
     @AfterEach
