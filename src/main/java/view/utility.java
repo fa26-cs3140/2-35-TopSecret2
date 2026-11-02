@@ -82,29 +82,43 @@ public class utility {
     }
 
     public static List<String> missionsToStr(List<Mission> missions) {
-        return null;
+        return missions.stream()
+                .map(m -> missionToStr(m))
+                .toList();
     }
 
     public static List<String> facilitiesToStr(List<Facility> facilities) {
-        return null;
+        return facilities.stream()
+                .map(f -> facilityToStr(f))
+                .toList();
     }
 
     public static List<String> briefsToStr(List<Brief> briefs) {
-        return null;
+        return briefs.stream()
+                .map(b -> briefToStr(b))
+                .toList();
     }
 
     public static List<String> agentsToStr(List<Agent> agents) {
-        return null;
+        return agents.stream()
+                .map(a -> agentToStr(a))
+                .toList();
     }
 
     public static List<String> usersToStr(List<User> users) {
-        return null;
+        return users.stream()
+                .map(u -> userToStr(u))
+                .toList();
     }
     public static List<String> logsToStr(List<LoggedAction> logs) {
-        return null;
+        return logs.stream()
+                .map(log -> logToStr(log))
+                .toList();
     }
     public static List<String> messagesToStr(List<Message> messages) {
-        return null;
+        return messages.stream()
+                .map(m -> messageToStr(m))
+                .toList();
     }
 
 }

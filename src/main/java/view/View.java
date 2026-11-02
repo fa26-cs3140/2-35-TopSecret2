@@ -1,17 +1,34 @@
 package view;
 
+import model.*;
+
 import java.util.List;
 
 public interface View {
     // Display information
-    String formatMessage(String message);
+    String promptMessage(String message);
 
-    String formatRecords(String title, List<String> records);
 
-    String formatRecord(String title, String record);
+    String singleMissionView(Mission mission);
+    String listMissionsView(List<Mission> missions);
+    String singleFacilityView(Facility facility);
+    String listFacilitysView(List<Facility> facilities);
+    String singleBriefView(Brief brief);
+    String listBriefsView(List<Brief> briefs);
+    String singleAgentView(Agent agent);
+    String listAgentsView(List<Agent> agents);
+    String singleUserView(User user);
+    String listUsersView(List<User> users);
+    String singleLogView(LoggedAction log);
+    String listLogsView(List<LoggedAction> logs);
 
-    // Display errors
-
+    String mainMenuView();
+    String browseMissionsView();
+    String browseFacilitiesView();
+    String browseBriefsView();
+    String browseAgentsView();
+    String createAccountView();
+    String loginView();
 
 
     String formatError(String error);
