@@ -1,0 +1,24 @@
+Controller tests
+------------------------------
+hasUsersDelegatesToUsers - hasUsers passes straight through to users.hasUser
+verifyLoginDelegatesToUsers - verifyLogin passes through and is verified against the mock
+needsPasswordSetupDelegatesToUsers - needsPasswordSetup passes through and is verified against the mock
+isAdminDelegatesToAccess - isAdmin passes through to access.isAdmin
+createFirstAccountReturnsEmptyStub - stub returns an empty String
+changePasswordReturnsEmptyStub - stub returns an empty String
+createUserReturnsEmptyStub - stub returns an empty String
+manageAccessReturnsEmptyStub - stub returns an empty String
+showMainMenuReturnsEmptyStub - stub returns an empty String
+browseMainMenuReturnsEmptyStub - stub returns an empty String
+listEntriesReturnsEmptyStub - stub returns an empty String
+readEntryReturnsEmptyStub - stub returns an empty String
+addEntryReturnsEmptyStub - stub returns an empty String
+editEntryReturnsEmptyStub - stub returns an empty String
+reviewAuditLogReturnsEmptyStub - stub returns an empty String
+assignAgentToMissionReturnsEmptyStub - stub returns an empty String
+sendMessageReturnsEmptyStub - stub returns an empty String
+viewMessagesReturnsEmptyStub - stub returns an empty String
+Notes: collaborators are Mockito mocks. Week 2 rewrites the
+stub assertions into real-text assertions, reusing the 22
+HW5 UserInterfaceTest names and inputs where they apply.
+Run: .\gradlew test --tests "controller.ControllerTest" --console=plain
