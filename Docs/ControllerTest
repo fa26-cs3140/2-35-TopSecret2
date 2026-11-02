@@ -21,4 +21,4 @@ viewMessagesReturnsEmptyStub - stub returns an empty String
 Notes: collaborators are Mockito mocks. Week 2 rewrites the
 stub assertions into real-text assertions, reusing the 22
 HW5 UserInterfaceTest names and inputs where they apply.
-Run: .\gradlew test --tests "controller.ControllerTest" --console=plain
+Run: .\gradlew test --tests "control.ControllerTest" --console=plain

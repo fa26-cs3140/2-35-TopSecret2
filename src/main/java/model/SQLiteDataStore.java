@@ -22,7 +22,7 @@ public class SQLiteDataStore implements DataStoreInterface, AutoCloseable {
     }
 
     // Package-private constructor for tests using a temporary database.
-    SQLiteDataStore(String databaseUrl) {
+    public SQLiteDataStore(String databaseUrl) {
         this.databaseUrl = databaseUrl;
         initDatabase();
 

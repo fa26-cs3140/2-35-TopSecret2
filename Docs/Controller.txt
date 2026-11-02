@@ -1,6 +1,6 @@
-Package: controller
+Package: control
 ---------------------------------------------
-controller implements ControllerInterface
+control implements ControllerInterface
 ------------------------------------------------
 -users: model.UserManagerInterface
 -access: model.AccessControlInterface
@@ -8,6 +8,6 @@ controller implements ControllerInterface
 -audit: model.AuditLogInterface
 -messages: MessageInterface
 ------------------------------
-+controller(users: model.UserManagerInterface, access: model.AccessControlInterface, store: model.DataStoreInterface, audit: model.AuditLogInterface, messages: MessageInterface)
++control(users: model.UserManagerInterface, access: model.AccessControlInterface, store: model.DataStoreInterface, audit: model.AuditLogInterface, messages: MessageInterface)
 [Everything else from ControllerInterface]
 ------------------------------

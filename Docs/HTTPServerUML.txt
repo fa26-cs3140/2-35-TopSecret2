@@ -1,14 +1,14 @@
-Package: controller
+Package: control
 -----------------------
--controller: ControllerInterface
+-control: ControllerInterface
 -sessions: Map<String,String>
 -port: int
 -server HttpServer
 --------------------------
-+WebServer(ControllerInterface controller, Int port)
++WebServer(ControllerInterface control, Int port)
 +start(): void
 +stop(): void
 ---------------------------
 HTTPServer starts and runs the Http server, receives http requests, translates and passes them
-onto controller
+onto control
 It uses a session token to pass current user information, and holds the cookie until the connection is closed

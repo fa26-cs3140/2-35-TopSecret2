@@ -5,4 +5,4 @@ stopBeforeStartDoesNotThrow - calling stop on a never-started stub throws nothin
 Notes: stub contract only; routing, sessions, and HTTP behavior
 arrive in week 2, when these are replaced by integration tests
 against a real server (that file is in recoverable trash until
-then). Run: .\gradlew test --tests "controller.WebServerTest" --console=plain
+then). Run: .\gradlew test --tests "control.WebServerTest" --console=plain

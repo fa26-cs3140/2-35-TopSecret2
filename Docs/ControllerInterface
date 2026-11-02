@@ -1,6 +1,6 @@
-Package: controller
+Package: control
 -----------------------
-controller Interface
+control Interface
 ----------------------
 +hasUsers(): boolean
 +verifyLogin(String username, String password): boolean

@@ -13,4 +13,4 @@ classpath; credentials.cip is deleted before and after each
 test. WebServer integration tests return in week 2, when the
 server is implemented (that file is in recoverable trash
 until then).
-Run: .\gradlew test --tests "controller.ControllerIntegrationTest" --console=plain
+Run: .\gradlew test --tests "control.ControllerIntegrationTest" --console=plain
