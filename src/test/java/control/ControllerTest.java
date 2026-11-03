@@ -467,6 +467,8 @@ public class ControllerTest {
     void viewMessagesEmptyListIsEmpty() {
         Agent ghost = new Agent(1, null, 2, "Ghost", "1990-01-01", "2000-01-01", "Notes");
         when(store.listAgents()).thenReturn(List.of(ghost));
+        when(messages.retrieveMessages(any(Agent.class))).thenReturn(List.of(
+                new Message(ghost, "Hello"), new Message(ghost, "World")));
         assertEquals("No messages", controller.viewMessages("ghost"));
     }
 }
