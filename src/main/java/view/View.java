@@ -11,12 +11,15 @@ public abstract class View {
     public View(boolean isAdmin) {
         this.isAdmin = isAdmin;
     }
+    public boolean isAdmin() {
+        return isAdmin;
+    }
 
 
     abstract String singleMissionView(Mission mission);
     abstract String listMissionsView(List<Mission> missions);
     abstract String singleFacilityView(Facility facility);
-    abstract String listFacilitysView(List<Facility> facilities);
+    abstract String listFacilitiesView(List<Facility> facilities);
     abstract String singleBriefView(Brief brief);
     abstract String listBriefsView(List<Brief> briefs);
     abstract String singleAgentView(Agent agent);

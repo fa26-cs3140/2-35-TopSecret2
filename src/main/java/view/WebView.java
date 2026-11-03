@@ -40,7 +40,7 @@ public class WebView extends View {
     /// @param facilities
     /// @return
     @Override
-    public String listFacilitysView(List<Facility> facilities) {
+    public String listFacilitiesView(List<Facility> facilities) {
         return "";
     }
 

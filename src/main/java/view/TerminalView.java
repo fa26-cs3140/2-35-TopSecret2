@@ -3,16 +3,31 @@ package view;
 import model.*;
 
 import java.util.List;
+import java.util.Scanner;
 
 public class TerminalView extends View {
 //    /// @param message
 //    /// @return
 //    @Override
-//    public String promptMessage(String message) {
+//    public void promptMessage(String message) {
 //        return "";
 //    }
+
     public TerminalView(boolean isAdmin) {
         super(isAdmin);
+    }
+
+    public int getInputInt(Scanner scnr, int rangeMin, int rangeMax, String message) {
+        return 0;
+    }
+    public int getInputInt(Scanner scnr, String message) {
+        return getInputInt(scnr, Integer.MIN_VALUE, Integer.MAX_VALUE, message);
+    }
+    public String getInputStr(Scanner scnr, String regEx, String message) {
+        return "";
+    }
+    public String getInputStr(Scanner scnr, String message) {
+        return getInputStr(scnr, ".+", message);
     }
 
     /// @param mission
@@ -39,7 +54,7 @@ public class TerminalView extends View {
     /// @param facilities
     /// @return
     @Override
-    public String listFacilitysView(List<Facility> facilities) {
+    public String listFacilitiesView(List<Facility> facilities) {
         return "";
     }
 
@@ -102,12 +117,11 @@ public class TerminalView extends View {
     /// @return
     @Override
     public String mainMenuView() {
-        System.out.println("----------Main Menu----------");
-        System.out.println("1. Browse briefs");
-        System.out.println("2. Browse agents");
-        System.out.println("3. Browse facilities");
-        System.out.println("4. Change Password");
-        return "";
+        String view = """
+                ----------Main Menu----------
+                
+                """;
+        return view;
     }
 
     /// @return
