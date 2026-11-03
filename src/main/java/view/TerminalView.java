@@ -2,188 +2,354 @@ package view;
 
 import model.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
 public class TerminalView extends View {
-    public void promptMessage(String message) {
-    }
+    private final boolean admin;
+
 
     public TerminalView(boolean isAdmin) {
         super(isAdmin);
+        this.admin = isAdmin;
     }
 
-    public int getInputInt(Scanner scnr, int rangeMin, int rangeMax, String message) {
-        return 0;
+
+    // ---------------- GENERAL INPUT ----------------
+
+    public void promptMessage(String message) {
+        System.out.println(message);
+    }
+
+
+    public int getInputInt(
+            Scanner scnr, int rangeMin, int rangeMax, String message) {
+
+        while (true) {
+            System.out.print(message);
+
+            if (!scnr.hasNextLine()) {
+                return -1;
+            }
+
+            String input = scnr.nextLine().trim();
+
+            try {
+                int value = Integer.parseInt(input);
+
+                if (value >= rangeMin && value <= rangeMax) {
+                    return value;
+                }
+
+            } catch (NumberFormatException ignored) {
+                // Prompt again if the input is not an integer.
+            }
+
+            System.out.println(
+                    "Invalid input. Enter an integer between "
+                            + rangeMin + " and " + rangeMax + "."
+            );
+        }
     }
     public int getInputInt(Scanner scnr, String message) {
-        return getInputInt(scnr, Integer.MIN_VALUE, Integer.MAX_VALUE, message);
+        return getInputInt(
+                scnr, Integer.MIN_VALUE, Integer.MAX_VALUE, message
+        );
     }
     public String getInputStr(Scanner scnr, String regEx, String message) {
-        return "";
+
+        while (true) {
+            System.out.print(message);
+
+            if (!scnr.hasNextLine()) {
+                return "";
+            }
+
+            String input = scnr.nextLine().trim();
+
+            if (input.matches(regEx)) {
+                return input;
+            }
+
+            System.out.println("Invalid input. Please try again.");
+        }
     }
     public String getInputStr(Scanner scnr, String message) {
         return getInputStr(scnr, ".+", message);
     }
 
-    /// @param mission
-    /// @return
+    private String getOptionalInput(Scanner scnr, String message) {
+        System.out.print(message);
+
+        if (!scnr.hasNextLine()) {
+            return "";
+        }
+
+        return scnr.nextLine().trim();
+    }
+
+    // ---------------- MISSION VIEWS ----------------
+
     @Override
     public String singleMissionView(Mission mission) {
-        return "";
+        return utility.missionToStr(mission);
     }
 
-    /// @param missions
-    /// @return
     @Override
     public String listMissionsView(List<Mission> missions) {
-        return "";
+        return String.join("\n", utility.missionsToStr(missions));
     }
 
-    /// @param facility
-    /// @return
+    // ---------------- FACILITY VIEWS ----------------
+
     @Override
     public String singleFacilityView(Facility facility) {
-        return "";
+        return utility.facilityToStr(facility);
     }
 
-    /// @param facilities
-    /// @return
     @Override
     public String listFacilitiesView(List<Facility> facilities) {
-        return "";
+        return String.join("\n", utility.facilitiesToStr(facilities));
     }
 
-    /// @param brief
-    /// @return
+    // ---------------- BRIEF VIEWS ----------------
+
     @Override
     public String singleBriefView(Brief brief) {
-        return "";
+        return utility.briefToStr(brief);
     }
 
-    /// @param briefs
-    /// @return
     @Override
     public String listBriefsView(List<Brief> briefs) {
-        return "";
+        return String.join("\n", utility.briefsToStr(briefs));
     }
 
-    /// @param agent
-    /// @return
+    // ---------------- AGENT VIEWS ----------------
+
     @Override
     public String singleAgentView(Agent agent) {
-        return "";
+        return utility.agentToStr(agent);
     }
 
-    /// @param agents
-    /// @return
     @Override
     public String listAgentsView(List<Agent> agents) {
-        return "";
+        return String.join("\n", utility.agentsToStr(agents));
     }
 
-    /// @param user
-    /// @return
+    // ---------------- USER VIEWS ----------------
+
     @Override
     public String singleUserView(User user) {
-        return "";
+        return utility.userToStr(user);
     }
 
-    /// @param users
-    /// @return
     @Override
     public String listUsersView(List<User> users) {
-        return "";
+        return String.join("\n", utility.usersToStr(users));
     }
 
-    /// @param log
-    /// @return
+    // ---------------- AUDIT LOG VIEWS ----------------
+
     @Override
     public String singleLogView(LoggedAction log) {
-        return "";
+        return utility.logToStr(log);
     }
 
-    /// @param logs
-    /// @return
     @Override
     public String listLogsView(List<LoggedAction> logs) {
-        return "";
+        return String.join("\n", utility.logsToStr(logs));
     }
 
-    /// @return
+    // ---------------- MENU VIEWS ----------------
     @Override
     public String mainMenuView() {
-        String view = """
+        if (admin) {
+            return """
                 ----------Main Menu----------
-                
+
+                1. Browse briefs
+                2. Browse agents
+                3. Browse facilities
+                4. Browse missions
+                5. Browse messages
+                6. Change Password
+                7. Create a new user
+                8. Promote or Demote users
+                9. Review audit log
+                10. Exit/logout
+                Enter an option number:
                 """;
-        return view;
+        }
+
+        return """
+            ----------Main Menu----------
+
+            1. Browse briefs
+            2. Browse agents
+            3. Browse facilities
+            4. Browse missions
+            5. Browse messages
+            6. Change Password
+            7. Exit/logout
+            Enter an option number:
+            """;
     }
 
-    /// @return
     @Override
     public String browseMissionsView() {
-        return "";
+        return browseMenu("missions", "mission");
     }
 
-    /// @return
     @Override
     public String browseFacilitiesView() {
-        return "";
+        return browseMenu("facilities", "facility");
     }
 
-    /// @return
     @Override
     public String browseBriefsView() {
-        return "";
+        return browseMenu("briefs", "brief");
     }
 
-    /// @return
     @Override
     public String browseAgentsView() {
-        return "";
+        return browseMenu("agents", "agent");
     }
 
-    public String browseMessagesView(){
-        return "";
+    public String browseMessagesView() {
+        return """
+            ----------Browse messages----------
+
+            1. List your messages
+            2. Leave a message to an agent
+            Enter an option number:
+            """;
+    }
+
+    private String browseMenu(String plural, String singular) {
+        String title = plural.substring(0, 1).toUpperCase()
+                + plural.substring(1);
+
+        if (admin) {
+            return String.format("""
+                    ----------Browse %s----------
+
+                    1. List %s
+                    2. Read %s
+                    3. Add %s
+                    4. Go back to main menu
+                    Enter an option number:
+                    """,
+                    plural,
+                    title,
+                    capitalize(singular),
+                    capitalize(singular)
+            );
+        }
+        return String.format("""
+                ----------Browse %s----------
+
+                1. List %s
+                2. Read %s
+                3. Go back to main menu
+                Enter an option number:
+                """,
+                plural,
+                title,
+                capitalize(singular)
+        );
+    }
+
+    private String capitalize(String value) {
+        return value.substring(0, 1).toUpperCase() + value.substring(1);
     }
 
     public String manageUsersView(List<User> users, User currentUser) {
-        return "";
+        List<String> usernames = new ArrayList<>();
+
+        for (User user : users) {
+            if (user.getUserID() != currentUser.getUserID()) {
+                usernames.add("-" + user.getUsername());
+            }
+        }
+
+        String userList = String.join("\n", usernames);
+
+        return """
+                ----------Promote or Demote users----------
+
+                Users:
+
+                """ + userList + """
+
+                
+                Enter Promote or Demote followed by username like "Promote username1"
+                """;
     }
+
 
     public String reviewAuditLogView(List<LoggedAction> logs) {
-        return "";
+        List<String> entries = new ArrayList<>();
+
+        for (LoggedAction log : logs) {
+            String action = log.getAction() == 0 ? "read" : "create";
+
+            entries.add(
+                    log.getDateTime()
+                            + " : " + log.getUser().getUsername()
+                            + " : " + action
+                            + " : " + log.getRecord()
+            );
+        }
+
+        return """
+                ----------Logs----------
+
+                """ + String.join("\n", entries)+"\n";
     }
 
-    public String listMessagesView(List<Message> messages){
-        return "";
+    public String listMessagesView(List<Message> messages) {
+        return String.join("\n", utility.messagesToStr(messages));
     }
 
 
+    // ---------------- LOGIN / ACCOUNT INPUT ----------------
     /**
      * prompts user for their username and password and returns them in String array
      *
      * @return {@code String[]} 1st element is username, 2nd element is password
      */
     public String[] promptLogin(Scanner scnr) {
-        return null;
+        String username = getInputStr(scnr, "Username: ");
+        String password = getInputStr(scnr, "Password: ");
+
+        return new String[]{username, password};
     }
 
 
     /**
      * prompts user to create a username and password and returns them in String array
-     * @return
+     * @return {@code String[]} 1st element is username, 2nd element is password, 3rd element is confirm password
      */
     public String[] promptSignup(Scanner scnr) {
-        return null;
+        String username = getInputStr(scnr, "Choose a username: ");
+        String password = getInputStr(scnr, "Choose a password: ");
+        String confirmation = getInputStr(scnr, "Confirm password: ");
+
+        return new String[]{username, password, confirmation};
     }
 
     /**
      * Prompts the user to change their password.
+     * @return {@code String[]} 1st element is password, 2nd element is password confirmation
      */
     public String[] promptChangePassword(Scanner scnr) {
-        return null;
+        String password = getInputStr(scnr, "New password: ");
+        String confirmation = getInputStr(
+                scnr, "Confirm new password: "
+        );
+
+        return new String[]{password, confirmation};
     }
 
     // ---------------- RECORD INPUT ----------------
@@ -192,22 +358,39 @@ public class TerminalView extends View {
      * @return String[] containing mission title and facility ID.
      */
     public String[] promptAddMission(Scanner scnr) {
-        return null;
+        String title = getInputStr(scnr, "Mission title: ");
+        String facilityID = getInputStr(
+                scnr, "\\d+", "Facility ID: "
+        );
+
+        return new String[]{title, facilityID};
     }
 
     /**
      * @return String[] containing facility name and abbreviation.
      */
     public String[] promptAddFacility(Scanner scnr) {
-        return null;
+        String name = getInputStr(scnr, "Facility name: ");
+        String abbreviation = getInputStr(
+                scnr, "Facility abbreviation: "
+        );
+
+        return new String[]{name, abbreviation};
     }
 
     /**
-     * @return String[] containing mission ID, title, date,
-     * and content.
+     * @param scnr
+     * @return String[]{missionID, title, date, content}
      */
     public String[] promptAddBrief(Scanner scnr) {
-        return null;
+        String missionID = getInputStr(
+                scnr, "\\d+", "Mission ID: "
+        );
+        String title = getInputStr(scnr, "Brief title: ");
+        String date = getInputStr(scnr, "Date: ");
+        String content = getInputStr(scnr, "Brief content: ");
+
+        return new String[]{missionID, title, date, content};
     }
 
     /**
@@ -215,14 +398,34 @@ public class TerminalView extends View {
      * name, DOB, DOD, and notes.
      */
     public String[] promptAddAgent(Scanner scnr) {
-        return null;
+        String missionID = getOptionalInput(
+                scnr, "Mission ID (leave blank if none): "
+        );
+        String facilityID = getInputStr(
+                scnr, "\\d+", "Facility ID: "
+        );
+        String name = getInputStr(scnr, "Agent name: ");
+        String dob = getInputStr(scnr, "Date of birth: ");
+        String dod = getOptionalInput(
+                scnr, "Date of death (leave blank if none): "
+        );
+        String notes = getOptionalInput(
+                scnr, "Notes (leave blank if none): "
+        );
+
+        return new String[]{
+                missionID, facilityID, name, dob, dod, notes
+        };
     }
 
     /**
      * @return String containing the record ID.
      */
     public String promptRecordID(Scanner scnr, String itemType) {
-        return "";
+        return getInputStr(
+                scnr, "\\d+",
+                capitalize(itemType) + " ID: "
+        );
     }
 
 
@@ -232,7 +435,7 @@ public class TerminalView extends View {
      * @return String containing the new username.
      */
     public String promptCreateUser(Scanner scnr) {
-        return "";
+        return getInputStr(scnr, "New username: ");
     }
 
     /**
@@ -240,14 +443,35 @@ public class TerminalView extends View {
      * and the username to modify.
      */
     public String[] promptManageAccess(Scanner scnr) {
-        return null;
+        while (true) {
+            String input = getInputStr(
+                    scnr,
+                    "Enter Promote or Demote followed by username: "
+            );
+
+            String[] parts = input.trim().split("\\s+", 2);
+
+            if (parts.length == 2
+                    && (parts[0].equalsIgnoreCase("promote")
+                    || parts[0].equalsIgnoreCase("demote"))) {
+
+                String action = parts[0].equalsIgnoreCase("promote")
+                        ? "Promote" : "Demote";
+
+                return new String[]{action, parts[1]};
+            }
+
+            System.out.println(
+                    "Invalid input. Use Promote username or Demote username."
+            );
+        }
     }
 
     /**
      * @return String containing the username to modify.
      */
     public String promptSelectUser(Scanner scnr) {
-        return "";
+        return getInputStr(scnr, "Enter username: ");
     }
 
 
@@ -258,49 +482,101 @@ public class TerminalView extends View {
      * and message content.
      */
     public String[] promptCreateMessage(Scanner scnr) {
-        return null;
+        String recipientID = getInputStr(
+                scnr, "\\d+", "Recipient agent ID: "
+        );
+        String content = getInputStr(
+                scnr, "Message content: "
+        );
+
+        return new String[]{recipientID, content};
     }
 
 
     // ---------------- GENERAL PROMPTS ----------------
 
     /**
+     * displays main menu and prompts for input
      * @return Selected menu option.
      */
     public int promptMainMenuChoice(Scanner scnr) {
-        return 0;
+        int maxOption = admin ? 10 : 7;
+
+        return getInputInt(
+                scnr, 1, maxOption, mainMenuView()
+        );
     }
 
     /**
      * @return Selected browse menu option.
      */
     public int promptBrowseMenuChoice(Scanner scnr, String itemType) {
-        return 0;
+        int maxOption;
+
+        if (itemType.equalsIgnoreCase("messages")) {
+            maxOption = 2;
+        } else {
+            maxOption = admin ? 4 : 3;
+        }
+
+        String menu;
+
+        if (itemType.equalsIgnoreCase("missions")) {
+            menu = browseMissionsView();
+        } else if (itemType.equalsIgnoreCase("facilities")) {
+            menu = browseFacilitiesView();
+        } else if (itemType.equalsIgnoreCase("briefs")) {
+            menu = browseBriefsView();
+        } else if (itemType.equalsIgnoreCase("agents")) {
+            menu = browseAgentsView();
+        } else if (itemType.equalsIgnoreCase("messages")) {
+            menu = browseMessagesView();
+        } else {
+            menu = "Enter an option number: ";
+        }
+
+        return getInputInt(scnr, 1, maxOption, menu);
     }
 
     /**
      * @return Selected yes/no response.
      */
     public boolean promptConfirmation(Scanner scnr, String message) {
-        return false;
+        while (true) {
+            String input = getInputStr(
+                    scnr, message + " (yes/no): "
+            );
+
+            if (input.equalsIgnoreCase("yes")
+                    || input.equalsIgnoreCase("y")) {
+                return true;
+            }
+
+            if (input.equalsIgnoreCase("no")
+                    || input.equalsIgnoreCase("n")) {
+                return false;
+            }
+
+            System.out.println("Please enter yes or no.");
+        }
     }
 
     /**
      * @return Selected option (e.g. promote/demote).
      */
     public String promptOption(Scanner scnr, String message) {
-        return "";
+        return getInputStr(scnr, message);
     }
 
 
     // ---------------- ERROR / STATUS VIEWS ----------------
 
     public String formatError(String error) {
-        return "";
+        return "Error: " + error;
     }
 
     public String formatSuccess(String message) {
-        return "";
+        return "Success: " + message;
     }
 
 

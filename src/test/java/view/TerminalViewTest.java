@@ -145,16 +145,16 @@ public class TerminalViewTest {
         String actual = view.listFacilitiesView(facilities);
 
         String expected = """
-            Facility ID: 1
-            Name: Facility1
-            Abbreviation: F1
-
-            Facility ID: 2
-            Name: Facility2
-            Abbreviation: F2
-
-
-            """;
+                Facility ID: 1
+                Name: Facility1
+                Abbreviation: F1
+                
+                Facility ID: 2
+                Name: Facility2
+                Abbreviation: F2
+                
+                
+                """;
 
         assertEquals(expected, actual);
     }
@@ -167,11 +167,11 @@ public class TerminalViewTest {
         String actual = view.singleFacilityView(f);
 
         String expected = """
-            Facility ID: 1
-            Name: Facility1
-            Abbreviation: F1
-            
-            """;
+                Facility ID: 1
+                Name: Facility1
+                Abbreviation: F1
+                
+                """;
 
         assertEquals(expected, actual);
     }
@@ -215,17 +215,16 @@ public class TerminalViewTest {
         String actual = view.singleBriefView(b);
 
         String expected = """
-            Brief ID: 1
-            Mission ID: 2
-            Title: brief1
-            Date: 1991-02-21
-            Content: content1
-            
-            """;
+                Brief ID: 1
+                Mission ID: 2
+                Title: brief1
+                Date: 1991-02-21
+                Content: content1
+                
+                """;
 
         assertEquals(expected, actual);
     }
-
 
 
     // ---------------- AGENT VIEWS ----------------
@@ -241,24 +240,24 @@ public class TerminalViewTest {
         String actual = view.listAgentsView(agents);
 
         String expected = """
-            Agent ID: 1
-            Mission ID: 2
-            Facility ID: 3
-            Name: agent1
-            Date Of Birth: 1990-02-01
-            Date Of Death: 2000-02-01
-            Notes: note1
-
-            Agent ID: 2
-            Mission ID: 3
-            Facility ID: 4
-            Name: agent2
-            Date Of Birth: 1991-03-01
-            Date Of Death:
-            Notes:
-
-
-            """;
+                Agent ID: 1
+                Mission ID: 2
+                Facility ID: 3
+                Name: agent1
+                Date Of Birth: 1990-02-01
+                Date Of Death: 2000-02-01
+                Notes: note1
+                
+                Agent ID: 2
+                Mission ID: 3
+                Facility ID: 4
+                Name: agent2
+                Date Of Birth: 1991-03-01
+                Date Of Death:
+                Notes:
+                
+                
+                """;
 
         assertEquals(expected, actual);
     }
@@ -271,15 +270,15 @@ public class TerminalViewTest {
         String actual = view.singleAgentView(a);
 
         String expected = """
-            Agent ID: 1
-            Mission ID: 2
-            Facility ID: 3
-            Name: agent1
-            Date Of Birth: 1990-02-01
-            Date Of Death: 2000-02-01
-            Notes: note1
-            
-            """;
+                Agent ID: 1
+                Mission ID: 2
+                Facility ID: 3
+                Name: agent1
+                Date Of Birth: 1990-02-01
+                Date Of Death: 2000-02-01
+                Notes: note1
+                
+                """;
 
         assertEquals(expected, actual);
     }
@@ -423,16 +422,18 @@ public class TerminalViewTest {
         String actual = view.mainMenuView();
         String expected = """
                 ----------Main Menu----------
+                
                 1. Browse briefs
                 2. Browse agents
                 3. Browse facilities
-                4. Change Password
-                5. Create a new user
-                6. Promote or Demote users
-                7. Review audit log
-                8. Exit/logout
+                4. Browse missions
+                5. Browse messages
+                6. Change Password
+                7. Create a new user
+                8. Promote or Demote users
+                9. Review audit log
+                10. Exit/logout
                 Enter an option number:
-                
                 """;
         assertEquals(expected, actual);
     }
@@ -444,17 +445,18 @@ public class TerminalViewTest {
         String actual = view.mainMenuView();
         String expected = """
                 ----------Main Menu----------
+                
                 1. Browse briefs
                 2. Browse agents
                 3. Browse facilities
-                4. Change Password
-                5. Exit/logout
+                4. Browse missions
+                5. Browse messages
+                6. Change Password
+                7. Exit/logout
                 Enter an option number:
-                
                 """;
         assertEquals(expected, actual);
     }
-
 
 
     // ---------------- BROWSE MENUS ----------------
@@ -463,17 +465,18 @@ public class TerminalViewTest {
         TerminalView view = new TerminalView(true);
 
         String expected = """
-            ----------Browse missions----------
-
-            1. List missions
-            2. Read mission
-            3. Add mission
-            4. Go back to main menu
-            Enter an option number:
-            """;
+                ----------Browse missions----------
+                
+                1. List missions
+                2. Read mission
+                3. Add mission
+                4. Go back to main menu
+                Enter an option number:
+                """;
 
         assertEquals(expected, view.browseMissionsView());
     }
+
     @Test
     public void browseBriefsViewTest1() {
         TerminalView view = new TerminalView(true);
@@ -511,14 +514,14 @@ public class TerminalViewTest {
         String actual = view.browseAgentsView();
 
         String expected = """
-            ----------Browse agents----------
-            1. List Agents
-            2. Read Agent
-            3. Add Agent
-            4. Go back to main menu
-            Enter an option number:
-
-            """;
+                ----------Browse agents----------
+                1. List Agents
+                2. Read Agent
+                3. Add Agent
+                4. Go back to main menu
+                Enter an option number:
+                
+                """;
 
         assertEquals(expected, actual);
     }
@@ -529,17 +532,16 @@ public class TerminalViewTest {
         String actual = view.browseAgentsView();
 
         String expected = """
-            ----------Browse agents----------
-            1. List Agents
-            2. Read Agent
-            3. Go back to main menu
-            Enter an option number:
-
-            """;
+                ----------Browse agents----------
+                1. List Agents
+                2. Read Agent
+                3. Go back to main menu
+                Enter an option number:
+                
+                """;
 
         assertEquals(expected, actual);
     }
-
 
 
     @Test
@@ -548,14 +550,14 @@ public class TerminalViewTest {
         String actual = view.browseFacilitiesView();
 
         String expected = """
-            ----------Browse facilities----------
-            1. List Facilities
-            2. Read Facility
-            3. Add Facility
-            4. Go back to main menu
-            Enter an option number:
-
-            """;
+                ----------Browse facilities----------
+                1. List Facilities
+                2. Read Facility
+                3. Add Facility
+                4. Go back to main menu
+                Enter an option number:
+                
+                """;
 
         assertEquals(expected, actual);
     }
@@ -566,13 +568,13 @@ public class TerminalViewTest {
         String actual = view.browseFacilitiesView();
 
         String expected = """
-            ----------Browse facilities----------
-            1. List Facilities
-            2. Read Facility
-            3. Go back to main menu
-            Enter an option number:
-
-            """;
+                ----------Browse facilities----------
+                1. List Facilities
+                2. Read Facility
+                3. Go back to main menu
+                Enter an option number:
+                
+                """;
 
         assertEquals(expected, actual);
     }
@@ -584,10 +586,9 @@ public class TerminalViewTest {
         String expected = """
             ----------Browse messages----------
 
-            1. List Messages
-            2. Send a Message
+            1. List your messages
+            2. Leave a message to an agent
             Enter an option number:
-            
             """;
 
         assertEquals(expected, view.browseMessagesView());
@@ -608,16 +609,16 @@ public class TerminalViewTest {
             List<User> users = store.listUsers();
 
             String expected = """
-                ----------Promote or Demote users----------
-
-                Users:
-
-                -username1
-                -username2
-
-                Enter Promote or Demote followed by username like "Promote username1"
-                
-                """;
+                    ----------Promote or Demote users----------
+                    
+                    Users:
+                    
+                    -username1
+                    -username2
+                    
+                    Enter Promote or Demote followed by username like "Promote username1"
+                    
+                    """;
 
             assertEquals(expected, view.manageUsersView(users, currentUser));
         } finally {
@@ -644,8 +645,8 @@ public class TerminalViewTest {
 
             assertNotNull(actual);
             assertTrue(actual.contains("----------Logs----------"));
-            assertTrue(actual.contains("date1 : user1 : 1 : record1"));
-            assertTrue(actual.contains("date2 : user2 : 0 : record2"));
+            assertTrue(actual.contains("date1 : user1 : write : record1"));
+            assertTrue(actual.contains("date2 : user2 : read : record2"));
         } finally {
             store.close();
         }
@@ -785,7 +786,7 @@ public class TerminalViewTest {
 
         String[] actual = view.promptManageAccess(scnr);
 
-        String[] expected = {"promote", "user2"};
+        String[] expected = {"Promote", "user2"};
 
         assertArrayEquals(expected, actual);
     }
@@ -895,15 +896,6 @@ public class TerminalViewTest {
         assertNotNull(actual);
         assertTrue(actual.contains("Password changed"));
     }
-
-
-
-
-
-
-
-
-
 
 
 }
