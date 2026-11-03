@@ -9,9 +9,8 @@ public class TerminalView extends View {
 //    /// @param message
 //    /// @return
 //    @Override
-//    public void promptMessage(String message) {
-//        return "";
-//    }
+    public void promptMessage(String message) {
+    }
 
     public TerminalView(boolean isAdmin) {
         super(isAdmin);
@@ -148,6 +147,18 @@ public class TerminalView extends View {
         return "";
     }
 
+    public String browseMessagesView(){
+        return "";
+    }
+
+    public String manageUsersView() {
+        return "";
+    }
+
+    public String reviewAuditLogView() {
+        return "";
+    }
+
 //    /// @return
 //    @Override
 //    public String createAccountView() {
@@ -172,7 +183,7 @@ public class TerminalView extends View {
      *
      * @return {@code String[]} 1st element is username, 2nd element is password
      */
-    public String[] promptLogin() {
+    public String[] promptLogin(Scanner scnr) {
         return null;
     }
 
@@ -181,16 +192,133 @@ public class TerminalView extends View {
      * prompts user to create a username and password and returns them in String array
      * @return
      */
-    public String[] promptSignup() {
+    public String[] promptSignup(Scanner scnr) {
         return null;
     }
 
     /**
-     * displays the main menu of options and returns the selected option by user
-     * @return the selected option by the user
+     * Prompts the user to change their password.
      */
-    public int displayMainMenu() {
+    public String[] promptChangePassword(Scanner scnr) {
+        return null;
+    }
+
+    // ---------------- RECORD INPUT ----------------
+
+    /**
+     * @return String[] containing mission title and facility ID.
+     */
+    public String[] promptAddMission(Scanner scnr) {
+        return null;
+    }
+
+    /**
+     * @return String[] containing facility name and abbreviation.
+     */
+    public String[] promptAddFacility(Scanner scnr) {
+        return null;
+    }
+
+    /**
+     * @return String[] containing mission ID, title, date,
+     * and content.
+     */
+    public String[] promptAddBrief(Scanner scnr) {
+        return null;
+    }
+
+    /**
+     * @return String[] containing mission ID, facility ID,
+     * name, DOB, DOD, and notes.
+     */
+    public String[] promptAddAgent(Scanner scnr) {
+        return null;
+    }
+
+    /**
+     * @return String containing the record ID.
+     */
+    public String promptRecordID(Scanner scnr, String itemType) {
+        return "";
+    }
+
+
+    // ---------------- USER MANAGEMENT INPUT ----------------
+
+    /**
+     * @return String containing the new username.
+     */
+    public String promptCreateUser(Scanner scnr) {
+        return "";
+    }
+
+    /**
+     * @return String[] containing action (promote/demote)
+     * and the username to modify.
+     */
+    public String[] promptManageAccess(Scanner scnr) {
+        return null;
+    }
+
+    /**
+     * @return String containing the username to modify.
+     */
+    public String promptSelectUser(Scanner scnr) {
+        return "";
+    }
+
+
+    // ---------------- MESSAGE INPUT ----------------
+
+    /**
+     * @return String[] containing recipient agent ID
+     * and message content.
+     */
+    public String[] promptCreateMessage(Scanner scnr) {
+        return null;
+    }
+
+
+    // ---------------- GENERAL PROMPTS ----------------
+
+    /**
+     * @return Selected menu option.
+     */
+    public int promptMainMenuChoice(Scanner scnr) {
         return 0;
     }
+
+    /**
+     * @return Selected browse menu option.
+     */
+    public int promptBrowseMenuChoice(Scanner scnr, String itemType) {
+        return 0;
+    }
+
+    /**
+     * @return Selected yes/no response.
+     */
+    public boolean promptConfirmation(Scanner scnr, String message) {
+        return false;
+    }
+
+    /**
+     * @return Selected option (e.g. promote/demote).
+     */
+    public String promptOption(Scanner scnr, String message) {
+        return "";
+    }
+
+
+    // ---------------- ERROR / STATUS VIEWS ----------------
+
+    public String formatError(String error) {
+        return "";
+    }
+
+    public String formatSuccess(String message) {
+        return "";
+    }
+
 
 }
