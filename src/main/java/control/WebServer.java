@@ -15,11 +15,21 @@ import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 
-// Week-1 stub of the web server. The fields and constructor are
-// real; start() and stop() are empty until week 2 implements
-// routing and sessions (see WebServerUML). The throws clause
-// on start() is already there so week 2 does not change the
-// signature on callers.
+// Week-2 web server: the browser's adapter to the controller.
+// It listens, routes, identifies the requester from the session
+// cookie, and translates controller text back into pages. It
+// holds no record logic, menu logic, admin gating, or audit
+// logic: the controller already decided all of that, and the
+// server only shows what the controller returned. The web is
+// read-only: browse, read, and audit routes only, no creating
+// or editing. Sessions are one token map: a random UUID minted
+// at login, never derived from the username, one login = one
+// token. The cookie has no Expires and no Max-Age, which is
+// what makes it a session cookie that dies when the browser
+// closes, and no Secure flag, because the site is plain http
+// on localhost and a Secure cookie would never be sent.
+// Helpers live as local lambdas inside start(), not private
+// methods, so the whole request path reads in one place.
 public class WebServer {
     private final ControllerInterface controller;
     private final Map<String, String> sessions = new ConcurrentHashMap<>();
@@ -32,11 +42,13 @@ public class WebServer {
         this.port = port;
     }
 
-    // Week 2: create the HttpServer on port, register one
-    // context per route, and start listening.
+    // The port the server actually listens on. After start()
+    // this is the real port (so port 0 picks a free one);
+    // before start() it is the configured port.
     public int getPort() {
         return server != null ? server.getAddress().getPort() : port;
     }
+
     public void start() throws IOException {
         if (server != null) {
             return;
@@ -44,15 +56,21 @@ public class WebServer {
         server = HttpServer.create(new InetSocketAddress(port), 0);
         server.setExecutor(null);
 
+        // Escape plain controller text for HTML pages.
         Function<String, String> escape = text -> text
-                .replace("&" , "&amp;")
+                .replace("&", "&amp;")
                 .replace("<", "&lt;")
                 .replace(">", "&gt;");
 
+        // Wrap controller text in a page. Uses C's WebView when
+        // it returns content; until then, plain wrapping, so
+        // pages work even while generateHTML is still a stub.
         BiFunction<String, String, String> wrapText = (title, text) -> {
             String html = view.generateHTML(title, text);
-            if (html != null || html.isEmpty()) {
-                html = "<html><head><title>" + escape.apply(title) + "</title></head><body><pre>" + escape.apply(text) + "</pre></body></html>";
+            if (html == null || html.isEmpty()) {
+                html = "<html><head><title>" + escape.apply(title)
+                        + "</title></head><body><pre>" + escape.apply(text)
+                        + "</pre></body></html>";
             }
             return html;
         };
