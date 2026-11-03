@@ -4,34 +4,38 @@ import model.*;
 
 import java.util.List;
 
-public interface View {
+public abstract class View {
     // Display information
-    String promptMessage(String message);
+//    abstract String promptMessage(String message);
+    protected boolean isAdmin;
+    public View(boolean isAdmin) {
+        this.isAdmin = isAdmin;
+    }
 
 
-    String singleMissionView(Mission mission);
-    String listMissionsView(List<Mission> missions);
-    String singleFacilityView(Facility facility);
-    String listFacilitysView(List<Facility> facilities);
-    String singleBriefView(Brief brief);
-    String listBriefsView(List<Brief> briefs);
-    String singleAgentView(Agent agent);
-    String listAgentsView(List<Agent> agents);
-    String singleUserView(User user);
-    String listUsersView(List<User> users);
-    String singleLogView(LoggedAction log);
-    String listLogsView(List<LoggedAction> logs);
+    abstract String singleMissionView(Mission mission);
+    abstract String listMissionsView(List<Mission> missions);
+    abstract String singleFacilityView(Facility facility);
+    abstract String listFacilitysView(List<Facility> facilities);
+    abstract String singleBriefView(Brief brief);
+    abstract String listBriefsView(List<Brief> briefs);
+    abstract String singleAgentView(Agent agent);
+    abstract String listAgentsView(List<Agent> agents);
+    abstract String singleUserView(User user);
+    abstract String listUsersView(List<User> users);
+    abstract String singleLogView(LoggedAction log);
+    abstract String listLogsView(List<LoggedAction> logs);
 
-    String mainMenuView();
-    String browseMissionsView();
-    String browseFacilitiesView();
-    String browseBriefsView();
-    String browseAgentsView();
-    String createAccountView();
-    String loginView();
+    abstract String mainMenuView();
+    abstract String browseMissionsView();
+    abstract String browseFacilitiesView();
+    abstract String browseBriefsView();
+    abstract String browseAgentsView();
+//    abstract String createAccountView();
+//    abstract String loginView();
 
 
-    String formatError(String error);
+//    abstract String formatError(String error);
 
 //    /**
 //     * prompts user for their username and password and returns them in String array

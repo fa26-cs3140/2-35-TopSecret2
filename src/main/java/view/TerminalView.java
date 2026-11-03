@@ -4,12 +4,15 @@ import model.*;
 
 import java.util.List;
 
-public class TerminalView implements View {
-    /// @param message
-    /// @return
-    @Override
-    public String promptMessage(String message) {
-        return "";
+public class TerminalView extends View {
+//    /// @param message
+//    /// @return
+//    @Override
+//    public String promptMessage(String message) {
+//        return "";
+//    }
+    public TerminalView(boolean isAdmin) {
+        super(isAdmin);
     }
 
     /// @param mission
@@ -99,6 +102,11 @@ public class TerminalView implements View {
     /// @return
     @Override
     public String mainMenuView() {
+        System.out.println("----------Main Menu----------");
+        System.out.println("1. Browse briefs");
+        System.out.println("2. Browse agents");
+        System.out.println("3. Browse facilities");
+        System.out.println("4. Change Password");
         return "";
     }
 
@@ -126,24 +134,24 @@ public class TerminalView implements View {
         return "";
     }
 
-    /// @return
-    @Override
-    public String createAccountView() {
-        return "";
-    }
+//    /// @return
+//    @Override
+//    public String createAccountView() {
+//        return "";
+//    }
+//
+//    /// @return
+//    @Override
+//    public String loginView() {
+//        return "";
+//    }
 
-    /// @return
-    @Override
-    public String loginView() {
-        return "";
-    }
-
-    /// @param error
-    /// @return
-    @Override
-    public String formatError(String error) {
-        return "";
-    }
+//    /// @param error
+//    /// @return
+//    @Override
+//    public String formatError(String error) {
+//        return "";
+//    }
 
     /**
      * prompts user for their username and password and returns them in String array
