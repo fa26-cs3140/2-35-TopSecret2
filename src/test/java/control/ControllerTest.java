@@ -101,7 +101,7 @@ public class ControllerTest {
 
     @Test
     void readEntryReturnsEmptyStub() {
-        assertEquals("", controller.readEntry("alice", "briefs", 1));
+        assertEquals("", controller.readEntry("alice", "briefs", 1, ));
     }
 
     @Test

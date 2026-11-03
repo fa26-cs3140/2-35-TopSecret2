@@ -188,7 +188,7 @@ public class Controller implements ControllerInterface {
 
     // Week 2: one full record from the store, plus a READ audit.
     @Override
-    public String readEntry(String username, String itemType,int id) {
+    public String readEntry(String username, String itemType,int id, List<String> fields) {
         if (!access.isAdmin(username)) {
             return "Not allowed";
         }

@@ -28,7 +28,7 @@ public interface ControllerInterface {
     String showMainMenu(String username);
     String browseMainMenu(String username, String itemType);
     String listEntries(String username, String itemType);
-    String readEntry(String username, String itemType, int id);
+    String readEntry(String username, String itemType, int id, List<String> fields);
     String addEntry(String username, String itemType, int id, List<String> fields);
     // Proposed addition: the team's doc omits it, but C's
     // terminal editing needs a controller edit path once the
