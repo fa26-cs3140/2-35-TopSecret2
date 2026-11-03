@@ -16,12 +16,16 @@ import model.TopSecretException;
 import model.User;
 import model.UserManagerInterface;
 
-// Week-1 stub of the controller. The four one-line delegations
-// below are real; every other method returns an empty String
-// until week 2 moves the HW5 logic in (see ControllerUML).
-// Note: these imports assume the model move. If you compile
-// before your teammates move their files into model, delete
-// the import lines above.
+// Week-2 controller: the full HW5 UserInterface logic, moved
+// not rewritten. Only two mechanical changes: println becomes
+// a returned String, and Scanner reads become parameters, with
+// the username passed explicitly instead of a currentUser field.
+// Deliberate HW5-to-HW6 changes, all flagged: missions join the
+// menus (main menu 1-9, browse menu gains Edit at 4, Back at 5);
+// agent creation takes no missionID (missions are assigned
+// later through assignAgentToMission); an invalid itemType in
+// readEntry returns "Invalid option" instead of the old UI's
+// impossible-case text, since the web can pass any type.
 public class Controller implements ControllerInterface {
     private final UserManagerInterface users;
     private final AccessControlInterface access;
@@ -54,69 +58,70 @@ public class Controller implements ControllerInterface {
         return users.needsPasswordSetup(username);
     }
 
-    @Override
-    public boolean isAdmin(String username) {
-        return access.isAdmin(username);
-    }
-
-    // Week 2: users.createUser + users.changePassword, with the
-    // first account admin by the bootstrap rule in main.
+    // First account: create the user, then set the password.
+    // The first account is admin by the bootstrap rule in main.
     @Override
     public String createFirstAccount(String username, String password1, String passwordConfirm) {
-        try{
+        try {
             users.createUser(username);
             users.changePassword(username, password1, passwordConfirm);
-        } catch (TopSecretException e){
+        } catch (TopSecretException e) {
             return e.getMessage();
         }
         return "Account is created!";
     }
 
-    // Week 2: users.changePassword, returning its message on error.
     @Override
     public String changePassword(String username, String password1, String passwordConfirm) {
-        try{
+        try {
             users.changePassword(username, password1, passwordConfirm);
-        } catch (TopSecretException e){
+        } catch (TopSecretException e) {
             return e.getMessage();
         }
         return "Password changed";
     }
 
-    // Week 2: admin-gated users.createUser.
+    // Admin-created users set their own password at first login,
+    // so success prints nothing, exactly like the HW5 UI.
     @Override
     public String createUser(String adminUsername, String newUsername) {
         if (!access.isAdmin(adminUsername)) {
             return "Not allowed";
-        };
+        }
         try {
             users.createUser(newUsername);
-        } catch (TopSecretException e){
+        } catch (TopSecretException e) {
             return e.getMessage();
         }
-        return "User created!";
+        return "";
     }
 
-    // Week 2: admin-gated promote/demote, refusing self-action,
-    // with the HW5 wording ("<name> was promoted" / "Not allowed").
     @Override
     public String manageAccess(String adminUsername, String targetUsername, String action) {
         if (!access.isAdmin(adminUsername)) {
             return "Not allowed";
-        };
-        boolean worked;
+        }
+        boolean ok;
+        String word;
         if (action.equalsIgnoreCase("promote")) {
-            worked = access.promoteUser(adminUsername, targetUsername);
-        }else if (action.equalsIgnoreCase("demote")) {
-            worked = access.demoteUser(adminUsername, targetUsername);
+            ok = access.promoteUser(adminUsername, targetUsername);
+            word = "promoted";
+        } else if (action.equalsIgnoreCase("demote")) {
+            ok = access.demoteUser(adminUsername, targetUsername);
+            word = "demoted";
+        } else {
+            return "Invalid option";
         }
-        else {
-            return "Invalid Option";
-        }
-        return worked ? targetUsername + " was " + action + "d." : "Not Allowed";
+        return ok ? targetUsername + " was " + word : "Not allowed";
     }
 
-    // Week 2: the 1-8 menu text, admin options only for admins.
+    @Override
+    public boolean isAdmin(String username) {
+        return access.isAdmin(username);
+    }
+
+    // Main menu text. Admin options only for admins; standard
+    // users see 1-5 and 9, like the HW5 menu showed 1-4 and 8.
     @Override
     public String showMainMenu(String username) {
         StringBuilder menu = new StringBuilder();
@@ -135,7 +140,8 @@ public class Controller implements ControllerInterface {
         return menu.toString();
     }
 
-    // Week 2: the list/read/add/back text for one record type.
+    // Browse menu text for one record type. Add and Edit are
+    // admin only; Back is always last.
     @Override
     public String browseMainMenu(String username, String itemType) {
         if (!itemType.equals("briefs") && !itemType.equals("agents")
@@ -154,126 +160,80 @@ public class Controller implements ControllerInterface {
         return menu.toString();
     }
 
-    // Week 2: one "id : name/title" line per record from the store.
     @Override
     public String listEntries(String username, String itemType) {
         List<String> lines = new ArrayList<>();
-        switch (itemType) {
-            case "briefs" -> {
-                for (Brief b : store.listBriefs()) {
-                    lines.add(b.getBriefID() + " : " + b.getTitle());
-                }
+        if (itemType.equals("briefs")) {
+            for (Brief b : store.listBriefs()) {
+                lines.add(b.getBriefID() + " : " + b.getTitle());
             }
-            case "agents" -> {
-                for (Agent a : store.listAgents()) {
-                    lines.add(a.getAgentID() + " : " + a.getName());
-                }
+        } else if (itemType.equals("agents")) {
+            for (Agent a : store.listAgents()) {
+                lines.add(a.getAgentID() + " : " + a.getName());
             }
-            case "facilities" -> {
-                for (Facility f : store.listFacilities()) {
-                    lines.add(f.getFacilityID() + " : " + f.getName());
-                }
+        } else if (itemType.equals("facilities")) {
+            for (Facility f : store.listFacilities()) {
+                lines.add(f.getFacilityID() + " : " + f.getName());
             }
-            case "missions" -> {
-                for (Mission m : store.listMissions()) {
-                    lines.add(m.getMissionID() + " : " + m.getTitle());
-                }
+        } else if (itemType.equals("missions")) {
+            for (Mission m : store.listMissions()) {
+                lines.add(m.getMissionID() + " : " + m.getTitle());
             }
-            default -> {
-                return "Invalid option";
-            }
+        } else {
+            return "Invalid option";
         }
         return String.join("\n", lines);
     }
 
-    // Week 2: one full record from the store, plus a READ audit.
     @Override
-    public String readEntry(String username, String itemType,int id, List<String> fields) {
-        if (!access.isAdmin(username)) {
-            return "Not allowed";
-        }
-        try {
-            switch (itemType) {
-                case "briefs" -> {
-                    Brief added = store.addBrief(new Brief(Integer.parseInt(fields.get(0)), fields.get(1), fields.get(2), fields.get(3)));
-                    User userObj = users.getUserByUsername(username);
-                    if (userObj != null) {
-                        audit.log(new LoggedAction(LoggedAction.CREATE, userObj, LocalDateTime.now().toString(), "briefs " + added.getBriefID()));
-                    }
-                }
-                case "agents" -> {
-                    Agent added = store.addAgent(new Agent(null, Integer.parseInt(fields.get(0)), fields.get(1), fields.get(2), fields.get(3), fields.get(4)));
-                    User userObj = users.getUserByUsername(username);
-                    if (userObj != null) {
-                        audit.log(new LoggedAction(LoggedAction.CREATE, userObj, LocalDateTime.now().toString(), "agents " + added.getAgentID()));
-                    }
-                }
-                case "facilities" -> {
-                    Facility added = store.addFacility(new Facility(fields.get(0), fields.get(1)));
-                    User userObj = users.getUserByUsername(username);
-                    if (userObj != null) {
-                        audit.log(new LoggedAction(LoggedAction.CREATE, userObj, LocalDateTime.now().toString(), "facilities " + added.getFacilityID()));
-                    }
-                }
-                case "missions" -> {
-                    Mission added = store.addMission(new Mission(fields.get(0), Integer.parseInt(fields.get(1))));
-                    User userObj = users.getUserByUsername(username);
-                    if (userObj != null) {
-                        audit.log(new LoggedAction(LoggedAction.CREATE, userObj, LocalDateTime.now().toString(), "missions " + added.getMissionID()));
-                    }
-                }
-                default -> {
-                    return "Invalid option";
-                }
+    public String readEntry(String username, String itemType, int id) {
+        if (itemType.equals("briefs")) {
+            Brief requested = store.getBrief(id);
+            if (requested == null) {
+                return "No brief found with this id";
             }
-        } catch (IllegalArgumentException e) {
-            return e.getMessage();
+            User userObj = users.getUserByUsername(username);
+            if (userObj != null) {
+                audit.log(new LoggedAction(LoggedAction.READ, userObj, LocalDateTime.now().toString(), itemType + " " + id));
+            }
+            return "Title: " + requested.getTitle() + "\nDate: " + requested.getDate() + "\nContent: " + requested.getContent();
+        } else if (itemType.equals("agents")) {
+            Agent requested = store.getAgent(id);
+            if (requested == null) {
+                return "No agent found with this id";
+            }
+            User userObj = users.getUserByUsername(username);
+            if (userObj != null) {
+                audit.log(new LoggedAction(LoggedAction.READ, userObj, LocalDateTime.now().toString(), itemType + " " + id));
+            }
+            return "Name: " + requested.getName() + "\nDoB: " + requested.getDate_of_birth() + "\nDoDeath: " + requested.getDate_of_death() + "\nNotes: " + requested.getNotes();
+        } else if (itemType.equals("facilities")) {
+            Facility requested = store.getFacility(id);
+            if (requested == null) {
+                return "No facility found with this id";
+            }
+            User userObj = users.getUserByUsername(username);
+            if (userObj != null) {
+                audit.log(new LoggedAction(LoggedAction.READ, userObj, LocalDateTime.now().toString(), itemType + " " + id));
+            }
+            return "Name: " + requested.getName() + "\nAbbreviation: " + requested.getAbbreviation();
+        } else if (itemType.equals("missions")) {
+            Mission requested = store.getMission(id);
+            if (requested == null) {
+                return "No mission found with this id";
+            }
+            User userObj = users.getUserByUsername(username);
+            if (userObj != null) {
+                audit.log(new LoggedAction(LoggedAction.READ, userObj, LocalDateTime.now().toString(), itemType + " " + id));
+            }
+            return "Title: " + requested.getTitle() + "\nFacility ID: " + requested.getFacilityID();
+        } else {
+            return "Invalid option";
         }
-        return listEntries(username, itemType);
     }
 
-    // Week 2: admin-gated store add, plus a CREATE audit and the
-    // updated list text.
     @Override
-    public String addEntry(String username, String itemType, int id, List<String> fields) {
-        if (!access.isAdmin(username)) {
-            return "Not allowed";
-        }
-        try {
-            if (itemType.equals("briefs")) {
-                if (store.getBrief(id) == null) {
-                    return "No brief found with this id";
-                }
-                store.updateBrief(new Brief(id, Integer.parseInt(fields.get(0)), fields.get(1), fields.get(2), fields.get(3)));
-            } else if (itemType.equals("agents")) {
-                Agent existing = store.getAgent(id);
-                if (existing == null) {
-                    return "No agent found with this id";
-                }
-                store.updateAgent(new Agent(id, existing.getMissionID(), Integer.parseInt(fields.get(0)), fields.get(1), fields.get(2), fields.get(3), fields.get(4)));
-            } else if (itemType.equals("facilities")) {
-                if (store.getFacility(id) == null) {
-                    return "No facility found with this id";
-                }
-                store.updateFacility(new Facility(id, fields.get(0), fields.get(1)));
-            } else if (itemType.equals("missions")) {
-                if (store.getMission(id) == null) {
-                    return "No mission found with this id";
-                }
-                store.updateMission(new Mission(id, fields.get(0), Integer.parseInt(fields.get(1))));
-            } else {
-                return "Invalid option";
-            }
-        } catch (IllegalArgumentException e) {
-            return e.getMessage();
-        }
-        // No audit yet: LoggedAction has no EDIT value (D's call).
-        return listEntries(username, itemType);
-    }
-
-    // Stays a stub until C adds store update methods.
-    @Override
-    public String editEntry(String username, String itemType, int id, List<String> fields) {
+    public String addEntry(String username, String itemType, List<String> fields) {
         if (!access.isAdmin(username)) {
             return "Not allowed";
         }
@@ -311,8 +271,43 @@ public class Controller implements ControllerInterface {
         return listEntries(username, itemType);
     }
 
-    // Week 2: admin-gated audit.getLog() formatted as
-    // time : username : read/create : record.
+    @Override
+    public String editEntry(String username, String itemType, int id, List<String> fields) {
+        if (!access.isAdmin(username)) {
+            return "Not allowed";
+        }
+        try {
+            if (itemType.equals("briefs")) {
+                if (store.getBrief(id) == null) {
+                    return "No brief found with this id";
+                }
+                store.updateBrief(new Brief(id, Integer.parseInt(fields.get(0)), fields.get(1), fields.get(2), fields.get(3)));
+            } else if (itemType.equals("agents")) {
+                Agent existing = store.getAgent(id);
+                if (existing == null) {
+                    return "No agent found with this id";
+                }
+                store.updateAgent(new Agent(id, existing.getMissionID(), Integer.parseInt(fields.get(0)), fields.get(1), fields.get(2), fields.get(3), fields.get(4)));
+            } else if (itemType.equals("facilities")) {
+                if (store.getFacility(id) == null) {
+                    return "No facility found with this id";
+                }
+                store.updateFacility(new Facility(id, fields.get(0), fields.get(1)));
+            } else if (itemType.equals("missions")) {
+                if (store.getMission(id) == null) {
+                    return "No mission found with this id";
+                }
+                store.updateMission(new Mission(id, fields.get(0), Integer.parseInt(fields.get(1))));
+            } else {
+                return "Invalid option";
+            }
+        } catch (IllegalArgumentException e) {
+            return e.getMessage();
+        }
+        // No audit yet: LoggedAction has no EDIT value (D's call).
+        return listEntries(username, itemType);
+    }
+
     @Override
     public String reviewAuditLog(String username) {
         if (!access.isAdmin(username)) {
@@ -333,9 +328,10 @@ public class Controller implements ControllerInterface {
         return String.join("\n", lines);
     }
 
-    // Stays a stub until C implements the store methods and the
-    // mission-agent join table (they currently throw
-    // UnsupportedOperationException).
+    // The store throws IllegalArgumentException once implemented
+    // (missing agent/mission, already assigned); today it throws
+    // UnsupportedOperationException, so RuntimeException covers
+    // both and the page never crashes.
     @Override
     public String assignAgentToMission(String username, int agentId, int missionId) {
         if (!access.isAdmin(username)) {
@@ -349,8 +345,8 @@ public class Controller implements ControllerInterface {
         return "Agent " + agentId + " assigned to mission " + missionId;
     }
 
-    // Week 2: pass the message to the message store. Any
-    // logged-in user may send one.
+    // Any logged-in user may send one. The agent is found by
+    // name, case-insensitively, first match wins.
     @Override
     public String sendMessage(String username, String agentName, String message) {
         Agent recipient = null;
@@ -365,10 +361,11 @@ public class Controller implements ControllerInterface {
         }
         messages.createMessage(recipient, message);
         return "Message sent to " + recipient.getName();
-    };
+    }
 
-    // Week 2: only the caller's own messages, matched
-    // case-insensitively. No admin permission needed.
+    // Only the caller's own messages: the agent whose name
+    // matches the logged-in username, case-insensitively.
+    // No admin permission needed.
     @Override
     public String viewMessages(String username) {
         Agent self = null;

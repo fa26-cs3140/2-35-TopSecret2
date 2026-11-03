@@ -5,14 +5,24 @@ import java.util.List;
 // Shared control contract for TopSecret. Both the terminal view
 // and the web server call these methods, so control logic is
 // written once. Methods returning String return the text to
-// display, including error text. No model.TopSecretException escapes
+// display, including error text. No TopSecretException escapes
 // the controller; the implementation catches it and returns
 // the message. itemType is "briefs", "agents", "facilities",
-// or "missions". Field order for addEntry/editEntry matches
-// the HW5 terminal prompts: briefs = missionID, title, date,
+// or "missions". Multi-line results join lines with "\n" and
+// have no trailing newline. Field order for addEntry/editEntry
+// matches the terminal prompts: briefs = missionID, title, date,
 // content; agents = facilityID, name, date_of_birth,
-// date_of_death, notes; facilities = name, abbreviation;
-// missions = title, facilityID.
+// date_of_death, notes (no missionID: agents are assigned to
+// missions later through assignAgentToMission, so a new agent
+// is created with a null missionID); facilities = name,
+// abbreviation; missions = title, facilityID.
+// Admin-gated methods return "Not allowed" for non-admins:
+// createUser, manageAccess, addEntry, editEntry,
+// reviewAuditLog, assignAgentToMission.
+// Note the two shapes that caused confusion: readEntry takes
+// no fields (it fetches the record itself), and addEntry
+// takes no id (the database assigns a new record's id).
+// Only editEntry takes both id and fields.
 public interface ControllerInterface {
     // Login and accounts
     boolean hasUsers();
@@ -28,19 +38,17 @@ public interface ControllerInterface {
     String showMainMenu(String username);
     String browseMainMenu(String username, String itemType);
     String listEntries(String username, String itemType);
-    String readEntry(String username, String itemType, int id, List<String> fields);
-    String addEntry(String username, String itemType, int id, List<String> fields);
-    // Proposed addition: the team's doc omits it, but C's
-    // terminal editing needs a controller edit path once the
-    // store adds update methods. The week-1 stub returns a
-    // not-yet-implemented text.
+    String readEntry(String username, String itemType, int id);
+    String addEntry(String username, String itemType, List<String> fields);
+    // Terminal editing. The store update methods back this;
+    // edits are not audit-logged until LoggedAction gains an
+    // EDIT value.
     String editEntry(String username, String itemType, int id, List<String> fields);
     String reviewAuditLog(String username);
 
-    // Joint operations (HW6). The store declares these methods
-    // but its current implementation throws
-    // UnsupportedOperationException until C builds the
-    // mission-agent join table, so this stays a stub for now.
+    // Joint operations (HW6). The store declares these methods;
+    // until C implements them they throw, and the controller
+    // returns the message instead of crashing.
     String assignAgentToMission(String username, int agentId, int missionId);
 
     // Messages (HW6, D's feature, terminal only, not on the web)
