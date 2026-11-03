@@ -1,8 +1,7 @@
 WebServer tests
 ------------------------------
-startAndStopDoNotThrow - constructing the stub and calling start then stop throws nothing
-stopBeforeStartDoesNotThrow - calling stop on a never-started stub throws nothing
-Notes: stub contract only; routing, sessions, and HTTP behavior
-arrive in week 2, when these are replaced by integration tests
-against a real server (that file is in recoverable trash until
-then). Run: .\gradlew test --tests "control.WebServerTest" --console=plain
+startAndStopDoNotThrow - constructing the server and calling start then stop throws nothing
+stopBeforeStartDoesNotThrow - calling stop on a never-started server throws nothing
+Notes: start/stop safety only; routing, sessions, and HTTP
+behavior are covered by the WebServerIntegrationTest suite.
+Run: .\gradlew test --tests "control.WebServerTest" --console=plain
