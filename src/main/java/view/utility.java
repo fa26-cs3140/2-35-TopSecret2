@@ -40,7 +40,7 @@ public class utility {
 
     public static String agentToStr (Agent a) {
         String str = """
-                Agent ID: $s
+                Agent ID: %s
                 Mission ID: %s
                 Facility ID: %s
                 Name: %s

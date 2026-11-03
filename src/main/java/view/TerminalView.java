@@ -6,9 +6,6 @@ import java.util.List;
 import java.util.Scanner;
 
 public class TerminalView extends View {
-//    /// @param message
-//    /// @return
-//    @Override
     public void promptMessage(String message) {
     }
 
@@ -151,32 +148,18 @@ public class TerminalView extends View {
         return "";
     }
 
-    public String manageUsersView() {
+    public String manageUsersView(List<User> users, User currentUser) {
         return "";
     }
 
-    public String reviewAuditLogView() {
+    public String reviewAuditLogView(List<LoggedAction> logs) {
         return "";
     }
 
-//    /// @return
-//    @Override
-//    public String createAccountView() {
-//        return "";
-//    }
-//
-//    /// @return
-//    @Override
-//    public String loginView() {
-//        return "";
-//    }
+    public String listMessagesView(List<Message> messages){
+        return "";
+    }
 
-//    /// @param error
-//    /// @return
-//    @Override
-//    public String formatError(String error) {
-//        return "";
-//    }
 
     /**
      * prompts user for their username and password and returns them in String array
