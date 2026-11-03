@@ -1,0 +1,290 @@
+## INPUT METHODS
+
+Scenario: getInputIntTest1 | User enters an integer within the specified range
+GIVEN user calls method TerminalView.getInputInt() with minimum 1, maximum 5, and input "3"
+WHEN user enters the integer 3
+THEN the method returns 3
+
+Scenario: getInputIntTest2 | User enters an integer without a specified range
+GIVEN user calls method TerminalView.getInputInt() with input "25"
+WHEN user enters the integer 25
+THEN the method returns 25
+
+Scenario: getInputIntTest3 | User enters an integer outside the specified range
+GIVEN user calls method TerminalView.getInputInt() with minimum 1, maximum 5, and inputs "8" and "3"
+WHEN user first enters 8, followed by 3
+THEN the method rejects 8 and returns 3
+
+Scenario: getInputStrTest1 | User enters a string matching a specified regular expression
+GIVEN user calls method TerminalView.getInputStr() with regular expression "\\d+" and input "12345"
+WHEN user enters the string "12345"
+THEN the method returns "12345"
+
+Scenario: getInputStrTest2 | User enters a string without a specified regular expression
+GIVEN user calls method TerminalView.getInputStr() with input "username"
+WHEN user enters the string "username"
+THEN the method returns "username"
+
+Scenario: getInputStrTest3 | User enters a string that initially does not match the specified regular expression
+GIVEN user calls method TerminalView.getInputStr() with regular expression "\\d+" and inputs "abc" and "123"
+WHEN user first enters "abc", followed by "123"
+THEN the method rejects "abc" and returns "123"
+
+Scenario: promptMessageTest1 | User displays a prompt message
+GIVEN user calls method TerminalView.promptMessage() with message "Test message"
+WHEN the message is displayed
+THEN the output contains "Test message" followed by a line separator
+
+## MISSION VIEWS
+
+Scenario: singleMissionViewTest1 | User displays a single mission
+GIVEN user creates a Mission with mission ID 1, title "title", and facility ID 2
+WHEN user calls method TerminalView.singleMissionView()
+THEN the returned string matches utility.missionToStr() for the mission
+
+Scenario: listMissionsViewTest1 | User displays multiple missions
+GIVEN user creates two Mission objects with mission IDs 1 and 2, titles "mission1" and "mission2", and facility IDs 2 and 3, respectively
+WHEN user calls method TerminalView.listMissionsView()
+THEN the returned string contains the formatted representations of both missions, separated by a newline
+
+## FACILITY VIEWS
+
+Scenario: ListFacilitiesViewTest1 | User displays multiple facilities
+GIVEN user creates two Facility objects with facility IDs 1 and 2, names "Facility1" and "Facility2", and abbreviations "F1" and "F2", respectively
+WHEN user calls method TerminalView.listFacilitiesView()
+THEN the returned string displays both facilities with their facility IDs, names, and abbreviations
+
+Scenario: singleFacilityViewTest1 | User displays a single facility
+GIVEN user creates a Facility with facility ID 1, name "Facility1", and abbreviation "F1"
+WHEN user calls method TerminalView.singleFacilityView()
+THEN the returned string displays the facility ID, name, and abbreviation
+
+## BRIEF VIEWS
+
+Scenario: ListBriefsViewTest1 | User displays multiple briefs
+GIVEN user creates two Brief objects with brief IDs 1 and 2, mission IDs 2 and 3, titles "brief1" and "brief2", dates "1991-02-21" and "1991-03-21", and contents "content1" and "content2", respectively
+WHEN user calls method TerminalView.listBriefsView()
+THEN the returned string displays both briefs with their brief IDs, mission IDs, titles, dates, and contents
+
+Scenario: singleBriefViewTest1 | User displays a single brief
+GIVEN user creates a Brief with brief ID 1, mission ID 2, title "brief1", date "1991-02-21", and content "content1"
+WHEN user calls method TerminalView.singleBriefView()
+THEN the returned string displays the brief ID, mission ID, title, date, and content
+
+## AGENT VIEWS
+
+Scenario: ListAgentsViewTest1 | User displays multiple agents
+GIVEN user creates two Agent objects with different agent IDs, mission IDs, facility IDs, names, dates of birth, dates of death, and notes, where the second agent has null date of death and notes
+WHEN user calls method TerminalView.listAgentsView()
+THEN the returned string displays both agents with their respective fields, leaving date of death and notes empty for the second agent
+
+Scenario: singleAgentViewTest1 | User displays a single agent
+GIVEN user creates an Agent with agent ID 1, mission ID 2, facility ID 3, name "agent1", date of birth "1990-02-01", date of death "2000-02-01", and notes "note1"
+WHEN user calls method TerminalView.singleAgentView()
+THEN the returned string displays the agent ID, mission ID, facility ID, name, date of birth, date of death, and notes
+
+## USER VIEWS
+
+Scenario: singleUserViewTest1 | User displays a single user
+GIVEN user creates a mocked User with user ID 1 and username "user1"
+WHEN user calls method TerminalView.singleUserView()
+THEN the returned string matches utility.userToStr() for the user
+
+Scenario: listUsersViewTest1 | User displays multiple users
+GIVEN user creates two mocked User objects with user IDs 1 and 2 and usernames "user1" and "user2", respectively
+WHEN user calls method TerminalView.listUsersView()
+THEN the returned string contains the formatted representations of both users, separated by a newline
+
+## AUDIT LOG VIEWS
+
+Scenario: singleLogViewTest1 | User displays a single audit log
+GIVEN user creates a mocked LoggedAction with user ID 1, username "user1", action READ, date and time "2026-11-03", and record "briefs 1"
+WHEN user calls method TerminalView.singleLogView()
+THEN the returned string matches utility.logToStr() for the log
+
+Scenario: listLogsViewTest1 | User displays multiple audit logs
+GIVEN user creates two mocked LoggedAction objects associated with user ID 1 and username "user1", with action READ, dates "2026-11-03" and "2026-11-04", and records "briefs 1" and "agents 2", respectively
+WHEN user calls method TerminalView.listLogsView()
+THEN the returned string contains the formatted representations of both logs, separated by a newline
+
+## MESSAGE VIEWS
+
+Scenario: listMessagesViewTest1 | User displays multiple messages
+GIVEN user creates two mocked Message objects addressed to an agent with agent ID 1 and message contents "Message 1" and "Message 2"
+WHEN user calls method TerminalView.listMessagesView()
+THEN the returned string contains the formatted representations of both messages, separated by a newline
+
+## MAIN MENU
+
+Scenario: mainMenuViewTest | User displays the main menu with administrative privileges
+GIVEN user creates a TerminalView with administrative privileges enabled
+WHEN user calls method TerminalView.mainMenuView()
+THEN the returned string displays the main menu with options to browse briefs, agents, facilities, missions, and messages, change password, create a new user, promote or demote users, review the audit log, and exit or logout
+
+Scenario: mainMenuViewTest2 | User displays the main menu without administrative privileges
+GIVEN user creates a TerminalView with administrative privileges disabled
+WHEN user calls method TerminalView.mainMenuView()
+THEN the returned string displays the main menu with options to browse briefs, agents, facilities, missions, and messages, and exit or logout
+
+## BROWSE MENUS
+
+Scenario: browseMissionsViewTest | User displays the mission browsing menu
+GIVEN user calls method TerminalView.browseMissionsView()
+WHEN the mission browsing menu is displayed
+THEN the returned string displays options to list missions, read a mission, add a mission, and go back to the main menu
+
+Scenario: browseBriefsViewTest1 | User displays the brief browsing menu with administrative privileges
+GIVEN user creates a TerminalView with administrative privileges enabled
+WHEN user calls method TerminalView.browseBriefsView()
+THEN the returned string displays options to list briefs, read a brief, add a brief, and go back to the main menu
+
+Scenario: browseBriefsViewTest2 | User displays the brief browsing menu without administrative privileges
+GIVEN user creates a TerminalView with administrative privileges disabled
+WHEN user calls method TerminalView.browseBriefsView()
+THEN the returned string displays options to list briefs, read a brief, and go back to the main menu
+
+Scenario: browseAgentsViewTest1 | User displays the agent browsing menu with administrative privileges
+GIVEN user creates a TerminalView with administrative privileges enabled
+WHEN user calls method TerminalView.browseAgentsView()
+THEN the returned string displays options to list agents, read an agent, add an agent, and go back to the main menu
+
+Scenario: browseAgentsViewTest2 | User displays the agent browsing menu without administrative privileges
+GIVEN user creates a TerminalView with administrative privileges disabled
+WHEN user calls method TerminalView.browseAgentsView()
+THEN the returned string displays options to list agents, read an agent, and go back to the main menu
+
+Scenario: browseFacilitiesViewTest1 | User displays the facility browsing menu with administrative privileges
+GIVEN user creates a TerminalView with administrative privileges enabled
+WHEN user calls method TerminalView.browseFacilitiesView()
+THEN the returned string displays options to list facilities, read a facility, add a facility, and go back to the main menu
+
+Scenario: browseFacilitiesViewTest2 | User displays the facility browsing menu without administrative privileges
+GIVEN user creates a TerminalView with administrative privileges disabled
+WHEN user calls method TerminalView.browseFacilitiesView()
+THEN the returned string displays options to list facilities, read a facility, and go back to the main menu
+
+Scenario: browseMessagesViewTest | User displays the message browsing menu
+GIVEN user calls method TerminalView.browseMessagesView()
+WHEN the message browsing menu is displayed
+THEN the returned string displays options to list personal messages and leave a message to an agent
+
+## USER MANAGEMENT VIEWS
+
+Scenario: manageUsersViewTest | User displays the promote or demote users menu
+GIVEN user creates a current user and two additional users with usernames "username1" and "username2"
+WHEN user calls method TerminalView.manageUsersView() with the user list and current user
+THEN the returned string displays the usernames of the other users and instructions to promote or demote a user by username
+
+## AUDIT LOG REVIEW
+
+Scenario: reviewAuditLogViewTest1 | User reviews the audit log
+GIVEN user creates two users and adds two audit log entries with different actions, dates, and records
+WHEN user calls method TerminalView.reviewAuditLogView()
+THEN the returned string contains the logs heading and displays both entries with their respective dates, usernames, actions, and records
+
+## AUTHENTICATION INPUT
+
+Scenario: promptLoginTest1 | User enters login credentials
+GIVEN user calls method TerminalView.promptLogin() with inputs "user1" and "password1"
+WHEN user enters the username and password
+THEN the method returns an array containing "user1" and "password1"
+
+Scenario: promptSignupTest1 | User enters new account credentials
+GIVEN user calls method TerminalView.promptSignup() with inputs "newuser", "password1", and "password1"
+WHEN user enters a username, password, and matching password confirmation
+THEN the method returns an array containing "newuser", "password1", and "password1"
+
+Scenario: promptChangePasswordTest1 | User enters a new password and confirmation
+GIVEN user calls method TerminalView.promptChangePassword() with inputs "newpassword" and "newpassword"
+WHEN user enters the new password and matching confirmation
+THEN the method returns an array containing both password entries
+
+## RECORD INPUT
+
+Scenario: promptAddMissionTest1 | User enters information for a new mission
+GIVEN user calls method TerminalView.promptAddMission() with inputs "New Mission" and "2"
+WHEN user enters the mission title and facility ID
+THEN the method returns an array containing "New Mission" and "2"
+
+Scenario: promptAddFacilityTest1 | User enters information for a new facility
+GIVEN user calls method TerminalView.promptAddFacility() with inputs "New Facility" and "NF"
+WHEN user enters the facility name and abbreviation
+THEN the method returns an array containing "New Facility" and "NF"
+
+Scenario: promptAddBriefTest1 | User enters information for a new brief
+GIVEN user calls method TerminalView.promptAddBrief() with inputs "2", "New Brief", "2026-11-03", and "Secret content"
+WHEN user enters the mission ID, brief title, date, and content
+THEN the method returns an array containing "2", "New Brief", "2026-11-03", and "Secret content"
+
+Scenario: promptAddAgentTest1 | User enters information for a new agent
+GIVEN user calls method TerminalView.promptAddAgent() with inputs "2", "3", "Agent Name", "1990-01-01", an empty date of death, and "Notes"
+WHEN user enters the mission ID, facility ID, name, date of birth, date of death, and notes
+THEN the method returns an array containing the six corresponding values, including the empty date of death
+
+Scenario: promptRecordIDTest1 | User enters a record ID
+GIVEN user calls method TerminalView.promptRecordID() with record type "briefs" and input "5"
+WHEN user enters the record ID
+THEN the method returns "5"
+
+## USER MANAGEMENT INPUT
+
+Scenario: promptCreateUserTest1 | User enters a username for a new user
+GIVEN user calls method TerminalView.promptCreateUser() with input "newuser"
+WHEN user enters the username
+THEN the method returns "newuser"
+
+Scenario: promptManageAccessTest1 | User enters a user access management command
+GIVEN user calls method TerminalView.promptManageAccess() with inputs "promote" and "user2"
+WHEN user enters the access command and username
+THEN the method returns an array containing "Promote" and "user2"
+
+Scenario: promptSelectUserTest1 | User selects a user by username
+GIVEN user calls method TerminalView.promptSelectUser() with input "user2"
+WHEN user enters the username
+THEN the method returns "user2"
+
+## MESSAGE INPUT
+
+Scenario: promptCreateMessageTest1 | User enters information for a new message
+GIVEN user calls method TerminalView.promptCreateMessage() with inputs "3" and "Secret message"
+WHEN user enters the recipient agent ID and message content
+THEN the method returns an array containing "3" and "Secret message"
+
+## GENERAL PROMPTS
+
+Scenario: promptMainMenuChoiceTest1 | User selects an option from the main menu
+GIVEN user calls method TerminalView.promptMainMenuChoice() with input "3"
+WHEN user enters the option number 3
+THEN the method returns 3
+
+Scenario: promptBrowseMenuChoiceTest1 | User selects an option from a browsing menu
+GIVEN user calls method TerminalView.promptBrowseMenuChoice() with record type "briefs" and input "2"
+WHEN user enters the option number 2
+THEN the method returns 2
+
+Scenario: promptConfirmationTest1 | User confirms an action
+GIVEN user calls method TerminalView.promptConfirmation() with input "yes" and message "Are you sure?"
+WHEN user confirms the action
+THEN the method returns true
+
+Scenario: promptConfirmationTest2 | User declines an action
+GIVEN user calls method TerminalView.promptConfirmation() with input "no" and message "Are you sure?"
+WHEN user declines the action
+THEN the method returns false
+
+Scenario: promptOptionTest1 | User enters a text option
+GIVEN user calls method TerminalView.promptOption() with prompt "Select an option: " and input "promote"
+WHEN user enters "promote"
+THEN the method returns "promote"
+
+## ERROR AND STATUS VIEWS
+
+Scenario: formatErrorTest1 | User formats an error message
+GIVEN user calls method TerminalView.formatError() with message "Invalid username"
+WHEN the error message is formatted
+THEN the returned string is not null and contains "Invalid username"
+
+Scenario: formatSuccessTest1 | User formats a success message
+GIVEN user calls method TerminalView.formatSuccess() with message "Password changed"
+WHEN the success message is formatted
+THEN the returned string is not null and contains "Password changed"

@@ -4,14 +4,17 @@ import model.*;
 
 import java.util.List;
 
-public class WebView implements View {
-
-    /// @param message
-    /// @return
-    @Override
-    public String promptMessage(String message) {
-        return "";
+public class WebView extends View {
+    public WebView(boolean isAdmin) {
+        super(isAdmin);
     }
+
+//    /// @param message
+//    /// @return
+//    @Override
+//    public String promptMessage(String message) {
+//        return "";
+//    }
 
     /// @param mission
     /// @return
@@ -37,7 +40,7 @@ public class WebView implements View {
     /// @param facilities
     /// @return
     @Override
-    public String listFacilitysView(List<Facility> facilities) {
+    public String listFacilitiesView(List<Facility> facilities) {
         return "";
     }
 
@@ -127,26 +130,26 @@ public class WebView implements View {
         return "";
     }
 
-    /// @return
-    @Override
-    public String createAccountView() {
-        return "";
-    }
-
-    /// @return
-    @Override
-    public String loginView() {
-        return "";
-    }
+//    /// @return
+//    @Override
+//    public String createAccountView() {
+//        return "";
+//    }
+//
+//    /// @return
+//    @Override
+//    public String loginView() {
+//        return "";
+//    }
 
     /// @param error
     /// @return
-    @Override
-    public String formatError(String error) {
-        return "";
-    }
+//    @Override
+//    public String formatError(String error) {
+//        return "";
+//    }
 
-    public String generateHTML(String title, String content) {
-        return "";
-    }
+//    public String generateHTML(String title, String content) {
+//        return "";
+//    }
 }
