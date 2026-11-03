@@ -1,24 +1,63 @@
 Controller tests
 ------------------------------
-hasUsersDelegatesToUsers - hasUsers passes straight through to users.hasUser
+hasUsersDelegatesToUsers - hasUsers passes straight through to users.hasUser, true and false
 verifyLoginDelegatesToUsers - verifyLogin passes through and is verified against the mock
 needsPasswordSetupDelegatesToUsers - needsPasswordSetup passes through and is verified against the mock
 isAdminDelegatesToAccess - isAdmin passes through to access.isAdmin
-createFirstAccountReturnsEmptyStub - stub returns an empty String
-changePasswordReturnsEmptyStub - stub returns an empty String
-createUserReturnsEmptyStub - stub returns an empty String
-manageAccessReturnsEmptyStub - stub returns an empty String
-showMainMenuReturnsEmptyStub - stub returns an empty String
-browseMainMenuReturnsEmptyStub - stub returns an empty String
-listEntriesReturnsEmptyStub - stub returns an empty String
-readEntryReturnsEmptyStub - stub returns an empty String
-addEntryReturnsEmptyStub - stub returns an empty String
-editEntryReturnsEmptyStub - stub returns an empty String
-reviewAuditLogReturnsEmptyStub - stub returns an empty String
-assignAgentToMissionReturnsEmptyStub - stub returns an empty String
-sendMessageReturnsEmptyStub - stub returns an empty String
-viewMessagesReturnsEmptyStub - stub returns an empty String
-Notes: collaborators are Mockito mocks. Week 2 rewrites the
-stub assertions into real-text assertions, reusing the 22
-HW5 UserInterfaceTest names and inputs where they apply.
+createFirstAccountSucceeds - first account creates the user, sets the password, returns "Account is created!"
+createFirstAccountReturnsExceptionMessage - createUser throwing returns the exception message
+changePasswordSucceeds - changePassword delegates and returns "Password changed"
+changePasswordReturnsExceptionMessage - changePassword throwing returns the exception message
+createUserSucceedsForAdmin - admin creating a user returns "" and calls users.createUser
+createUserRefusesNonAdmin - non-admin gets "Not allowed" and users is never touched
+createUserReturnsExceptionMessage - createUser throwing returns the exception message
+manageAccessPromotesUser - admin promote returns "alice was promoted"
+manageAccessDemotesUser - admin demote returns "alice was demoted"
+manageAccessFalseResultIsNotAllowed - promote returning false gives "Not allowed"
+manageAccessRefusesNonAdmin - non-admin manageAccess returns "Not allowed"
+manageAccessRejectsBadAction - unknown action returns "Invalid option"
+showMainMenuShowsAdminOptions - admin menu shows all 9 options
+showMainMenuHidesAdminOptions - standard menu shows 1-5 and 9 only
+browseMainMenuShowsAdminOptions - admin browse menu shows List, Read, Add, Edit, Back
+browseMainMenuHidesAdminOptions - standard browse menu shows List, Read, Back only
+browseMainMenuRejectsBadType - unknown type returns "Invalid option"
+listEntriesListsBriefs - briefs list as "id : title" lines
+listEntriesListsAgents - agents list as "id : name" lines
+listEntriesListsFacilities - facilities list as "id : name" lines
+listEntriesListsMissions - missions list as "id : title" lines
+listEntriesRejectsBadType - unknown type returns "Invalid option"
+readEntryPrintsBriefAndAudits - brief read prints Title/Date/Content and logs a READ audit for "briefs 1"
+readEntryPrintsAgent - agent read prints Name/DoB/DoDeath/Notes
+readEntryPrintsFacility - facility read prints Name/Abbreviation
+readEntryPrintsMission - mission read prints Title/Facility ID
+readEntryHandlesUnknownId - unknown brief id returns "No brief found with this id"
+readEntryRejectsBadType - unknown type returns "Invalid option"
+addEntryAddsBriefAuditsAndRelists - admin brief add audits CREATE "briefs 7" and relists
+addEntryAddsAgentWithoutMission - admin agent add passes null missionID and relists
+addEntryAddsMission - admin mission add captures title and facilityID and relists
+addEntryRefusesNonAdmin - non-admin add returns "Not allowed" and store is never touched
+addEntryRejectsBadType - unknown type returns "Invalid option"
+addEntryReturnsBadNumberMessage - non-numeric missionID returns the parse message
+addEntryReturnsStoreMessage - store throwing returns its message
+editEntryEditsBriefAndRelists - brief edit updates id/missionID/title and relists
+editEntryKeepsAgentMission - agent edit keeps the existing missionID (5) while facility changes
+editEntryRefusesNonAdmin - non-admin edit returns "Not allowed" and store is never touched
+editEntryHandlesUnknownId - unknown brief id returns "No brief found with this id"
+editEntryRejectsBadType - unknown type returns "Invalid option"
+editEntryReturnsStoreMessage - store throwing on update returns its message
+reviewAuditLogFormatsEntries - audit log formats as "time : user : read/create : record" lines
+reviewAuditLogRefusesNonAdmin - non-admin audit review returns "Not allowed"
+reviewAuditLogEmptyIsEmpty - empty log returns ""
+assignAgentToMissionSucceeds - admin assign returns "Agent 1 assigned to mission 2"
+assignAgentToMissionRefusesNonAdmin - non-admin assign returns "Not allowed"
+assignAgentToMissionReturnsStoreMessage - store throwing returns "Not implemented yet"
+sendMessageFindsAgentCaseInsensitively - "ghost" finds Ghost and returns "Message sent to Ghost"
+sendMessageHandlesUnknownAgent - unknown agent returns "No agent found with this name"
+viewMessagesShowsOwnMessages - "ghost" sees own messages joined with newlines
+viewMessagesWithoutAgentIsEmpty - no matching agent returns "No messages"
+viewMessagesEmptyListIsEmpty - empty message list returns "No messages"
+Notes: collaborators are Mockito mocks; every method is
+tested on its real returned text, reusing the HW5
+UserInterface wording and inputs. No listUsernames tests:
+the 18-method interface has no listUsernames.
 Run: .\gradlew test --tests "control.ControllerTest" --console=plain
