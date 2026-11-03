@@ -1,0 +1,13 @@
+WebServer integration tests
+------------------------------
+unauthenticatedRootShowsLoginForm - root without a cookie shows the login form
+invalidLoginShowsErrorWithoutCookie - bad credentials show "Invalid username or password." and set no cookie
+validLoginSetsSessionCookie - good credentials redirect with a session cookie and no Max-Age/Expires
+authenticatedBrowseCallsController - browse with a cookie calls the controller and shows its text
+browseWithoutCookieShowsLoginForm - browse without a cookie shows the login form and never touches the controller
+unknownPathReturnsErrorPageNotCrash - unknown path returns an error page, never a crash
+logoutClearsSession - logout removes the session, so the old cookie gets the login form again
+auditRouteCallsController - audit with a cookie calls the controller and shows its text
+Notes: real WebServer on port 0, mocked ControllerInterface,
+real HttpClient with redirects never.
+Run: .\gradlew test --tests "control.WebServerIntegrationTest" --console=plain
