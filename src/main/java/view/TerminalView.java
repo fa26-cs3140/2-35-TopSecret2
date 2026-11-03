@@ -7,11 +7,9 @@ import java.util.List;
 import java.util.Scanner;
 
 public class TerminalView extends View {
-    private final boolean admin;
+    private boolean admin;
 
-
-    public TerminalView(boolean isAdmin) {
-        super(isAdmin);
+    public void setAdmin(boolean isAdmin) {
         this.admin = isAdmin;
     }
 

@@ -5,16 +5,7 @@ import model.*;
 import java.util.List;
 
 public class WebView extends View {
-    public WebView(boolean isAdmin) {
-        super(isAdmin);
-    }
 
-//    /// @param message
-//    /// @return
-//    @Override
-//    public String promptMessage(String message) {
-//        return "";
-//    }
 
     /// @param mission
     /// @return
@@ -100,6 +91,10 @@ public class WebView extends View {
         return "";
     }
 
+    public String listMessages(List<Message> messages){
+        return "";
+    }
+
     /// @return
     @Override
     public String mainMenuView() {
@@ -130,26 +125,7 @@ public class WebView extends View {
         return "";
     }
 
-//    /// @return
-//    @Override
-//    public String createAccountView() {
-//        return "";
-//    }
-//
-//    /// @return
-//    @Override
-//    public String loginView() {
-//        return "";
-//    }
 
-    /// @param error
-    /// @return
-//    @Override
-//    public String formatError(String error) {
-//        return "";
-//    }
 
-//    public String generateHTML(String title, String content) {
-//        return "";
-//    }
+
 }

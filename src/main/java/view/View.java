@@ -7,13 +7,10 @@ import java.util.List;
 public abstract class View {
     // Display information
 //    abstract String promptMessage(String message);
-    protected boolean isAdmin;
-    public View(boolean isAdmin) {
-        this.isAdmin = isAdmin;
-    }
-    public boolean isAdmin() {
-        return isAdmin;
-    }
+//    protected boolean isAdmin;
+//    public boolean isAdmin() {
+//        return isAdmin;
+//    }
 
 
     abstract String singleMissionView(Mission mission);
@@ -34,20 +31,4 @@ public abstract class View {
     abstract String browseFacilitiesView();
     abstract String browseBriefsView();
     abstract String browseAgentsView();
-//    abstract String createAccountView();
-//    abstract String loginView();
-
-
-//    abstract String formatError(String error);
-
-//    /**
-//     * prompts user for their username and password and returns them in String array
-//     * @return {@code String[]} 1st element is username, 2nd element is password
-//     */
-//    String[] prmptUsrNameAndPwd();
-//
-//    /**
-//     * displays the
-//     */
-//    void displayMainMenu();
 }

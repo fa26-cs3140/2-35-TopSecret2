@@ -23,7 +23,9 @@ public class TerminalViewTest {
 
     @Test
     public void getInputIntTest1() {
-        TerminalView view = new TerminalView(true);
+        TerminalView view = new TerminalView();
+        view.setAdmin(true);
+
         Scanner scnr = new Scanner("3\n");
 
         int actual = view.getInputInt(scnr, 1, 5, "Enter: ");
@@ -33,7 +35,9 @@ public class TerminalViewTest {
 
     @Test
     public void getInputIntTest2() {
-        TerminalView view = new TerminalView(true);
+        TerminalView view = new TerminalView();
+        view.setAdmin(true);
+
         Scanner scnr = new Scanner("25\n");
 
         int actual = view.getInputInt(scnr, "Enter: ");
@@ -43,7 +47,9 @@ public class TerminalViewTest {
 
     @Test
     public void getInputIntTest3() {
-        TerminalView view = new TerminalView(true);
+        TerminalView view = new TerminalView();
+        view.setAdmin(true);
+
         Scanner scnr = new Scanner("8\n3\n");
 
         int actual = view.getInputInt(scnr, 1, 5, "Enter: ");
@@ -53,7 +59,9 @@ public class TerminalViewTest {
 
     @Test
     public void getInputStrTest1() {
-        TerminalView view = new TerminalView(true);
+        TerminalView view = new TerminalView();
+        view.setAdmin(true);
+
         Scanner scnr = new Scanner("12345\n");
 
         String actual = view.getInputStr(scnr, "\\d+", "Enter: ");
@@ -63,7 +71,9 @@ public class TerminalViewTest {
 
     @Test
     public void getInputStrTest2() {
-        TerminalView view = new TerminalView(true);
+        TerminalView view = new TerminalView();
+        view.setAdmin(true);
+
         Scanner scnr = new Scanner("username\n");
 
         String actual = view.getInputStr(scnr, "Enter: ");
@@ -73,7 +83,9 @@ public class TerminalViewTest {
 
     @Test
     public void getInputStrTest3() {
-        TerminalView view = new TerminalView(true);
+        TerminalView view = new TerminalView();
+        view.setAdmin(true);
+
         Scanner scnr = new Scanner("abc\n123\n");
 
         String actual = view.getInputStr(scnr, "\\d+", "Enter: ");
@@ -83,7 +95,8 @@ public class TerminalViewTest {
 
     @Test
     public void promptMessageTest1() {
-        TerminalView view = new TerminalView(true);
+        TerminalView view = new TerminalView();
+        view.setAdmin(true);
 
         ByteArrayOutputStream output = new ByteArrayOutputStream();
         PrintStream original = System.out;
@@ -106,7 +119,9 @@ public class TerminalViewTest {
 
     @Test
     public void singleMissionViewTest1() {
-        TerminalView view = new TerminalView(true);
+        TerminalView view = new TerminalView();
+        view.setAdmin(true);
+
         Mission mission = new Mission(1, "title", 2);
 
         String actual = view.singleMissionView(mission);
@@ -117,7 +132,8 @@ public class TerminalViewTest {
 
     @Test
     public void listMissionsViewTest1() {
-        TerminalView view = new TerminalView(true);
+        TerminalView view = new TerminalView();
+        view.setAdmin(true);
 
         List<Mission> missions = List.of(
                 new Mission(1, "mission1", 2),
@@ -136,7 +152,9 @@ public class TerminalViewTest {
 
     @Test
     public void ListFacilitiesViewTest1() {
-        TerminalView view = new TerminalView(true);
+        TerminalView view = new TerminalView();
+        view.setAdmin(true);
+
         List<Facility> facilities = List.of(
                 new Facility(1, "Facility1", "F1"),
                 new Facility(2, "Facility2", "F2")
@@ -161,7 +179,9 @@ public class TerminalViewTest {
 
     @Test
     public void singleFacilityViewTest1() {
-        TerminalView view = new TerminalView(true);
+        TerminalView view = new TerminalView();
+        view.setAdmin(true);
+
         Facility f = new Facility(1, "Facility1", "F1");
 
         String actual = view.singleFacilityView(f);
@@ -180,7 +200,9 @@ public class TerminalViewTest {
     // ---------------- BRIEF VIEWS ----------------
     @Test
     public void ListBriefsViewTest1() {
-        TerminalView view = new TerminalView(true);
+        TerminalView view = new TerminalView();
+        view.setAdmin(true);
+
         List<Brief> briefs = List.of(
                 new Brief(1, 2, "brief1", "1991-02-21", "content1"),
                 new Brief(2, 3, "brief2", "1991-03-21", "content2")
@@ -209,7 +231,9 @@ public class TerminalViewTest {
 
     @Test
     public void singleBriefViewTest1() {
-        TerminalView view = new TerminalView(true);
+        TerminalView view = new TerminalView();
+        view.setAdmin(true);
+
         Brief b = new Brief(1, 2, "brief1", "1991-02-21", "content1");
 
         String actual = view.singleBriefView(b);
@@ -231,7 +255,9 @@ public class TerminalViewTest {
 
     @Test
     public void ListAgentsViewTest1() {
-        TerminalView view = new TerminalView(true);
+        TerminalView view = new TerminalView();
+        view.setAdmin(true);
+
         List<Agent> agents = List.of(
                 new Agent(1, 2, 3, "agent1", "1990-02-01", "2000-02-01", "note1"),
                 new Agent(2, 3, 4, "agent2", "1991-03-01", null, null)
@@ -264,7 +290,9 @@ public class TerminalViewTest {
 
     @Test
     public void singleAgentViewTest1() {
-        TerminalView view = new TerminalView(true);
+        TerminalView view = new TerminalView();
+        view.setAdmin(true);
+
         Agent a = new Agent(1, 2, 3, "agent1", "1990-02-01", "2000-02-01", "note1");
 
         String actual = view.singleAgentView(a);
@@ -288,7 +316,8 @@ public class TerminalViewTest {
 
     @Test
     public void singleUserViewTest1() {
-        TerminalView view = new TerminalView(true);
+        TerminalView view = new TerminalView();
+        view.setAdmin(true);
 
         User user = mock(User.class);
 
@@ -303,7 +332,8 @@ public class TerminalViewTest {
 
     @Test
     public void listUsersViewTest1() {
-        TerminalView view = new TerminalView(true);
+        TerminalView view = new TerminalView();
+        view.setAdmin(true);
 
         User user1 = mock(User.class);
         User user2 = mock(User.class);
@@ -329,7 +359,8 @@ public class TerminalViewTest {
 
     @Test
     public void singleLogViewTest1() {
-        TerminalView view = new TerminalView(true);
+        TerminalView view = new TerminalView();
+        view.setAdmin(true);
 
         User user = mock(User.class);
         LoggedAction log = mock(LoggedAction.class);
@@ -350,7 +381,8 @@ public class TerminalViewTest {
 
     @Test
     public void listLogsViewTest1() {
-        TerminalView view = new TerminalView(true);
+        TerminalView view = new TerminalView();
+        view.setAdmin(true);
 
         User user = mock(User.class);
 
@@ -388,7 +420,8 @@ public class TerminalViewTest {
 
     @Test
     public void listMessagesViewTest1() {
-        TerminalView view = new TerminalView(true);
+        TerminalView view = new TerminalView();
+        view.setAdmin(true);
 
         Agent agent = new Agent(
                 1, 2, 3, "agent1",
@@ -417,7 +450,8 @@ public class TerminalViewTest {
     // ---------------- MAIN MENU ----------------
     @Test
     public void mainMenuViewTest() {
-        TerminalView view = new TerminalView(true);
+        TerminalView view = new TerminalView();
+        view.setAdmin(true);
 
         String actual = view.mainMenuView();
         String expected = """
@@ -440,7 +474,8 @@ public class TerminalViewTest {
 
     @Test
     public void mainMenuViewTest2() {
-        TerminalView view = new TerminalView(false);
+        TerminalView view = new TerminalView();
+        view.setAdmin(false);
 
         String actual = view.mainMenuView();
         String expected = """
@@ -462,7 +497,8 @@ public class TerminalViewTest {
     // ---------------- BROWSE MENUS ----------------
     @Test
     public void browseMissionsViewTest() {
-        TerminalView view = new TerminalView(true);
+        TerminalView view = new TerminalView();
+        view.setAdmin(true);
 
         String expected = """
                 ----------Browse missions----------
@@ -479,7 +515,9 @@ public class TerminalViewTest {
 
     @Test
     public void browseBriefsViewTest1() {
-        TerminalView view = new TerminalView(true);
+        TerminalView view = new TerminalView();
+        view.setAdmin(true);
+
         String actual = view.browseBriefsView();
         String expected = """
                 ----------Browse briefs----------
@@ -495,7 +533,9 @@ public class TerminalViewTest {
 
     @Test
     public void browseBriefsViewTest2() {
-        TerminalView view = new TerminalView(false);
+        TerminalView view = new TerminalView();
+        view.setAdmin(false);
+
         String actual = view.browseBriefsView();
         String expected = """
                 ----------Browse briefs----------
@@ -510,7 +550,9 @@ public class TerminalViewTest {
 
     @Test
     public void browseAgentsViewTest1() {
-        TerminalView view = new TerminalView(true);
+        TerminalView view = new TerminalView();
+        view.setAdmin(true);
+
         String actual = view.browseAgentsView();
 
         String expected = """
@@ -528,7 +570,9 @@ public class TerminalViewTest {
 
     @Test
     public void browseAgentsViewTest2() {
-        TerminalView view = new TerminalView(false);
+        TerminalView view = new TerminalView();
+        view.setAdmin(false);
+
         String actual = view.browseAgentsView();
 
         String expected = """
@@ -546,7 +590,9 @@ public class TerminalViewTest {
 
     @Test
     public void browseFacilitiesViewTest1() {
-        TerminalView view = new TerminalView(true);
+        TerminalView view = new TerminalView();
+        view.setAdmin(true);
+
         String actual = view.browseFacilitiesView();
 
         String expected = """
@@ -564,7 +610,9 @@ public class TerminalViewTest {
 
     @Test
     public void browseFacilitiesViewTest2() {
-        TerminalView view = new TerminalView(false);
+        TerminalView view = new TerminalView();
+        view.setAdmin(false);
+
         String actual = view.browseFacilitiesView();
 
         String expected = """
@@ -581,7 +629,8 @@ public class TerminalViewTest {
 
     @Test
     public void browseMessagesViewTest() {
-        TerminalView view = new TerminalView(true);
+        TerminalView view = new TerminalView();
+        view.setAdmin(true);
 
         String expected = """
             ----------Browse messages----------
@@ -605,7 +654,8 @@ public class TerminalViewTest {
             store.addUser(new User(-1, "username1"));
             store.addUser(new User(-1, "username2"));
 
-            TerminalView view = new TerminalView(true);
+            TerminalView view = new TerminalView();
+            view.setAdmin(true);
             List<User> users = store.listUsers();
 
             String expected = """
@@ -638,7 +688,9 @@ public class TerminalViewTest {
             store.addLog(new LoggedAction(1, user, "date1", "record1"));
             store.addLog(new LoggedAction(0, user2, "date2", "record2"));
 
-            TerminalView view = new TerminalView(true);
+            TerminalView view = new TerminalView();
+            view.setAdmin(true);
+
             List<LoggedAction> logs = store.listLogs();
 
             String actual = view.reviewAuditLogView(logs);
@@ -656,7 +708,9 @@ public class TerminalViewTest {
 
     @Test
     public void promptLoginTest1() {
-        TerminalView view = new TerminalView(true);
+        TerminalView view = new TerminalView();
+        view.setAdmin(true);
+
         Scanner scnr = new Scanner("user1\npassword1\n");
 
         String[] actual = view.promptLogin(scnr);
@@ -668,7 +722,9 @@ public class TerminalViewTest {
 
     @Test
     public void promptSignupTest1() {
-        TerminalView view = new TerminalView(true);
+        TerminalView view = new TerminalView();
+        view.setAdmin(true);
+
         Scanner scnr = new Scanner(
                 "newuser\npassword1\npassword1\n"
         );
@@ -684,7 +740,9 @@ public class TerminalViewTest {
 
     @Test
     public void promptChangePasswordTest1() {
-        TerminalView view = new TerminalView(true);
+        TerminalView view = new TerminalView();
+        view.setAdmin(true);
+
         Scanner scnr = new Scanner("newpassword\nnewpassword\n");
 
         String[] actual = view.promptChangePassword(scnr);
@@ -701,7 +759,9 @@ public class TerminalViewTest {
 
     @Test
     public void promptAddMissionTest1() {
-        TerminalView view = new TerminalView(true);
+        TerminalView view = new TerminalView();
+        view.setAdmin(true);
+
         Scanner scnr = new Scanner("New Mission\n2\n");
 
         String[] actual = view.promptAddMission(scnr);
@@ -713,7 +773,8 @@ public class TerminalViewTest {
 
     @Test
     public void promptAddFacilityTest1() {
-        TerminalView view = new TerminalView(true);
+        TerminalView view = new TerminalView();
+        view.setAdmin(true);
         Scanner scnr = new Scanner("New Facility\nNF\n");
 
         String[] actual = view.promptAddFacility(scnr);
@@ -725,7 +786,9 @@ public class TerminalViewTest {
 
     @Test
     public void promptAddBriefTest1() {
-        TerminalView view = new TerminalView(true);
+        TerminalView view = new TerminalView();
+        view.setAdmin(true);
+
         Scanner scnr = new Scanner(
                 "2\nNew Brief\n2026-11-03\nSecret content\n"
         );
@@ -741,7 +804,9 @@ public class TerminalViewTest {
 
     @Test
     public void promptAddAgentTest1() {
-        TerminalView view = new TerminalView(true);
+        TerminalView view = new TerminalView();
+        view.setAdmin(true);
+
         Scanner scnr = new Scanner(
                 "2\n3\nAgent Name\n1990-01-01\n\nNotes\n"
         );
@@ -758,7 +823,9 @@ public class TerminalViewTest {
 
     @Test
     public void promptRecordIDTest1() {
-        TerminalView view = new TerminalView(true);
+        TerminalView view = new TerminalView();
+        view.setAdmin(true);
+
         Scanner scnr = new Scanner("5\n");
 
         String actual = view.promptRecordID(scnr, "briefs");
@@ -771,7 +838,9 @@ public class TerminalViewTest {
 
     @Test
     public void promptCreateUserTest1() {
-        TerminalView view = new TerminalView(true);
+        TerminalView view = new TerminalView();
+        view.setAdmin(true);
+
         Scanner scnr = new Scanner("newuser\n");
 
         String actual = view.promptCreateUser(scnr);
@@ -781,7 +850,9 @@ public class TerminalViewTest {
 
     @Test
     public void promptManageAccessTest1() {
-        TerminalView view = new TerminalView(true);
+        TerminalView view = new TerminalView();
+        view.setAdmin(true);
+
         Scanner scnr = new Scanner("promote\nuser2\n");
 
         String[] actual = view.promptManageAccess(scnr);
@@ -793,7 +864,9 @@ public class TerminalViewTest {
 
     @Test
     public void promptSelectUserTest1() {
-        TerminalView view = new TerminalView(true);
+        TerminalView view = new TerminalView();
+        view.setAdmin(true);
+
         Scanner scnr = new Scanner("user2\n");
 
         String actual = view.promptSelectUser(scnr);
@@ -805,7 +878,9 @@ public class TerminalViewTest {
 
     @Test
     public void promptCreateMessageTest1() {
-        TerminalView view = new TerminalView(true);
+        TerminalView view = new TerminalView();
+        view.setAdmin(true);
+
         Scanner scnr = new Scanner("3\nSecret message\n");
 
         String[] actual = view.promptCreateMessage(scnr);
@@ -820,7 +895,9 @@ public class TerminalViewTest {
 
     @Test
     public void promptMainMenuChoiceTest1() {
-        TerminalView view = new TerminalView(true);
+        TerminalView view = new TerminalView();
+        view.setAdmin(true);
+
         Scanner scnr = new Scanner("3\n");
 
         int actual = view.promptMainMenuChoice(scnr);
@@ -830,7 +907,9 @@ public class TerminalViewTest {
 
     @Test
     public void promptBrowseMenuChoiceTest1() {
-        TerminalView view = new TerminalView(true);
+        TerminalView view = new TerminalView();
+        view.setAdmin(true);
+
         Scanner scnr = new Scanner("2\n");
 
         int actual = view.promptBrowseMenuChoice(scnr, "briefs");
@@ -840,7 +919,9 @@ public class TerminalViewTest {
 
     @Test
     public void promptConfirmationTest1() {
-        TerminalView view = new TerminalView(true);
+        TerminalView view = new TerminalView();
+        view.setAdmin(true);
+
         Scanner scnr = new Scanner("yes\n");
 
         boolean actual = view.promptConfirmation(
@@ -852,7 +933,9 @@ public class TerminalViewTest {
 
     @Test
     public void promptConfirmationTest2() {
-        TerminalView view = new TerminalView(true);
+        TerminalView view = new TerminalView();
+        view.setAdmin(true);
+
         Scanner scnr = new Scanner("no\n");
 
         boolean actual = view.promptConfirmation(
@@ -864,7 +947,9 @@ public class TerminalViewTest {
 
     @Test
     public void promptOptionTest1() {
-        TerminalView view = new TerminalView(true);
+        TerminalView view = new TerminalView();
+        view.setAdmin(true);
+
         Scanner scnr = new Scanner("promote\n");
 
         String actual = view.promptOption(
@@ -879,7 +964,9 @@ public class TerminalViewTest {
 
     @Test
     public void formatErrorTest1() {
-        TerminalView view = new TerminalView(true);
+        TerminalView view = new TerminalView();
+        view.setAdmin(true);
+
 
         String actual = view.formatError("Invalid username");
 
@@ -889,7 +976,8 @@ public class TerminalViewTest {
 
     @Test
     public void formatSuccessTest1() {
-        TerminalView view = new TerminalView(true);
+        TerminalView view = new TerminalView();
+        view.setAdmin(true);
 
         String actual = view.formatSuccess("Password changed");
 
