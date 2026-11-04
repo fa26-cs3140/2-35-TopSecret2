@@ -125,6 +125,10 @@ public class WebView extends View {
         return "";
     }
 
+    public String loginView(){
+        return "";
+    }
+
 
 
 
