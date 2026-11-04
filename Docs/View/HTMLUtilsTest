@@ -1,0 +1,84 @@
+Scenario: escapeHTMLTest1 | Verifies that special HTML characters are escaped.
+GIVEN a string containing HTML tags, double quotes, an ampersand, and single quotes.
+WHEN escapeHTML is called with the string.
+THEN the characters are replaced with their corresponding HTML entities.
+
+Scenario: escapeHTMLTest2 | Verifies that null input is handled by escapeHTML.
+GIVEN a null string.
+WHEN escapeHTML is called.
+THEN an empty string is returned.
+
+Scenario: createPageTest1 | Verifies that a complete HTML page is generated.
+GIVEN a page title and HTML body content.
+WHEN createPage is called.
+THEN a complete HTML document is returned with the specified title, metadata, and body content.
+
+Scenario: createPageTest2 | Verifies that the page title is escaped and null body content is handled.
+GIVEN a title containing angle brackets and a null body.
+WHEN createPage is called.
+THEN the title is HTML-escaped and the body contains a whitespace character.
+
+Scenario: createHeadingTest1 | Verifies that a heading is generated from plain text.
+GIVEN the text "Hello World".
+WHEN createHeading is called.
+THEN an h1 element containing "Hello World" is returned.
+
+Scenario: createHeadingTest2 | Verifies that heading text is HTML-escaped.
+GIVEN the text "<script>".
+WHEN createHeading is called.
+THEN an h1 element containing "&lt;script&gt;" is returned.
+
+Scenario: createTextBlockTest1 | Verifies that multiline text is wrapped in a pre element.
+GIVEN the text "Line 1" followed by "Line 2" on a new line.
+WHEN createTextBlock is called.
+THEN the text is returned inside a pre element with the newline preserved.
+
+Scenario: createTextBlockTest2 | Verifies that text containing HTML tags is escaped.
+GIVEN the text "<script>".
+WHEN createTextBlock is called.
+THEN the script tag is escaped inside a pre element.
+
+Scenario: createLinkTest1 | Verifies that a link is generated from a URL and label.
+GIVEN the URL "/browse" and label "Browse Records".
+WHEN createLink is called.
+THEN an anchor element with the specified URL and label is returned.
+
+Scenario: createLinkTest2 | Verifies that special characters in a link URL and label are escaped.
+GIVEN a URL containing an ampersand and a label containing angle brackets.
+WHEN createLink is called.
+THEN the ampersand in the URL and the angle brackets in the label are HTML-escaped.
+
+Scenario: createLinkListTest1 | Verifies that a list of links is generated.
+GIVEN links to the agents and missions pages with their labels.
+WHEN createLinkList is called.
+THEN an unordered list containing both links is returned.
+
+Scenario: createLinkListTest2 | Verifies that null input produces an empty link list.
+GIVEN a null array of links.
+WHEN createLinkList is called.
+THEN an empty unordered list is returned.
+
+Scenario: createLinkListTest3 | Verifies that invalid link entries are skipped.
+GIVEN an array containing a valid link, a null entry, an entry with only a URL, and another valid link.
+WHEN createLinkList is called.
+THEN the null entry and incomplete entry are skipped, and the two valid links are returned in an unordered list.
+
+Scenario: createIDFormTest1 | Verifies that an ID input form is generated.
+GIVEN the action "/read" and label "Enter ID:".
+WHEN createIDForm is called.
+THEN a GET form is returned with the specified action, a required numeric ID input, and a Read button.
+
+Scenario: createIDFormTest2 | Verifies that special characters in an ID form's action and label are escaped.
+GIVEN an action containing an ampersand and a label containing angle brackets.
+WHEN createIDForm is called.
+THEN the action and label are HTML-escaped in the generated GET form.
+
+Scenario: createReadFormTest1 | Verifies that a record-reading form is generated for a specified type.
+GIVEN the record type "Agent".
+WHEN createReadForm is called.
+THEN a GET form is returned with a hidden type field, an Agent ID label, a required numeric ID input, and a Read button.
+
+Scenario: createBackLinkTest1 | Verifies that a link to the main menu is generated.
+GIVEN no additional input.
+WHEN createBackLink is called.
+THEN a link to "/" with the label "Back to Main Menu" is returned.
