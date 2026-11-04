@@ -109,10 +109,16 @@ public class HTMLUtils {
      * Generates a form for reading a particular record type.
      */
     public static String createReadForm(String type) {
-        return createIDForm(
-                "/read?type=" + type,
-                "Enter " + type + " ID:"
-        );
+        return """
+            <form method="GET" action="/read">
+                <input type="hidden" name="type" value="%s">
+
+                <label for="id">Enter %s ID:</label>
+                <input type="number" id="id" name="id" required>
+
+                <button type="submit">Read</button>
+            </form>
+            """.formatted(escapeHTML(type), escapeHTML(type));
     }
 
     /**

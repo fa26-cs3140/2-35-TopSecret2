@@ -186,7 +186,7 @@ public class WebServer {
                 return;
             }
             String type = parseForm.apply(exchange.getRequestURI().getRawQuery()).getOrDefault("type", "");
-            sendPage.accept(exchange, wrapText.apply("Browse", controller.listEntries(username, type)));
+            sendPage.accept(exchange, wrapText.apply("Browse: " + type, controller.listEntries(username, type)));
         });
 
         // Read: one full record.
@@ -205,7 +205,7 @@ public class WebServer {
                 sendPage.accept(exchange, wrapText.apply("Read", "Invalid option"));
                 return;
             }
-            sendPage.accept(exchange, wrapText.apply("Read", controller.readEntry(username, type, id)));
+            sendPage.accept(exchange, wrapText.apply("Read: " + type, controller.readEntry(username, type, id)));
         });
 
         // Audit: the audit log, admin-gated by the controller.
