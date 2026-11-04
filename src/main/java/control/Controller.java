@@ -119,6 +119,22 @@ public class Controller implements ControllerInterface {
     public boolean isAdmin(String username) {
         return access.isAdmin(username);
     }
+    // Manage-access screen: all usernames except the caller,
+// one per line. Admin only; the caller is never listed.
+    @Override
+    public String listUsernames(String username) {
+        if (!access.isAdmin(username)) {
+            return "Not allowed";
+        }
+        List<String> names = new ArrayList<>();
+        for (String name : users.listUsernames()) {
+            if (!name.equals(username)) {
+                names.add(name);
+            }
+        }
+        return String.join("\n", names);
+    }
+
 
     // Main menu text. Admin options only for admins; standard
     // users see 1-5 and 9, like the HW5 menu showed 1-4 and 8.
@@ -135,7 +151,11 @@ public class Controller implements ControllerInterface {
             menu.append("7. Promote or Demote users\n");
             menu.append("8. Review audit log\n");
         }
-        menu.append("9. Exit/logout\n");
+        menu.append("9. Send or view messages\n");
+        if (access.isAdmin(username)) {
+            menu.append("10. Assign agent to mission\n");
+        }
+        menu.append("11. Exit/logout\n");
         menu.append("Enter an option number:");
         return menu.toString();
     }
