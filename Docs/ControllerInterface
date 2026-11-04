@@ -9,6 +9,7 @@ control Interface
 +changePassword(String username, String pass1, String passConfirm): String
 +createUser(String adminUser, String newUser): String
 +manageAccess(String adminUser, String targetUser, String action): String
++listUsernames(String username): String
 +isAdmin(String username): boolean
 +showMainMenu(String username): String
 +browseMainMenu(String username, String itemType): string
