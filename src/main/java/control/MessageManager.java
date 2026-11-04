@@ -4,6 +4,7 @@ import model.Agent;
 import model.DataStoreInterface;
 import model.Message;
 import model.UserManagerInterface;
+import model.TopSecretException;
 
 import java.util.ArrayList;
 import java.util.List;
