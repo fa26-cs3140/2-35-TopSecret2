@@ -211,5 +211,8 @@ public interface DataStoreInterface {
      */
     User addUser(User user);
 
+    Message addMessage(Message newMessage);
+
+    List<Message> listMessagesForAgent(Agent recipient);
 
 }
