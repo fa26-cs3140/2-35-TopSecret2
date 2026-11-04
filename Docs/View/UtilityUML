@@ -1,0 +1,17 @@
+Utility
+-----------------------------------------------------
+-----------------------------------------------------
++ missionToStr(m: Mission): String {static}
++ facilityToStr(f: Facility): String {static}
++ briefToStr(b: Brief): String {static}
++ agentToStr(a: Agent): String {static}
++ userToStr(user: User): String {static}
++ logToStr(log: LoggedAction): String {static}
++ messageToStr(m: Message): String {static}
++ missionsToStr(missions: List<Mission>): List<String> {static}
++ facilitiesToStr(facilities: List<Facility>): List<String> {static}
++ briefsToStr(briefs: List<Brief>): List<String> {static}
++ agentsToStr(agents: List<Agent>): List<String> {static}
++ usersToStr(users: List<User>): List<String> {static}
++ logsToStr(logs: List<LoggedAction>): List<String> {static}
++ messagesToStr(messages: List<Message>): List<String> {static}

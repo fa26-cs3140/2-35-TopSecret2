@@ -4,7 +4,7 @@ import model.*;
 
 import java.util.List;
 
-public class utility {
+public class Utility {
 
 
     public static String missionToStr (Mission m) {
