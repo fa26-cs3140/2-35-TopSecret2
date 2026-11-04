@@ -31,8 +31,15 @@ public class MessageManager {
         return newMessage;
     }
 
-    public List<Message> retrieveMessages(Agent agent) {
-        // TODO: Replace stub with actual message retrieval.
-        return new ArrayList<Message>();
+    public List<Message> retrieveMessages(Agent agent) throws TopSecretException {
+        List<Message> availableMessages;
+
+        try {
+            availableMessages = dataStore.listMessagesForAgent(agent);
+        } catch (IllegalStateException e) {
+            throw new TopSecretException(e.getMessage());
+        }
+
+        return availableMessages;
     }
 }
