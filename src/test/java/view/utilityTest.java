@@ -53,7 +53,7 @@ class utilityTest {
 
     @Test
     void agentToStr() {
-        Agent agent = new Agent(1, 2,3,"AgentName", "1999-02-23", null, "notes");
+        Agent agent = new Agent(1, 3,"AgentName", "1999-02-23", null, "notes");
         String actual = utility.agentToStr(agent);
 
         String expected = """
@@ -97,7 +97,7 @@ class utilityTest {
 
     @Test
     void messageToStr() {
-        Agent agent = new Agent(1, 2,3,"AgentName", "1999-02-23", null, "notes");
+        Agent agent = new Agent(1,3,"AgentName", "1999-02-23", null, "notes");
         Message message = new Message(agent, "Message");
         String actual = utility.messageToStr(message);
 
@@ -163,8 +163,8 @@ class utilityTest {
     @Test
     void agentsToStr() {
         List<Agent> agents = List.of(
-                new Agent(1, 2, 3, "AgentName1", "1999-02-23", null, "notes1"),
-                new Agent(2, 3, 4, "AgentName2", "2000-03-24", null, "notes2")
+                new Agent(1, 3, "AgentName1", "1999-02-23", null, "notes1"),
+                new Agent(2, 4, "AgentName2", "2000-03-24", null, "notes2")
         );
 
         List<String> actual = utility.agentsToStr(agents);
@@ -216,8 +216,8 @@ class utilityTest {
 
     @Test
     void messagesToStr() {
-        Agent agent1 = new Agent(1, 2, 3, "AgentName1", "1999-02-23", null, "notes1");
-        Agent agent2 = new Agent(2, 3, 4, "AgentName2", "2000-03-24", null, "notes2");
+        Agent agent1 = new Agent(1, 3, "AgentName1", "1999-02-23", null, "notes1");
+        Agent agent2 = new Agent(2, 4, "AgentName2", "2000-03-24", null, "notes2");
 
         List<Message> messages = List.of(
                 new Message(agent1, "Message1"),
