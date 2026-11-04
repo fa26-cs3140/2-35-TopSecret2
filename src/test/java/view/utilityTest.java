@@ -32,7 +32,7 @@ class utilityTest {
                 Facility ID: 1
                 Name: FacilityName
                 Abbreviation: FT
-        """;
+                """;
         assertEquals(expected, actual);
     }
 
@@ -47,7 +47,7 @@ class utilityTest {
                 Title: BriefTitle
                 Date: 1999-02-15
                 Content: Content
-        """;
+                """;
         assertEquals(expected, actual);
     }
 
@@ -62,9 +62,9 @@ class utilityTest {
                 Facility ID: 3
                 Name: AgentName
                 Date Of Birth: 1999-02-23
-                Date Of Death: 
+                Date Of Death:\s
                 Notes: notes
-        """;
+                """;
         assertEquals(expected, actual);
 
     }
@@ -76,7 +76,7 @@ class utilityTest {
         String expected = """
                 User ID: 1
                 Username: userName
-        """;
+                """;
         assertEquals(expected, actual);
     }
 

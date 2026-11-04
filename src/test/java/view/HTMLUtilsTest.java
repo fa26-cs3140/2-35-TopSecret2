@@ -56,7 +56,7 @@ public class HTMLUtilsTest {
                     <title>&lt;Test&gt;</title>
                 </head>
                 <body>
-
+                   \s
                 </body>
                 </html>
                 """;
@@ -198,9 +198,12 @@ public class HTMLUtilsTest {
         String actual = HTMLUtils.createReadForm("Agent");
 
         String expected = """
-                <form method="GET" action="/read?type=Agent">
+                <form method="GET" action="/read">
+                    <input type="hidden" name="type" value="Agent">
+                
                     <label for="id">Enter Agent ID:</label>
                     <input type="number" id="id" name="id" required>
+                
                     <button type="submit">Read</button>
                 </form>
                 """;

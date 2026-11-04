@@ -82,6 +82,38 @@ public class TerminalView {
             );
         }
     }
+    private int getInputInt(String message, int min, int max, int... othernums) {
+        while (true) {
+            String input = getInput(message);
+
+            if (input == null) {
+                return -1;
+            }
+
+            try {
+                int value = Integer.parseInt(input);
+
+                if (value >= min && value <= max) {
+                    return value;
+                }
+
+                for (int num : othernums) {
+                    if (value == num) {
+                        return value;
+                    }
+                }
+
+            } catch (NumberFormatException ignored) {
+                // Prompt again.
+            }
+
+            System.out.println(
+                    "Invalid input. Enter an integer between "
+                            + min + " and " + max
+                            + " or one of the specified options."
+            );
+        }
+    }
 
     private int getPositiveInt(String message) {
         while (true) {
@@ -264,13 +296,13 @@ public class TerminalView {
     private void showMainMenu() {
         while (true) {
 
-//            display(controller.showMainMenu(currentUser));
 
-            int choice = getInputInt(
-                    1,
-                    isAdmin() ? 9 : 6,
-                    controller.showMainMenu(currentUser)
-            );
+            int choice = -1;
+            if (isAdmin()){
+                choice = getInputInt(1,11,controller.showMainMenu(currentUser));
+            }else{
+                choice = getInputInt(controller.showMainMenu(currentUser), 1,5,9,11);
+            }
 
             if (choice == -1) {
                 return;
@@ -303,6 +335,12 @@ public class TerminalView {
                         reviewAuditLog();
                         break;
                     case 9:
+                        browseMessages();
+                        break;
+                    case 10:
+                        assignAgentToMission();
+                        break;
+                    case 11:
                         return;
                     default:
                         System.out.println("Invalid option.");
@@ -324,7 +362,10 @@ public class TerminalView {
                     case 5:
                         changePassword();
                         break;
-                    case 6:
+                    case 9:
+                        browseMessages();
+                        break;
+                    case 11:
                         return;
                     default:
                         System.out.println("Invalid option.");
@@ -339,17 +380,12 @@ public class TerminalView {
 
         while (true) {
 
-//            display(controller.browseMainMenu(
-//                    currentUser, itemType
-//            ));
-
-            int choice = getInputInt(
-                    1,
-                    isAdmin() ? 5 : 3,
-                    controller.browseMainMenu(
-                            currentUser, itemType
-                    )
-            );
+            int choice = -1;
+            if(isAdmin()){
+                choice = getInputInt(1,5, controller.browseMainMenu(currentUser, itemType));
+            }else {
+                choice = getInputInt(controller.browseMainMenu(currentUser, itemType), 1,2,5);
+            }
 
             if (choice == -1) {
                 return;
@@ -382,7 +418,7 @@ public class TerminalView {
                     case 2:
                         readEntry(itemType);
                         break;
-                    case 3:
+                    case 5:
                         return;
                     default:
                         System.out.println("Invalid option.");
@@ -647,9 +683,6 @@ public class TerminalView {
                     1, 3, "Enter an option number: "
             );
 
-            if (choice == -1 || choice == 3) {
-                return;
-            }
 
             switch (choice) {
                 case 1:
@@ -659,6 +692,8 @@ public class TerminalView {
                 case 2:
                     sendMessage();
                     break;
+                case 3:
+                    return;
 
                 default:
                     System.out.println("Invalid option.");

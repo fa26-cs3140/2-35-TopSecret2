@@ -297,6 +297,18 @@ public class SQLiteDataStore implements DataStoreInterface, AutoCloseable {
         }
     }
 
+    /**
+     * updates an existing mission in DB, the missionID selects which row to overwrite
+     *
+     * @param mission
+     * @return the final model.Mission representation in the database
+     * @throws IllegalArgumentException when no mission with that id exists, or the facility does not exist
+     */
+    @Override
+    public Mission updateMission(Mission mission) {
+        return null;
+    }
+
 
     /**
      * query database to get all agents and return them as {@code List<model.Agent>}
@@ -565,6 +577,18 @@ public class SQLiteDataStore implements DataStoreInterface, AutoCloseable {
     }
 
     /**
+     * updates an existing model.Agent in the database, the agentID selects which row to overwrite
+     *
+     * @param agent
+     * @return the final model.Agent representation in the database
+     * @throws IllegalArgumentException when no agent with that id exists, or the facility does not exist
+     */
+    @Override
+    public Agent updateAgent(Agent agent) {
+        return null;
+    }
+
+    /**
      * add a facility to the database, the facilityID will be ignored and automatically assigned by the database
      *
      * @param facility
@@ -602,6 +626,18 @@ public class SQLiteDataStore implements DataStoreInterface, AutoCloseable {
             throw new IllegalArgumentException(
                     "Failed to add facility. model.Facility name or abbreviation already exists", e);
         }
+    }
+
+    /**
+     * updates an existing facility in the database, the facilityID selects which row to overwrite
+     *
+     * @param facility
+     * @return the final model.Facility entry representation in the database
+     * @throws IllegalArgumentException when no facility with that id exists
+     */
+    @Override
+    public Facility updateFacility(Facility facility) {
+        return null;
     }
 
     /**
@@ -646,6 +682,18 @@ public class SQLiteDataStore implements DataStoreInterface, AutoCloseable {
             throw new IllegalArgumentException(
                     "Failed to add model.Brief. model.Mission may not exist", e);
         }
+    }
+
+    /**
+     * updates an existing model.Brief in the database, the briefID selects which row to overwrite
+     *
+     * @param brief
+     * @return the final Brief entry representation in the database
+     * @throws IllegalArgumentException when no brief with that id exists, or the mission does not exist
+     */
+    @Override
+    public Brief updateBrief(Brief brief) {
+        return null;
     }
 
 
