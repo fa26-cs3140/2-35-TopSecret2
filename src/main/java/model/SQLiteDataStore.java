@@ -101,6 +101,14 @@ public class SQLiteDataStore implements DataStoreInterface, AutoCloseable {
                     )
                     """;
 
+            String messagesInitSql = """
+                    CREATE TABLE IF NOT EXISTS messages (
+                        message_ID INTEGER PRIMARY KEY AUTOINCREMENT,
+                        recipient_agent_ID INTEGER NOT NULL REFERENCES agents(agent_ID) ON DELETE CASCADE,
+                        content TEXT NOT NULL
+                    )
+                    """;
+
             //use this if 2 foreign key constraint is not working for mission_ID
 //            String clearAgentMissionTriggerSql = """
 //                CREATE TRIGGER IF NOT EXISTS clear_agent_mission_on_delete
@@ -123,6 +131,7 @@ public class SQLiteDataStore implements DataStoreInterface, AutoCloseable {
                 statement.execute(missionsInitSql);
                 statement.execute(briefsInitSql);
                 statement.execute(agentsInitSql);
+                statement.execute(messagesInitSql);
             }
 
         } catch (SQLException e) {
