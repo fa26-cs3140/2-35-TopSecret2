@@ -71,7 +71,7 @@ public class TerminalViewTest {
 
     @Test
     public void runCreatesFirstAccountAndEntersMainMenu() {
-        createView("alice\npassword\npassword\n9\n");
+        createView("alice\npassword\npassword\n11\n");
 
         when(controller.hasUsers()).thenReturn(false);
         when(controller.createFirstAccount(
@@ -121,7 +121,7 @@ public class TerminalViewTest {
 
     @Test
     public void runLogsInExistingUser() {
-        createView("alice\npassword\n9\n");
+        createView("alice\npassword\n11\n");
         mockSuccessfulLogin(true);
 
         assertEquals(0, view.run());
@@ -133,7 +133,7 @@ public class TerminalViewTest {
 
     @Test
     public void runRetriesAfterIncorrectLogin() {
-        createView("alice\nwrong\nalice\npassword\n9\n");
+        createView("alice\nwrong\nalice\npassword\n11\n");
 
         when(controller.hasUsers()).thenReturn(true);
         when(controller.needsPasswordSetup("alice")).thenReturn(false);
@@ -153,7 +153,7 @@ public class TerminalViewTest {
 
     @Test
     public void runSetsUpPasswordForNewUser() {
-        createView("alice\nnewPassword\nnewPassword\n9\n");
+        createView("alice\nnewPassword\nnewPassword\n11\n");
 
         when(controller.hasUsers()).thenReturn(true);
         when(controller.needsPasswordSetup("alice")).thenReturn(true);
@@ -173,7 +173,7 @@ public class TerminalViewTest {
     @Test
     public void runRetriesLoginWhenPasswordSetupFails() {
         createView(
-                "alice\nfirst\nsecond\nalice\npassword\n9\n"
+                "alice\nfirst\nsecond\nalice\npassword\n11\n"
         );
 
         when(controller.hasUsers()).thenReturn(true);
@@ -199,7 +199,7 @@ public class TerminalViewTest {
 
     @Test
     public void adminCanExitMainMenu() {
-        createView("alice\npassword\n9\n");
+        createView("alice\npassword\n11\n");
         mockSuccessfulLogin(true);
 
         assertEquals(0, view.run());
@@ -220,7 +220,7 @@ public class TerminalViewTest {
     @Test
     public void adminCanChangePassword() {
         createView(
-                "alice\npassword\n5\nnewPassword\nnewPassword\n9\n"
+                "alice\npassword\n5\nnewPassword\nnewPassword\n11\n"
         );
         mockSuccessfulLogin(true);
 
@@ -237,7 +237,7 @@ public class TerminalViewTest {
 
     @Test
     public void adminCanCreateUser() {
-        createView("alice\npassword\n6\nbob\n9\n");
+        createView("alice\npassword\n6\nbob\n11\n");
         mockSuccessfulLogin(true);
 
         when(controller.createUser("alice", "bob"))
@@ -250,7 +250,7 @@ public class TerminalViewTest {
 
     @Test
     public void adminCanPromoteUser() {
-        createView("alice\npassword\n7\nPromote bob\n9\n");
+        createView("alice\npassword\n7\nPromote bob\n11\n");
         mockSuccessfulLogin(true);
 
         when(controller.manageAccess("alice", "bob", "Promote"))
@@ -263,7 +263,7 @@ public class TerminalViewTest {
 
     @Test
     public void adminCanDemoteUser() {
-        createView("alice\npassword\n7\nDemote bob\n9\n");
+        createView("alice\npassword\n7\nDemote bob\n11\n");
         mockSuccessfulLogin(true);
 
         when(controller.manageAccess("alice", "bob", "Demote"))
@@ -276,7 +276,7 @@ public class TerminalViewTest {
 
     @Test
     public void adminCanReviewAuditLog() {
-        createView("alice\npassword\n8\n9\n");
+        createView("alice\npassword\n8\n11\n");
         mockSuccessfulLogin(true);
 
         when(controller.reviewAuditLog("alice"))
@@ -290,7 +290,7 @@ public class TerminalViewTest {
     @Test
     public void adminCanReturnFromInvalidManageAccessInput() {
         createView(
-                "alice\npassword\n7\ninvalid input\nPromote bob\n9\n"
+                "alice\npassword\n7\ninvalid input\nPromote bob\n11\n"
         );
         mockSuccessfulLogin(true);
 
@@ -306,7 +306,7 @@ public class TerminalViewTest {
 
     @Test
     public void adminCanOpenBriefsMenu() {
-        createView("alice\npassword\n1\n5\n9\n");
+        createView("alice\npassword\n1\n5\n11\n");
         mockSuccessfulLogin(true);
 
         when(controller.browseMainMenu("alice", "briefs"))
@@ -319,7 +319,7 @@ public class TerminalViewTest {
 
     @Test
     public void adminCanOpenAgentsMenu() {
-        createView("alice\npassword\n2\n5\n9\n");
+        createView("alice\npassword\n2\n5\n11\n");
         mockSuccessfulLogin(true);
 
         when(controller.browseMainMenu("alice", "agents"))
@@ -332,7 +332,7 @@ public class TerminalViewTest {
 
     @Test
     public void adminCanOpenFacilitiesMenu() {
-        createView("alice\npassword\n3\n5\n9\n");
+        createView("alice\npassword\n3\n5\n11\n");
         mockSuccessfulLogin(true);
 
         when(controller.browseMainMenu("alice", "facilities"))
@@ -345,7 +345,7 @@ public class TerminalViewTest {
 
     @Test
     public void adminCanOpenMissionsMenu() {
-        createView("alice\npassword\n4\n5\n9\n");
+        createView("alice\npassword\n4\n5\n11\n");
         mockSuccessfulLogin(true);
 
         when(controller.browseMainMenu("alice", "missions"))
@@ -360,7 +360,7 @@ public class TerminalViewTest {
 
     @Test
     public void adminCanListBriefs() {
-        createView("alice\npassword\n1\n1\n5\n9\n");
+        createView("alice\npassword\n1\n1\n5\n11\n");
         mockSuccessfulLogin(true);
 
         when(controller.browseMainMenu("alice", "briefs"))
@@ -375,7 +375,7 @@ public class TerminalViewTest {
 
     @Test
     public void adminCanReadBrief() {
-        createView("alice\npassword\n1\n2\n12\n5\n9\n");
+        createView("alice\npassword\n1\n2\n12\n5\n11\n");
         mockSuccessfulLogin(true);
 
         when(controller.browseMainMenu("alice", "briefs"))
@@ -414,7 +414,7 @@ public class TerminalViewTest {
     @Test
     public void adminCanAddBrief() {
         createView(
-                "alice\npassword\n1\n3\n10\nTitle\n2026-11-03\nContent\n5\n9\n"
+                "alice\npassword\n1\n3\n10\nTitle\n2026-11-03\nContent\n5\n11\n"
         );
         mockSuccessfulLogin(true);
 
@@ -435,7 +435,7 @@ public class TerminalViewTest {
     @Test
     public void adminCanAddAgent() {
         createView(
-                "alice\npassword\n2\n3\n4\nAgent Name\n1990-01-01\n\nNotes\n5\n9\n"
+                "alice\npassword\n2\n3\n4\nAgent Name\n1990-01-01\n\nNotes\n5\n11\n"
         );
         mockSuccessfulLogin(true);
 
@@ -456,7 +456,7 @@ public class TerminalViewTest {
     @Test
     public void adminCanAddFacility() {
         createView(
-                "alice\npassword\n3\n3\nFacility Name\nFAC\n5\n9\n"
+                "alice\npassword\n3\n3\nFacility Name\nFAC\n5\n11\n"
         );
         mockSuccessfulLogin(true);
 
@@ -478,7 +478,7 @@ public class TerminalViewTest {
     @Test
     public void adminCanAddMission() {
         createView(
-                "alice\npassword\n4\n3\nMission Title\n7\n5\n9\n"
+                "alice\npassword\n4\n3\nMission Title\n7\n5\n11\n"
         );
         mockSuccessfulLogin(true);
 
@@ -501,7 +501,7 @@ public class TerminalViewTest {
     @Test
     public void adminCanEditBrief() {
         createView(
-                "alice\npassword\n1\n4\n12\n10\nNew title\n2026-11-03\nNew content\n5\n9\n"
+                "alice\npassword\n1\n4\n12\n10\nNew title\n2026-11-03\nNew content\n5\n11\n"
         );
         mockSuccessfulLogin(true);
 
@@ -524,7 +524,7 @@ public class TerminalViewTest {
     @Test
     public void adminCanEditAgent() {
         createView(
-                "alice\npassword\n2\n4\n12\n4\nAgent Name\n1990-01-01\n\nNotes\n5\n9\n"
+                "alice\npassword\n2\n4\n12\n4\nAgent Name\n1990-01-01\n\nNotes\n5\n11\n"
         );
         mockSuccessfulLogin(true);
 
@@ -547,7 +547,7 @@ public class TerminalViewTest {
     @Test
     public void adminCanEditFacility() {
         createView(
-                "alice\npassword\n3\n4\n12\nFacility Name\nFAC\n5\n9\n"
+                "alice\npassword\n3\n4\n12\nFacility Name\nFAC\n5\n11\n"
         );
         mockSuccessfulLogin(true);
 
@@ -570,7 +570,7 @@ public class TerminalViewTest {
     @Test
     public void adminCanEditMission() {
         createView(
-                "alice\npassword\n4\n4\n12\nMission Title\n7\n5\n9\n"
+                "alice\npassword\n4\n4\n12\nMission Title\n7\n5\n11\n"
         );
         mockSuccessfulLogin(true);
 
