@@ -999,4 +999,56 @@ public class SQLiteDataStore implements DataStoreInterface, AutoCloseable {
         throw new UnsupportedOperationException("Not implemented yet");
     }
 
+    @Override
+    public Message addMessage(Message newMessage) {
+        String sql = """
+        INSERT INTO messages (recipient_agent_ID, content)
+        VALUES (?, ?)
+        """;
+
+        try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
+            Agent messageRecipient = newMessage.getRecipient();
+            pstmt.setInt(1, messageRecipient.getAgentID());
+            pstmt.setString(2, newMessage.getMessageContent());
+
+            pstmt.executeUpdate();
+
+            return newMessage;
+
+        } catch (SQLException e) {
+            throw new IllegalArgumentException(
+                    "Unable to create message", e);
+        }
+    }
+
+    @Override
+    public List<Message> listMessagesForAgent(Agent recipient) {
+        String sql = """
+                SELECT * FROM messages
+                WHERE recipient_agent_ID = ?
+            """;
+
+        List<Message> messages = new ArrayList<>();
+
+        try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
+            pstmt.setInt(1, recipient.getAgentID());
+
+            try (ResultSet rs = pstmt.executeQuery()) {
+                while (rs.next()) {
+                    Message currMessage = new Message(
+                            recipient,
+                            rs.getString("content")
+                    );
+
+                    messages.add(currMessage);
+                }
+            }
+        }
+        catch (SQLException e) {
+            throw new IllegalStateException("Failed to retrieve messages", e);
+        }
+
+        return messages;
+
+        }
 }
