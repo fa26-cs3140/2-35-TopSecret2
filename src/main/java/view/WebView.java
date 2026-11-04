@@ -130,6 +130,10 @@ public class WebView extends View {
     }
 
 
+    public String generateHTML(String title, String content){
+        return "";
+    }
+
 
 
 }

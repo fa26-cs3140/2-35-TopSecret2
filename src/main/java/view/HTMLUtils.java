@@ -4,10 +4,19 @@ import java.util.List;
 
 public class HTMLUtils {
 
+    //Utility class
+    private HTMLUtils() {
+        // Utility class; prevent instantiation.
+    }
+
     /**
      * Generates a complete HTML document.
+     *
+     * @param title page title
+     * @param body HTML content to place inside the body
+     * @return complete HTML document
      */
-    public static String page(String title, String content) {
+    public static String createPage(String title, String body) {
         return """
                 <!DOCTYPE html>
                 <html>
@@ -19,13 +28,13 @@ public class HTMLUtils {
                     %s
                 </body>
                 </html>
-                """.formatted(title, content);
+                """.formatted(title, body);
     }
 
     /**
-     * Escapes special HTML characters.
+     * Escapes special HTML characters to prevent HTML injection.
      */
-    public static String escape(String text) {
+    public static String escapeHTML(String text) {
         return "";
     }
 
@@ -33,60 +42,37 @@ public class HTMLUtils {
     /**
      * Generates a heading.
      */
-    public static String heading(String text, int level) {
-        return "<h" + level + ">" + text
-                + "</h" + level + ">";
+    public static String createHeading(String heading) {
+        return "";
+    }
+
+    /**
+     * Displays plain text while preserving its original formatting.
+     */
+    public static String createTextBlock(String text) {
+        return "";
     }
 
     /**
      * Generates a hyperlink.
      */
-    public static String link(String text, String href) {
-        return "<a href=\"" + href + "\">"
-                + text + "</a>";
+    public static String createLink(String url, String label) {
+        return "";
     }
 
     /**
      * Generates an unordered list of hyperlinks.
      */
-    public static String linkList(String... links) {
+    public static String createLinkList(String[][] links) {
         return "";
     }
+
 
 
     /**
-     * Generates an unordered list of formatted records.
+     * Generates a form for submitting an ID.
      */
-    public static String recordList(List<String> records) {
+    public static String createIDForm(String action, String label) {
         return "";
     }
-
-    /**
-     * Generates a GET form for retrieving a record by ID.
-     */
-    public static String idForm(
-            String action,
-            String inputName,
-            String label) {
-        return "";
-    }
-
-    /**
-     * Generates the login form.
-     */
-    public static String loginForm() {
-        return "";
-    }
-
-    /**
-     * Generates a link back to the main menu.
-     */
-    public static String mainMenuLink() {
-        return "";
-    }
-
-
-
-
-
 }
