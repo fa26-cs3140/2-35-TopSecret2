@@ -17,21 +17,18 @@ public class MessageManager {
         this.dataStore = dataStore;
     }
 
-    public Message createMessage(Agent recipient, String contents) {
-        // TODO: Replace stub with actual message creation
-        Agent sampleAgent = new Agent(
-                -1,
-                -1,
-                "Agent P",
-                "Unknown",
-                "None",
-                "");
+    public Message createMessage(Agent recipient, String contents) throws TopSecretException {
+        Message newMessage = new Message(
+                recipient,
+                contents);
 
-        Message sampleMessage = new Message(
-                sampleAgent,
-                "Great Googlymoogly!");
+        try {
+            dataStore.addMessage(newMessage);
+        } catch (IllegalArgumentException e) {
+            throw new TopSecretException(e.getMessage());
+        }
 
-        return sampleMessage;
+        return newMessage;
     }
 
     public List<Message> retrieveMessages(Agent agent) {
