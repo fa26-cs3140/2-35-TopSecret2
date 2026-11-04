@@ -1,52 +1,35 @@
-TerminalView extends View
+TerminalView
 -----------------------------------------------------
-- admin: boolean {final}
+- controller: ControllerInterface {final}
+- scnr: Scanner {final}
+- currentUser: String
 -----------------------------------------------------
-+ TerminalView(isAdmin: boolean)
-+ promptMessage(message: String): void
-+ getInputInt(scnr: Scanner, rangeMin: int, rangeMax: int, message: String): int
-+ getInputInt(scnr: Scanner, message: String): int
-+ getInputStr(scnr: Scanner, regEx: String, message: String): String
-+ getInputStr(scnr: Scanner, message: String): String
-- getOptionalInput(scnr: Scanner, message: String): String
-+ singleMissionView(mission: Mission): String
-+ listMissionsView(missions: List<Mission>): String
-+ singleFacilityView(facility: Facility): String
-+ listFacilitiesView(facilities: List<Facility>): String
-+ singleBriefView(brief: Brief): String
-+ listBriefsView(briefs: List<Brief>): String
-+ singleAgentView(agent: Agent): String
-+ listAgentsView(agents: List<Agent>): String
-+ singleUserView(user: User): String
-+ listUsersView(users: List<User>): String
-+ singleLogView(log: LoggedAction): String
-+ listLogsView(logs: List<LoggedAction>): String
-+ mainMenuView(): String
-+ browseMissionsView(): String
-+ browseFacilitiesView(): String
-+ browseBriefsView(): String
-+ browseAgentsView(): String
-+ browseMessagesView(): String
-- browseMenu(plural: String, singular: String): String
++ TerminalView(controller: ControllerInterface)
++ run(): int
+- display(message: String): void
+- getInput(message: String): String
+- getRequiredInput(message: String): String
+- getOptionalInput(message: String): String
+- getInputInt(min: int, max: int, message: String): int
+- getInputInt(message: String, min: int, max: int, othernums: int...): int
+- getPositiveInt(message: String): int
+- isAdmin(): boolean
 - capitalize(value: String): String
-+ manageUsersView(users: List<User>, currentUser: User): String
-+ reviewAuditLogView(logs: List<LoggedAction>): String
-+ listMessagesView(messages: List<Message>): String
-+ promptLogin(scnr: Scanner): String[]
-+ promptSignup(scnr: Scanner): String[]
-+ promptChangePassword(scnr: Scanner): String[]
-+ promptAddMission(scnr: Scanner): String[]
-+ promptAddFacility(scnr: Scanner): String[]
-+ promptAddBrief(scnr: Scanner): String[]
-+ promptAddAgent(scnr: Scanner): String[]
-+ promptRecordID(scnr: Scanner, itemType: String): String
-+ promptCreateUser(scnr: Scanner): String
-+ promptManageAccess(scnr: Scanner): String[]
-+ promptSelectUser(scnr: Scanner): String
-+ promptCreateMessage(scnr: Scanner): String[]
-+ promptMainMenuChoice(scnr: Scanner): int
-+ promptBrowseMenuChoice(scnr: Scanner, itemType: String): int
-+ promptConfirmation(scnr: Scanner, message: String): boolean
-+ promptOption(scnr: Scanner, message: String): String
-+ formatError(error: String): String
-+ formatSuccess(message: String): String
+- loginStep(): boolean
+- promptSignup(): String[]
+- promptChangePassword(): String[]
+- changePassword(): void
+- showMainMenu(): void
+- browseMenu(itemType: String): void
+- listEntries(itemType: String): void
+- readEntry(itemType: String): void
+- addEntry(itemType: String): void
+- editEntry(itemType: String): void
+- promptRecordFields(itemType: String): List<String>
+- addRequiredField(fields: List<String>, message: String): boolean
+- assignAgentToMission(): void
+- createUser(): void
+- manageAccess(): void
+- reviewAuditLog(): void
+- browseMessages(): void
+- sendMessage(): void
