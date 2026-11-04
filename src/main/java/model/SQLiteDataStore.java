@@ -86,18 +86,22 @@ public class SQLiteDataStore implements DataStoreInterface, AutoCloseable {
             String agentsInitSql = """
                     CREATE TABLE IF NOT EXISTS agents (
                         agent_ID INTEGER PRIMARY KEY AUTOINCREMENT,
-                        mission_ID INTEGER REFERENCES missions(mission_ID) ON DELETE SET NULL,
                         facility_ID INTEGER NOT NULL REFERENCES facilities(facility_ID) ON DELETE CASCADE,
                         name TEXT NOT NULL,
                         date_of_birth TEXT NOT NULL,
                         date_of_death TEXT,
                         notes TEXT,
-                        FOREIGN KEY (mission_ID, facility_ID)
-                                REFERENCES missions(mission_ID, facility_ID),
                         CHECK (
                             date_of_death IS NULL
                             OR date_of_death >= date_of_birth
                         )
+                    )
+                    """;
+            String missionAgentsInitSql = """
+                    CREATE TABLE IF NOT EXISTS mission_agents (
+                        agent_ID INTEGER NOT NULL REFERENCES agents(agent_ID) ON DELETE CASCADE,
+                        mission_ID INTEGER NOT NULL REFERENCES missions(mission_ID) ON DELETE CASCADE,
+                        PRIMARY KEY (agent_ID, mission_ID)
                     )
                     """;
 
@@ -131,6 +135,7 @@ public class SQLiteDataStore implements DataStoreInterface, AutoCloseable {
                 statement.execute(missionsInitSql);
                 statement.execute(briefsInitSql);
                 statement.execute(agentsInitSql);
+                statement.execute(missionAgentsInitSql);
                 statement.execute(messagesInitSql);
             }
 
