@@ -1,0 +1,13 @@
+HTMLUtils
+-----------------------------------------------------
+-----------------------------------------------------
+- HTMLUtils()
++ escapeHTML(text: String): String {static}
++ createPage(title: String, body: String): String {static}
++ createHeading(heading: String): String {static}
++ createTextBlock(text: String): String {static}
++ createLink(url: String, label: String): String {static}
++ createLinkList(links: String[][]): String {static}
++ createIDForm(action: String, label: String): String {static}
++ createReadForm(type: String): String {static}
++ createBackLink(): String {static}
