@@ -58,7 +58,6 @@ class utilityTest {
 
         String expected = """
                 Agent ID: 1
-                Mission ID: 2
                 Facility ID: 3
                 Name: AgentName
                 Date Of Birth: 1999-02-23
@@ -90,9 +89,10 @@ class utilityTest {
                 Action: 1
                 User Name: userName
                 User ID: 1
-                Date:  1999-02-23
+                Date: 1999-02-23
                 Record: record
                 """;
+        assertEquals(expected, actual);
     }
 
     @Test

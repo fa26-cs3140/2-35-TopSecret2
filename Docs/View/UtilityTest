@@ -1,0 +1,69 @@
+Scenario: missionToStr | Verifies that a mission is formatted as a string.
+GIVEN a mission with ID 1, facility ID 2, and title "MissionTitle".
+WHEN missionToStr is called.
+THEN the returned string contains the mission ID, facility ID, and title in the expected format.
+
+Scenario: facilityToStr | Verifies that a facility is formatted as a string.
+GIVEN a facility with ID 1, name "FacilityName", and abbreviation "FT".
+WHEN facilityToStr is called.
+THEN the returned string contains the facility ID, name, and abbreviation in the expected format.
+
+Scenario: briefToStr | Verifies that a brief is formatted as a string.
+GIVEN a brief with ID 1, mission ID 2, title "BriefTitle", date "1999-02-15", and content "Content".
+WHEN briefToStr is called.
+THEN the returned string contains the brief details in the expected format.
+
+Scenario: agentToStr | Verifies that an agent is formatted as a string when the date of death is null.
+GIVEN an agent with ID 1, facility ID 3, name "AgentName", date of birth "1999-02-23", a null date of death, and notes "notes".
+WHEN agentToStr is called.
+THEN the returned string contains the agent details, including a blank date-of-death field and the mission ID shown in the expected format.
+
+Scenario: userToStr | Verifies that a user is formatted as a string.
+GIVEN a user with ID 1 and username "userName".
+WHEN userToStr is called.
+THEN the returned string contains the user ID and username in the expected format.
+
+Scenario: logToStr | Verifies that a logged action is formatted as a string.
+GIVEN a logged action with action ID 1, user "userName" with ID 1, date "1999-02-23", and record "record".
+WHEN logToStr is called.
+THEN the returned string contains the action ID, username, user ID, date, and record in the expected format.
+
+Scenario: messageToStr | Verifies that a message is formatted as a string.
+GIVEN a message addressed to agent ID 1 with name "AgentName" and content "Message".
+WHEN messageToStr is called.
+THEN the returned string contains the recipient agent ID, recipient name, and message content in the expected format.
+
+Scenario: missionsToStr | Verifies that a list of missions is formatted as a list of strings.
+GIVEN two missions with different IDs, titles, and facility IDs.
+WHEN missionsToStr is called.
+THEN the returned list contains the formatted string for each mission in the original order.
+
+Scenario: facilitiesToStr | Verifies that a list of facilities is formatted as a list of strings.
+GIVEN two facilities with different IDs, names, and abbreviations.
+WHEN facilitiesToStr is called.
+THEN the returned list contains the formatted string for each facility in the original order.
+
+Scenario: briefsToStr | Verifies that a list of briefs is formatted as a list of strings.
+GIVEN two briefs with different IDs, mission IDs, titles, dates, and content.
+WHEN briefsToStr is called.
+THEN the returned list contains the formatted string for each brief in the original order.
+
+Scenario: agentsToStr | Verifies that a list of agents is formatted as a list of strings.
+GIVEN two agents with different IDs, facility IDs, names, birth dates, null death dates, and notes.
+WHEN agentsToStr is called.
+THEN the returned list contains the formatted string for each agent in the original order.
+
+Scenario: usersToStr | Verifies that a list of users is formatted as a list of strings.
+GIVEN two users with different IDs and usernames.
+WHEN usersToStr is called.
+THEN the returned list contains the formatted string for each user in the original order.
+
+Scenario: logsToStr | Verifies that a list of logged actions is formatted as a list of strings.
+GIVEN two logged actions associated with different users, dates, and records.
+WHEN logsToStr is called.
+THEN the returned list contains the formatted string for each logged action in the original order.
+
+Scenario: messagesToStr | Verifies that a list of messages is formatted as a list of strings.
+GIVEN two messages addressed to different agents with different message content.
+WHEN messagesToStr is called.
+THEN the returned list contains the formatted string for each message in the original order.

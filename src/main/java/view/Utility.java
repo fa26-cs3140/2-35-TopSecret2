@@ -63,7 +63,7 @@ public class Utility {
                 Action: %s
                 User Name: %s
                 User ID: %s
-                Date:  %s
+                Date: %s
                 Record: %s
                 """;
         return String.format(str, log.getAction(),log.getUser().getUsername(), log.getUser().getUserID(), log.getDateTime(), log.getRecord());
