@@ -75,4 +75,18 @@ public class HTMLUtils {
     public static String createIDForm(String action, String label) {
         return "";
     }
+
+    /**
+     * Generates a form for reading a particular record type.
+     */
+    public static String createReadForm(String type) {
+        return "";
+    }
+
+    /**
+     * Generates a link back to the main menu.
+     */
+    public static String createBackLink() {
+        return "";
+    }
 }
