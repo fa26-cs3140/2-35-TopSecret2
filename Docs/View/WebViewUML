@@ -1,0 +1,10 @@
+WebView
+-----------------------------------------------------
+-----------------------------------------------------
++ WebView()
++ generateHTML(title: String, text: String): String
++ mainMenuView(controllerMenu: String): String
++ browseView(type: String, records: String): String
++ readView(type: String, record: String): String
++ auditView(logs: String): String
+- getTypeFromTitle(title: String): String
