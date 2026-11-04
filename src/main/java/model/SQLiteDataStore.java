@@ -190,6 +190,12 @@ public class SQLiteDataStore implements DataStoreInterface, AutoCloseable {
         if (header == null) {
             throw new IllegalArgumentException("The TSV file is empty.");
         }
+
+        if (table.equals("agents")) {
+            importAgentsTsvReader(reader, header);
+            return;
+        }
+
         String[] cols = header.split("\t");
 
         String insertSql = """
@@ -255,6 +261,107 @@ public class SQLiteDataStore implements DataStoreInterface, AutoCloseable {
         } catch (Exception e) {
             throw new IllegalStateException(
                     "Failed to import TSV data.", e);
+        }
+    }
+
+    private void importAgentsTsvReader(BufferedReader reader, String header) throws IOException {
+        String[] cols = header.strip().split("\t");
+
+        if (cols.length != 4
+                || !cols[0].equals("name")
+                || !cols[1].equals("date_of_birth")
+                || !cols[2].equals("facility_ID")
+                || !cols[3].equals("mission_ID")) {
+            throw new IllegalArgumentException("Invalid agents.tsv header.");
+        }
+
+        String agentSql = """
+            INSERT INTO agents (name, date_of_birth, facility_ID)
+            VALUES (?, ?, ?)
+            """;
+
+        String missionAgentSql = """
+            INSERT INTO mission_agents (agent_ID, mission_ID)
+            VALUES (?, ?)
+            """;
+
+        boolean originalAutoCommit;
+
+        try {
+            originalAutoCommit = connection.getAutoCommit();
+        } catch (SQLException e) {
+            throw new IllegalStateException(
+                    "Failed to retrieve database auto-commit.", e);
+        }
+
+        try {
+            connection.setAutoCommit(false);
+
+            try (PreparedStatement agentStatement =
+                         connection.prepareStatement(
+                                 agentSql, Statement.RETURN_GENERATED_KEYS);
+                 PreparedStatement missionAgentStatement =
+                         connection.prepareStatement(missionAgentSql)) {
+
+                String line;
+
+                while ((line = reader.readLine()) != null) {
+                    if (line.isBlank()) {
+                        continue;
+                    }
+
+                    String[] fields = line.split("\t", -1);
+
+                    if (fields.length != 4) {
+                        throw new IllegalArgumentException(
+                                "Invalid agent TSV row: " + line);
+                    }
+
+                    for (String field : fields) {
+                        if (field.isEmpty()) {
+                            throw new IllegalArgumentException(
+                                    "TSV row contains an empty field: " + line);
+                        }
+                    }
+
+                    agentStatement.setString(1, fields[0]);
+                    agentStatement.setString(2, fields[1]);
+                    agentStatement.setInt(3, Integer.parseInt(fields[2]));
+
+                    agentStatement.executeUpdate();
+
+                    try (ResultSet keys = agentStatement.getGeneratedKeys()) {
+                        if (!keys.next()) {
+                            throw new SQLException(
+                                    "Failed to retrieve generated agent ID");
+                        }
+
+                        int agentID = keys.getInt(1);
+
+                        missionAgentStatement.setInt(1, agentID);
+                        missionAgentStatement.setInt(2, Integer.parseInt(fields[3]));
+
+                        missionAgentStatement.executeUpdate();
+                    }
+                }
+
+                connection.commit();
+
+            } catch (Exception e) {
+                connection.rollback();
+                throw e;
+            }
+
+        } catch (SQLException e) {
+            throw new IllegalStateException(
+                    "Failed to import agents TSV data.", e);
+        } finally {
+            try {
+                connection.setAutoCommit(originalAutoCommit);
+            } catch (SQLException e) {
+                throw new IllegalStateException(
+                        "Failed to restore database auto-commit.", e);
+            }
         }
     }
 
@@ -332,8 +439,8 @@ public class SQLiteDataStore implements DataStoreInterface, AutoCloseable {
     @Override
     public List<Agent> listAgents() {
         String sql = """
-                SELECT * FROM agents
-                """;
+            SELECT * FROM agents
+            """;
 
         List<Agent> agents = new ArrayList<>();
 
@@ -341,11 +448,8 @@ public class SQLiteDataStore implements DataStoreInterface, AutoCloseable {
              ResultSet rs = pstmt.executeQuery()) {
 
             while (rs.next()) {
-                Integer missionIDValue = rs.getInt("mission_ID");
-                missionIDValue = rs.wasNull() ? null : missionIDValue;
                 Agent agent = new Agent(
                         rs.getInt("agent_ID"),
-                        missionIDValue,
                         rs.getInt("facility_ID"),
                         rs.getString("name"),
                         rs.getString("date_of_birth"),
@@ -442,21 +546,17 @@ public class SQLiteDataStore implements DataStoreInterface, AutoCloseable {
     @Override
     public Agent getAgent(int id) {
         String sql = """
-                SELECT * FROM agents
-                WHERE agent_ID = ?
-                """;
+            SELECT * FROM agents
+            WHERE agent_ID = ?
+            """;
 
         try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
             pstmt.setInt(1, id);
 
             try (ResultSet rs = pstmt.executeQuery()) {
                 if (rs.next()) {
-                    int missionIDValue = rs.getInt("mission_ID");
-                    Integer missionID = rs.wasNull() ? null : missionIDValue;
-
                     return new Agent(
                             rs.getInt("agent_ID"),
-                            missionID,
                             rs.getInt("facility_ID"),
                             rs.getString("name"),
                             rs.getString("date_of_birth"),
@@ -550,20 +650,19 @@ public class SQLiteDataStore implements DataStoreInterface, AutoCloseable {
     @Override
     public Agent addAgent(Agent agent) {
         String sql = """
-                INSERT INTO agents (mission_ID, facility_ID, name,
-                                    date_of_birth, date_of_death, notes)
-                VALUES (?, ?, ?, ?, ?, ?)
-                """;
+            INSERT INTO agents (facility_ID, name,
+                                date_of_birth, date_of_death, notes)
+            VALUES (?, ?, ?, ?, ?)
+            """;
 
         try (PreparedStatement pstmt = connection.prepareStatement(
                 sql, Statement.RETURN_GENERATED_KEYS)) {
 
-            pstmt.setObject(1, agent.getMissionID(), Types.INTEGER);
-            pstmt.setInt(2, agent.getFacilityID());
-            pstmt.setString(3, agent.getName());
-            pstmt.setString(4, agent.getDate_of_birth());
-            pstmt.setString(5, agent.getDate_of_death());
-            pstmt.setString(6, agent.getNotes());
+            pstmt.setInt(1, agent.getFacilityID());
+            pstmt.setString(2, agent.getName());
+            pstmt.setString(3, agent.getDate_of_birth());
+            pstmt.setString(4, agent.getDate_of_death());
+            pstmt.setString(5, agent.getNotes());
 
             pstmt.executeUpdate();
 
@@ -571,7 +670,6 @@ public class SQLiteDataStore implements DataStoreInterface, AutoCloseable {
                 if (keys.next()) {
                     return new Agent(
                             keys.getInt(1),
-                            agent.getMissionID(),
                             agent.getFacilityID(),
                             agent.getName(),
                             agent.getDate_of_birth(),
@@ -585,8 +683,7 @@ public class SQLiteDataStore implements DataStoreInterface, AutoCloseable {
 
         } catch (SQLException e) {
             throw new IllegalArgumentException(
-                    "Failed to add model.Agent. model.Mission or facility may not exist, "
-                            + "or mission's facility does not match agent's facility", e);
+                    "Failed to add model.Agent. Facility may not exist.", e);
         }
     }
 

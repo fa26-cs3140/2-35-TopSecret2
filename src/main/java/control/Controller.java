@@ -265,7 +265,7 @@ public class Controller implements ControllerInterface {
                     audit.log(new LoggedAction(LoggedAction.CREATE, userObj, LocalDateTime.now().toString(), "briefs " + added.getBriefID()));
                 }
             } else if (itemType.equals("agents")) {
-                Agent added = store.addAgent(new Agent(null, Integer.parseInt(fields.get(0)), fields.get(1), fields.get(2), fields.get(3), fields.get(4)));
+                Agent added = store.addAgent(new Agent(Integer.parseInt(fields.get(0)), fields.get(1), fields.get(2), fields.get(3), fields.get(4)));
                 User userObj = users.getUserByUsername(username);
                 if (userObj != null) {
                     audit.log(new LoggedAction(LoggedAction.CREATE, userObj, LocalDateTime.now().toString(), "agents " + added.getAgentID()));
@@ -307,7 +307,7 @@ public class Controller implements ControllerInterface {
                 if (existing == null) {
                     return "No agent found with this id";
                 }
-                store.updateAgent(new Agent(id, existing.getMissionID(), Integer.parseInt(fields.get(0)), fields.get(1), fields.get(2), fields.get(3), fields.get(4)));
+                store.updateAgent(new Agent(id, Integer.parseInt(fields.get(0)), fields.get(1), fields.get(2), fields.get(3), fields.get(4)));
             } else if (itemType.equals("facilities")) {
                 if (store.getFacility(id) == null) {
                     return "No facility found with this id";

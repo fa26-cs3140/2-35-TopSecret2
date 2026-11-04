@@ -7,7 +7,6 @@ import java.time.format.ResolverStyle;
 
 public class Agent {
     private int agentID,  facilityID;
-    private Integer missionID;
     private String name, date_of_birth, date_of_death, notes;
 
     /**
@@ -17,8 +16,9 @@ public class Agent {
      * @param date_of_death
      * @param notes
      */
-    public Agent(Integer missionID, int facilityID, String name, String date_of_birth, String date_of_death, String notes) {
-        this(-1, missionID, facilityID, name, date_of_birth, date_of_death, notes);
+    public Agent(int facilityID, String name, String date_of_birth,
+                 String date_of_death, String notes) {
+        this(-1, facilityID, name, date_of_birth, date_of_death, notes);
     }
 
     /**
@@ -31,9 +31,9 @@ public class Agent {
      * @param date_of_death
      * @param notes
      */
-    public Agent(int agentID, Integer missionID, int facilityID, String name, String date_of_birth, String date_of_death, String notes) {
+    public Agent(int agentID, int facilityID, String name,
+                 String date_of_birth, String date_of_death, String notes) {
         this.agentID = agentID;
-        this.missionID = missionID;
         this.facilityID = facilityID;
         this.name = name;
         setDate_of_birth(date_of_birth);
@@ -44,12 +44,6 @@ public class Agent {
     public int getFacilityID() {
         return facilityID;
     }
-
-
-    public Integer getMissionID() {
-        return missionID;
-    }
-
 
     public int getAgentID() {
         return agentID;
