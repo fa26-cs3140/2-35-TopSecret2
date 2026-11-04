@@ -81,7 +81,7 @@ public class ControllerTest {
     }
 
     @Test
-    void createFirstAccountSucceeds() throws TopSecretException {
+    void createFirstAccountSucceeds() throws TopSecretException{
         assertEquals("Account is created!", controller.createFirstAccount("alice", "Pass1", "Pass1"));
         verify(users).createUser("alice");
         verify(users).changePassword("alice", "Pass1", "Pass1");
@@ -94,19 +94,19 @@ public class ControllerTest {
     }
 
     @Test
-    void changePasswordSucceeds() throws TopSecretException {
+    void changePasswordSucceeds() throws TopSecretException{
         assertEquals("Password changed", controller.changePassword("alice", "Pass1", "Pass1"));
         verify(users).changePassword("alice", "Pass1", "Pass1");
     }
 
     @Test
-    void changePasswordReturnsExceptionMessage() throws TopSecretException {
+    void changePasswordReturnsExceptionMessage() throws TopSecretException{
         doThrow(new TopSecretException("weak")).when(users).changePassword("alice", "Pass1", "Pass1");
         assertEquals("weak", controller.changePassword("alice", "Pass1", "Pass1"));
     }
 
     @Test
-    void createUserSucceedsForAdmin() throws TopSecretException {
+    void createUserSucceedsForAdmin() throws TopSecretException{
         when(access.isAdmin("boss")).thenReturn(true);
         assertEquals("", controller.createUser("boss", "alice"));
         verify(users).createUser("alice");
@@ -159,17 +159,30 @@ public class ControllerTest {
     }
 
     @Test
+    void listUsernamesExcludesCaller() {
+        when(access.isAdmin("boss")).thenReturn(true);
+        when(users.listUsernames()).thenReturn(List.of("boss", "alice", "carol"));
+        assertEquals("alice\ncarol", controller.listUsernames("boss"));
+    }
+
+    @Test
+    void listUsernamesRefusesNonAdmin() {
+        assertEquals("Not allowed", controller.listUsernames("alice"));
+        verifyNoInteractions(users);
+    }
+
+    @Test
     void showMainMenuShowsAdminOptions() {
         when(access.isAdmin("boss")).thenReturn(true);
         assertEquals("1. Browse briefs\n2. Browse agents\n3. Browse facilities\n4. Browse missions\n"
                 + "5. Change Password\n6. Create a new user\n7. Promote or Demote users\n8. Review audit log\n"
-                + "9. Exit/logout\nEnter an option number:", controller.showMainMenu("boss"));
+                + "9. Send or view messages\n10. Assign agent to mission\n11. Exit/logout\nEnter an option number:", controller.showMainMenu("boss"));
     }
 
     @Test
     void showMainMenuHidesAdminOptions() {
         assertEquals("1. Browse briefs\n2. Browse agents\n3. Browse facilities\n4. Browse missions\n"
-                + "5. Change Password\n9. Exit/logout\nEnter an option number:", controller.showMainMenu("alice"));
+                + "5. Change Password\n9. Send or view messages\n11. Exit/logout\nEnter an option number:", controller.showMainMenu("alice"));
     }
 
     @Test
@@ -467,8 +480,6 @@ public class ControllerTest {
     void viewMessagesEmptyListIsEmpty() {
         Agent ghost = new Agent(1, null, 2, "Ghost", "1990-01-01", "2000-01-01", "Notes");
         when(store.listAgents()).thenReturn(List.of(ghost));
-        when(messages.retrieveMessages(any(Agent.class))).thenReturn(List.of(
-                new Message(ghost, "Hello"), new Message(ghost, "World")));
         assertEquals("No messages", controller.viewMessages("ghost"));
     }
 }
