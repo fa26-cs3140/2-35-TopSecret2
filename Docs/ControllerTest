@@ -16,8 +16,10 @@ manageAccessDemotesUser - admin demote returns "alice was demoted"
 manageAccessFalseResultIsNotAllowed - promote returning false gives "Not allowed"
 manageAccessRefusesNonAdmin - non-admin manageAccess returns "Not allowed"
 manageAccessRejectsBadAction - unknown action returns "Invalid option"
-showMainMenuShowsAdminOptions - admin menu shows all 9 options
-showMainMenuHidesAdminOptions - standard menu shows 1-5 and 9 only
+listUsernamesExcludesCaller - admin list excludes the caller, others joined with newlines
+listUsernamesRefusesNonAdmin - non-admin list returns "Not allowed" and users is never touched
+showMainMenuShowsAdminOptions - admin menu shows all 11 options
+showMainMenuHidesAdminOptions - standard menu shows 1-5, 9 and 11 only
 browseMainMenuShowsAdminOptions - admin browse menu shows List, Read, Add, Edit, Back
 browseMainMenuHidesAdminOptions - standard browse menu shows List, Read, Back only
 browseMainMenuRejectsBadType - unknown type returns "Invalid option"
