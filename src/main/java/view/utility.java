@@ -6,9 +6,6 @@ import java.util.List;
 
 public class utility {
 
-    static void main() {
-        missionToStr(new Mission(1,"title",2));
-    }
 
     public static String missionToStr (Mission m) {
         String str = """
