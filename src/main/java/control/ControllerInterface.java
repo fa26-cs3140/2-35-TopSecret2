@@ -17,7 +17,7 @@ import java.util.List;
 // is created with a null missionID); facilities = name,
 // abbreviation; missions = title, facilityID.
 // Admin-gated methods return "Not allowed" for non-admins:
-// createUser, manageAccess, addEntry, editEntry,
+// createUser, manageAccess, addEntry, editEntry, listUsernames
 // reviewAuditLog, assignAgentToMission.
 // Note the two shapes that caused confusion: readEntry takes
 // no fields (it fetches the record itself), and addEntry
@@ -32,6 +32,8 @@ public interface ControllerInterface {
     String changePassword(String username, String password1, String passwordConfirm);
     String createUser(String adminUsername, String newUsername);
     String manageAccess(String adminUsername, String targetUsername, String action);
+    String listUsernames(String username);
+
     boolean isAdmin(String username);
 
     // Navigation and records, shared by terminal and web
