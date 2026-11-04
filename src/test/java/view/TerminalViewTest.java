@@ -409,6 +409,20 @@ public class TerminalViewTest {
         );
     }
 
+    @Test
+    public void adminCanViewMessages() {
+        createView("alice\npassword\n9\n1\n3\n11\n");
+        mockSuccessfulLogin(true);
+
+        when(controller.viewMessages("alice"))
+                .thenReturn("Your messages");
+
+        assertEquals(0, view.run());
+
+        verify(controller).viewMessages("alice");
+        assertTrue(getOutput().contains("Your messages"));
+    }
+
     // ---------------- ADD RECORDS ----------------
 
     @Test
@@ -494,6 +508,23 @@ public class TerminalViewTest {
                 "missions",
                 List.of("Mission Title", "7")
         );
+    }
+
+    @Test
+    public void adminCanSendMessageToAgent() {
+        createView("alice\npassword\n9\n2\nBob\nMeet at the facility.\n3\n11\n");
+        mockSuccessfulLogin(true);
+
+        when(controller.sendMessage(
+                "alice", "Bob", "Meet at the facility."
+        )).thenReturn("Message sent.");
+
+        assertEquals(0, view.run());
+
+        verify(controller).sendMessage(
+                "alice", "Bob", "Meet at the facility."
+        );
+        assertTrue(getOutput().contains("Message sent."));
     }
 
     // ---------------- EDIT RECORDS ----------------
@@ -588,5 +619,18 @@ public class TerminalViewTest {
                 12,
                 List.of("Mission Title", "7")
         );
+    }
+
+    @Test
+    public void adminCanAssignAgentToMission() {
+        createView("alice\npassword\n10\n4\n7\n11\n");
+        mockSuccessfulLogin(true);
+
+        when(controller.assignAgentToMission("alice", 4, 7))
+                .thenReturn("Agent assigned to mission.");
+
+        assertEquals(0, view.run());
+
+        verify(controller).assignAgentToMission("alice", 4, 7);
     }
 }
