@@ -4,7 +4,7 @@ import model.*;
 
 import java.util.List;
 
-public class utility {
+public class Utility {
 
 
     public static String missionToStr (Mission m) {
@@ -35,18 +35,18 @@ public class utility {
         return String.format(str, b.getBriefID(), b.getMissionID(), b.getTitle(), b.getDate(), b.getContent());
     }
 
-    public static String agentToStr (Agent a) {
+    public static String agentToStr(Agent a) {
         String str = """
-                Agent ID: %s
-                Mission ID: %s
-                Facility ID: %s
-                Name: %s
-                Date Of Birth: %s
-                Date Of Death: %s
-                Notes: %s
-                """;
-        return String.format(str, a.getAgentID(), (a.getMissionID() != null ? a.getMissionID() : ""),
-                a.getFacilityID(), a.getName(), a.getDate_of_birth(), a.getDate_of_death()==null ? "" : a.getDate_of_death() ,
+            Agent ID: %s
+            Facility ID: %s
+            Name: %s
+            Date Of Birth: %s
+            Date Of Death: %s
+            Notes: %s
+            """;
+        return String.format(str, a.getAgentID(),
+                a.getFacilityID(), a.getName(), a.getDate_of_birth(),
+                a.getDate_of_death() == null ? "" : a.getDate_of_death(),
                 a.getNotes() == null ? "" : a.getNotes());
     }
 
@@ -63,7 +63,7 @@ public class utility {
                 Action: %s
                 User Name: %s
                 User ID: %s
-                Date:  %s
+                Date: %s
                 Record: %s
                 """;
         return String.format(str, log.getAction(),log.getUser().getUsername(), log.getUser().getUserID(), log.getDateTime(), log.getRecord());

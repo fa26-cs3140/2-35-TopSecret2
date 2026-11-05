@@ -1,0 +1,62 @@
+
+Scenario: generateHTMLMainMenuTest1 | Verifies that the main menu HTML includes the page title, heading, Browse Agents link, and corresponding label.
+GIVEN a WebView instance
+WHEN generateHTML is called with "Main menu" and "Browse Agents"
+THEN the generated HTML contains the Main Menu title and heading, the `/browse?type=agents` link, and the Browse Agents text.
+
+Scenario: generateHTMLBrowseTest1 | Verifies that the browse page HTML includes the page title, heading, record content, and ID entry prompt.
+GIVEN a WebView instance
+WHEN generateHTML is called with "Browse: missions" and "Mission ID: 1"
+THEN the generated HTML contains the Browse missions title and heading, Mission ID: 1, and the Enter missions ID: prompt.
+
+Scenario: generateHTMLReadTest1 | Verifies that the read page HTML includes the page title, heading, record content, and browse link.
+GIVEN a WebView instance
+WHEN generateHTML is called with "Read: agents" and "Agent ID: 1"
+THEN the generated HTML contains the Read agents title and heading, Agent ID: 1, and the `/browse?type=agents` link.
+
+Scenario: generateHTMLAuditTest1 | Verifies that the audit page HTML includes the page title, heading, and audit content.
+GIVEN a WebView instance
+WHEN generateHTML is called with "Audit log" and "User logged in"
+THEN the generated HTML contains the Audit Log title and heading and the User logged in text.
+
+Scenario: generateHTMLDefaultTest1 | Verifies that custom page titles and content are included with a link back to the main menu.
+GIVEN a WebView instance
+WHEN generateHTML is called with "Custom Page" and "Custom content"
+THEN the generated HTML contains the Custom Page title and heading, Custom content, and Back to Main Menu.
+
+Scenario: generateHTMLNullTest1 | Verifies that null title and content values use the default TopSecret title and heading.
+GIVEN a WebView instance
+WHEN generateHTML is called with null title and null content
+THEN the generated HTML contains the TopSecret title and heading.
+
+Scenario: mainMenuViewTest1 | Verifies that the main menu includes all supplied menu options and the audit and logout links.
+GIVEN a WebView instance
+WHEN mainMenuView is called with Browse Agents, Browse Missions, and Review Audit Log
+THEN the generated HTML contains all three menu options and the `/audit` and `/logout` links.
+
+Scenario: mainMenuViewTest2 | Verifies that the main menu displays only the supplied regular-user option and the logout link.
+GIVEN a WebView instance
+WHEN mainMenuView is called with Browse Agents
+THEN the generated HTML contains Browse Agents and `/logout`, but does not contain Review Audit Log.
+
+Scenario: mainMenuViewTest3 | Verifies that an unknown menu option triggers the default menu options.
+GIVEN a WebView instance
+WHEN mainMenuView is called with Some unknown menu option
+THEN the generated HTML contains Browse Briefs, Browse Agents, Browse Facilities, Browse Missions, and Browse Messages.
+
+Scenario: browseViewTest1 | Verifies that the browse page includes record content, a read form, and navigation links.
+GIVEN a WebView instance
+WHEN browseView is called with "agents" and "Agent ID: 1"
+THEN the generated HTML contains the Browse agents title and heading, Agent ID: 1, a Read a Record form, an Enter agents ID: prompt, and Back to Main Menu.
+
+Scenario: readViewTest1 | Verifies that the read page includes record content and navigation links.
+GIVEN a WebView instance
+WHEN readView is called with "agents" and "Agent ID: 1"
+THEN the generated HTML contains the Read agents title and heading, Agent ID: 1, Back to Browse agents, and Back to Main Menu.
+
+Scenario: auditViewTest1 | Verifies that the audit page includes its title, content, and navigation link.
+GIVEN a WebView instance
+WHEN auditView is called with "User logged in"
+THEN the generated HTML contains the Audit Log title and heading, User logged in, and Back to Main Menu.
+
+

@@ -1,0 +1,10 @@
+
+Scenario: generateMainMenuHTMLIntegrationTest | Verifies that generating the main menu HTML includes the document structure, menu title and heading, navigation links, audit link, and logout link.
+GIVEN a WebView instance
+WHEN generateHTML is called with "Main menu" and the five supplied menu options
+THEN the generated HTML contains the DOCTYPE declaration, Main Menu title and heading, links for browsing briefs, agents, facilities, and missions, the audit link, and the logout link.
+
+Scenario: generateBrowsePageHTMLIntegrationTest | Verifies that generating the browse page HTML includes record content, a read form, and navigation back to the main menu.
+GIVEN a WebView instance
+WHEN generateHTML is called with "Browse: missions" and mission details
+THEN the generated HTML contains the DOCTYPE declaration, Browse missions title and heading, mission ID and title, a form targeting `/read` with the missions type, and a Back to Main Menu link targeting `/`.
