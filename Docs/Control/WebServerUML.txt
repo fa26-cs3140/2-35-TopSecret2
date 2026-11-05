@@ -1,0 +1,103 @@
+Package: control
+
+WebServer
+------------------------------
+-controller: ControllerInterface
+-sessions: Map<String, String>
+-port: int
+-server: HttpServer
+-view: WebView
+------------------------------
++WebServer(controller: ControllerInterface, port: int)
++getPort(): int
++start(): void
++stop(): void
+------------------------------
+Purpose: the browser's adapter to the controller. A browser
+speaks HTTP and the controller speaks method calls, so this
+class sits on a port, accepts requests, and translates them
+into controller calls and back again. That is this class and
+nothing else. It does not do the work; it checks the
+requester's badge, directs the request to the right
+controller method, and hands the answer back as a page.
+
+Built on com.sun.net.httpserver.HttpServer: part of the JDK,
+not a web framework, serving plain HTML only, no CSS, no
+Javascript, and no new dependencies. Request handlers are
+lambdas registered inside start(), not private helper
+methods, so the whole request path reads in one place. Port
+is a constructor argument so tests can use a free port
+while the application uses 3002. start() is a no-op if the
+server is already started; stop() is null-safe and
+idempotent, so tests can stop a never-started server.
+getPort() returns the real bound port after start() and the
+configured port before it.
+
+Jobs, and only these jobs:
+
+Listen: own the socket on the port, accept HTTP requests,
+and stay up until the process stops.
+
+Route: turn a path into a controller call. GET /browse with
+a type becomes listEntries, GET /read with a type and id
+becomes readEntry, GET /audit becomes reviewAuditLog, GET /
+becomes showMainMenu, and POST /login and GET /logout run
+the session steps below.
+
+Identify the requester: read the session token from the
+Cookie header and resolve it in the sessions map to a
+username. A missing, unknown, or removed token gets the
+login form instead of the requested page. This answers "who
+is this request from?", which is different from the
+controller's question, "is this user allowed to do this?"
+(answered by isAdmin). That split is why a standard user
+typing /audit into the address bar is still refused: this
+class identifies them fine, and the controller says no.
+
+Own sessions: the sessions field is a ConcurrentHashMap
+from token to username, since the server handles requests
+on multiple threads. Login creates a UUID token, puts
+token -> username in the map, and sets the session cookie.
+Logout removes the token from the map and sends back an
+expired session cookie so the browser drops it. The cookie
+is "session=<token>; Path=/; HttpOnly", with no Expires
+and no Max-Age, making it a session cookie that dies when
+the browser closes, as required, and no Secure flag,
+because the site is plain http on localhost. Sessions are
+memory only, so restarting the server logs everyone out.
+
+Translate back: take the String the controller returns and
+wrap it in a page. WebView.generateHTML wraps the text;
+if it ever returns empty, the server falls back to plain
+wrapping with HTML escaping. A successful login
+redirects to / instead of sending a page; a failed login
+sends the error text "Invalid username or password." with
+the login form again and sets no cookie.
+
+Guardrails: every page except the login form requires a
+valid session, and the guard runs before any controller
+call, so an unauthenticated request never touches the
+controller. Unknown paths and bad or missing ids get an
+error page. No request crashes the server (TA checklist 6).
+
+Routes:
+GET  /                          login form, or main menu page when session valid
+GET  /login                     login form
+POST /login                     valid: session cookie + 302 to /; invalid: error page, no cookie
+GET  /logout                    remove token, expire cookie, 302 to /
+GET  /browse?type=...           list page from controller.listEntries
+GET  /read?type=...&id=...      record page from controller.readEntry; bad id gives "Invalid option" page
+GET  /audit                     audit page from controller.reviewAuditLog
+any other path                  "Unknown page." error page, never a crash
+
+There are no add, edit, create, or message routes: the web
+view is read-only and messages are terminal only.
+
+Does not do: no record logic, no menu logic, no admin
+gating, no audit logic (all Controller); no HTML building
+of its own (WebView, with the plain fallback above); no
+direct model access (only through the controller); no
+startup decision (main's hasUser() check).
+
+This replaces HTTPServerUML: delete that file when placing
+this one.

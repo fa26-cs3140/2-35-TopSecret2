@@ -1,4 +1,4 @@
-WebServer integration tests
+WebServerController integration tests
 ------------------------------
 unauthenticatedRootShowsLoginForm - root without a cookie shows the login form
 invalidLoginShowsErrorWithoutCookie - bad credentials show "Invalid username or password." and set no cookie
