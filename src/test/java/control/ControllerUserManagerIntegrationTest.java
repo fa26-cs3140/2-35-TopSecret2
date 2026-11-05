@@ -27,7 +27,7 @@ import static org.mockito.Mockito.mock;
 // credentials.cip is deleted before and after each test, as in
 // HW5, so a stray file cannot hijack the first-run flow.
 // Run: .\gradlew test --tests "controller.ControllerIntegrationTest" --console=plain
-public class ControllerIntegrationTest {
+public class ControllerUserManagerIntegrationTest {
     @TempDir
     Path tempDir;
 
