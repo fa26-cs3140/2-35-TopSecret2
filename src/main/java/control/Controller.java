@@ -379,8 +379,12 @@ public class Controller implements ControllerInterface {
         if (recipient == null) {
             return "No agent found with this name";
         }
-        messages.createMessage(recipient, message);
-        return "Message sent to " + recipient.getName();
+        try {
+            messages.sendMessage(recipient, message);
+            return "Message sent to " + recipient.getName();
+        } catch (TopSecretException e){
+            return e.getMessage();
+        }
     }
 
     // Only the caller's own messages: the agent whose name
@@ -397,8 +401,10 @@ public class Controller implements ControllerInterface {
         }
         if (self == null) {
             return "No messages";
-        }
-        List<Message> found = messages.retrieveMessages(self);
+        }try{
+            List<Message> found = messages.retrieveMessages(self);
+
+
         if (found.isEmpty()) {
             return "No messages";
         }
@@ -407,5 +413,8 @@ public class Controller implements ControllerInterface {
             lines.add(m.getMessageContent());
         }
         return String.join("\n", lines);
+        } catch (TopSecretException e){
+            return e.getMessage();
+        }
     }
 }

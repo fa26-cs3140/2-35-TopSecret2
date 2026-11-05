@@ -448,12 +448,12 @@ public class ControllerTest {
     }
 
     @Test
-    void sendMessageFindsAgentCaseInsensitively() {
+    void sendMessageFindsAgentCaseInsensitively() throws TopSecretException {
         Agent ghost = new Agent(1, null, 2, "Ghost", "1990-01-01", "2000-01-01", "Notes");
         when(store.listAgents()).thenReturn(List.of(ghost));
         assertEquals("Message sent to Ghost", controller.sendMessage("alice", "ghost", "Hello"));
         ArgumentCaptor<Agent> agentCaptor = ArgumentCaptor.forClass(Agent.class);
-        verify(messages).createMessage(agentCaptor.capture(), any(String.class));
+        verify(messages).sendMessage(agentCaptor.capture(), any(String.class));
         assertEquals("Ghost", agentCaptor.getValue().getName());
     }
 
@@ -463,7 +463,7 @@ public class ControllerTest {
     }
 
     @Test
-    void viewMessagesShowsOwnMessages() {
+    void viewMessagesShowsOwnMessages() throws TopSecretException {
         Agent ghost = new Agent(1, null, 2, "Ghost", "1990-01-01", "2000-01-01", "Notes");
         when(store.listAgents()).thenReturn(List.of(ghost));
         when(messages.retrieveMessages(any(Agent.class))).thenReturn(List.of(
