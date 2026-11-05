@@ -163,7 +163,6 @@ class SQLiteDataStoreTest {
 
             assertNotNull(expected);
             assertEquals(expected.getAgentID(), actual.getAgentID());
-            assertEquals(expected.getMissionID(), actual.getMissionID());
             assertEquals(expected.getFacilityID(), actual.getFacilityID());
             assertEquals(expected.getName(), actual.getName());
             assertEquals(expected.getDate_of_birth(), actual.getDate_of_birth());
@@ -273,7 +272,6 @@ class SQLiteDataStoreTest {
         Agent actual = store.addAgent(expected);
 
         assertNotNull(actual);
-        assertEquals(expected.getMissionID(), actual.getMissionID());
         assertEquals(expected.getFacilityID(), actual.getFacilityID());
         assertEquals(expected.getName(), actual.getName());
         assertEquals(expected.getDate_of_birth(), actual.getDate_of_birth());
@@ -285,7 +283,6 @@ class SQLiteDataStoreTest {
 
         assertNotNull(actual);
         assertEquals(expected.getAgentID(), actual.getAgentID());
-        assertEquals(expected.getMissionID(), actual.getMissionID());
         assertEquals(expected.getFacilityID(), actual.getFacilityID());
         assertEquals(expected.getName(), actual.getName());
         assertEquals(expected.getDate_of_birth(), actual.getDate_of_birth());
@@ -355,7 +352,6 @@ class SQLiteDataStoreTest {
         // Create a new agent at the mission's facility
         Agent agent = store.addAgent(
                 new Agent(
-                        null,
                         mission.getFacilityID(),
                         "Test Agent",
                         "1990-01-01",
@@ -400,7 +396,6 @@ class SQLiteDataStoreTest {
         // Create one agent
         Agent agent = store.addAgent(
                 new Agent(
-                        null,
                         facility.getFacilityID(),
                         "Multi Mission Agent",
                         "1990-01-01",
@@ -453,12 +448,12 @@ class SQLiteDataStoreTest {
 
         // Create one agent from each facility
         Agent agent1 = store.addAgent(
-                new Agent(null, facility1.getFacilityID(),
+                new Agent(facility1.getFacilityID(),
                         "Agent A", "1990-01-01", null, "Test")
         );
 
         Agent agent2 = store.addAgent(
-                new Agent(null, facility2.getFacilityID(),
+                new Agent(facility2.getFacilityID(),
                         "Agent B", "1990-01-01", null, "Test")
         );
 
@@ -495,7 +490,6 @@ class SQLiteDataStoreTest {
         // Create an agent
         Agent agent = store.addAgent(
                 new Agent(
-                        null,
                         facility.getFacilityID(),
                         "Duplicate Test Agent",
                         "1990-01-01",
@@ -531,7 +525,6 @@ class SQLiteDataStoreTest {
         // Create an agent
         Agent agent = store.addAgent(
                 new Agent(
-                        null,
                         facility.getFacilityID(),
                         "Unassign Test Agent",
                         "1990-01-01",
@@ -581,7 +574,6 @@ class SQLiteDataStoreTest {
         // Create an agent
         Agent agent = store.addAgent(
                 new Agent(
-                        null,
                         facility.getFacilityID(),
                         "Retrieval Test Agent",
                         "1990-01-01",
@@ -627,14 +619,14 @@ class SQLiteDataStoreTest {
         // Create two agents
         Agent agent1 = store.addAgent(
                 new Agent(
-                        null, facility.getFacilityID(),
+                        facility.getFacilityID(),
                         "Agent One", "1990-01-01", null, "Test"
                 )
         );
 
         Agent agent2 = store.addAgent(
                 new Agent(
-                        null, facility.getFacilityID(),
+                        facility.getFacilityID(),
                         "Agent Two", "1990-01-01", null, "Test"
                 )
         );
