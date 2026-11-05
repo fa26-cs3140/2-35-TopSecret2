@@ -1,9 +1,10 @@
-opSecret
+TopSecret
 
-TopSecret is an interactive command-line utility for storing and reviewing secret
-mission data -- briefs, agents, and facilities -- in a SQLite database.
-It supports multiple user accounts with standard and admin access levels, and it
-keeps an audit log of every record that is read or created.
+TopSecret is an interactive utility for storing and reviewing secret
+mission data -- briefs, agents, facilities, and missions -- in a SQLite
+database. It supports multiple user accounts with standard and admin
+access levels, keeps an audit log of every record that is read or
+created, and lets agents exchange terminal-only messages.
 
 Features:
     Supports multiple user accounts
@@ -13,87 +14,83 @@ Features:
         and review the audit log
     Standard users can browse and read entries and change their own password
     Users only see the menu options they have access to
-    Browse, list, and read briefs, agents, and facilities; admins can add
-        new entries, which are immediately visible in the lists
-    Every read and create is written to an audit log stored in the database,
-        recording the user, the action, the record, and the time
+    Browse, list, and read briefs, agents, facilities, and missions;
+        admins can add new entries and edit existing ones, which are
+        immediately visible in the lists
+    A mission is run by one facility; agents belong to one facility and
+        may be assigned to multiple missions, from any facility
+    Messages are terminal-only: a user addresses a message to an agent
+        by name, and an agent reads it by logging in with a matching
+        username (matching is case-insensitive, no admin needed)
+    Every read and create is written to an audit log stored in the
+        database, recording the user, the action, the record, and the time
     Passwords are stored ciphered in a credentials file; only the account
-        owner can set or change their password
-    Usernames must be at least 3 characters and may contain letters, numbers,
-        hyphens, and underscores
-    Passwords must be at least 5 characters and include uppercase and
-        lowercase letters
-    Runs through Gradle or as a standalone JAR
+        owner can change their own password
 
-Requirements:
-    Java
-    Gradle (the Gradle wrapper is included)
+Team:
+    Group Member | Name              | Github ID
+    Member A     | Srikar Kolli      | Srikar-Kolli
+    Member B     | Sebastian Nowicki | sgnowicki-gif
+    Member C     | Eltaf Sameem      | Eltaf-Sameem
+    Member D     | Jaime Lopez       | MrTwoMile
 
-Usage
-    Run with Gradle
-        ./gradlew run
+Packages:
+    control - Controller, ControllerInterface, WebServer, MessageManager
+    model   - entities, UserManager, AccessControl, AuditLog, SQLiteDataStore
+    view    - TerminalView, WebView, HTMLUtils, Utility
+    TopSecret (default package) - application entry point and wiring
 
-    On Windows:
-        .\gradlew run
+Running the terminal version (default):
+    .\gradlew run
 
-    Run the JAR
-        ./gradlew build
-        java -jar TopSecret.jar
+Running the web version:
+    .\gradlew run --args="-web"
+    Then open http://localhost:3002/ in a browser. The first page is a
+    username and password form. Valid credentials set a session cookie
+    that expires when the browser is closed; every page except the login
+    form requires that session, and unknown pages show an error page
+    instead of crashing. The web view is read-only: records and the audit
+    log can be browsed and read, but not created or edited. The web
+    version does not start until at least one user account exists;
+    create one in the terminal first.
 
-    First run:
-        If no accounts exist, the program prompts you to create the first
-        account (username, then a new password entered twice). This first
-        account is an admin. Users created later by an admin set their own
-        password the first time they log in.
+Building a runnable jar:
+    .\gradlew build
+    java -jar build/libs/TopSecret.jar
+    java -jar build/libs/TopSecret.jar -web
 
-    Main menu:
-        1. Browse briefs
-        2. Browse agents
-        3. Browse facilities
-        4. Change Password
-        5. Create a new user        (admin only)
-        6. Promote or Demote users   (admin only)
-        7. Review audit log          (admin only)
-        8. Exit
+Accounts:
+    Usernames must be at least 3 characters: letters, numbers, hyphens,
+        and underscores
+    Passwords must be at least 5 characters with an uppercase and a
+        lowercase letter
+    The first account is created on first run and is automatically admin
+    Users created by an admin set their own password at first login
+    Passwords are stored ciphered in credentials.cip; access roles are
+        stored in roles.txt
 
-        Admin-only options are not shown to standard users.
+Data:
+    Records live in a SQLite database (data.db) through SQLiteDataStore
+    Seed data ships in src/main/resources/dataset/ (facilities, missions,
+        briefs, agents) and is loaded when a database is created
+    The cipher key lives in src/main/resources/ciphers/key.txt
 
-    Browse menu (for each of briefs, agents, facilities):
-        1. List entries
-        2. Read an entry by ID
-        3. Add an entry              (admin only)
-        4. Back
+Tests:
+    Run everything with:
+        .\gradlew test --console=plain
+    Run one suite with:
+        .\gradlew test --tests "control.ControllerTest" --console=plain
+    Suites:
+        control - ControllerTest (58 unit tests, Mockito mocks),
+            ControllerUserManagerTest (real UserManager over a real
+            test database), WebServerTest, WebServerIntegrationTest
+            (real server on port 0, mocked controller, real HttpClient)
+        model   - entity, UserManager, AccessControl, AuditLog,
+            SQLiteDataStore, Cipher, FileHandler, Message tests
+        view    - TerminalViewTest, WebViewTest, WebViewHTMLUtilsTest,
+            HTMLUtilsTest, UtilityTest
 
-    Record properties:
-        Briefs:     title, date, text
-        Agents:     name, date of birth, date of death, notes
-        Facilities: name, abbreviation
-
-Project Structure:
-    Source code is in src/main/java/ and tests are in src/test/java/
-    Briefs, agents, facilities, users, and audit log records are stored in a
-        SQLite database, created automatically on first run and seeded with
-        the sample dataset in src/main/resources/dataset/
-    model.User passwords are stored ciphered in credentials.cip in the working
-        directory, using the cipher key in src/main/resources/ciphers/
-    Admin and standard roles are stored in roles.txt in the working
-        directory, so promotions and demotions persist between runs
-    Documentation is in the docs directory, including team.txt (team members,
-        roles, and GitHub IDs), the system UML class diagram, and the
-        database ERD
-
-Testing:
-    The project uses JUnit and Mockito for unit tests and integration tests.
-
-    Run the test suite with:
-        ./gradlew test
-
-    On Windows:
-        .\gradlew test
-
-Build:
-    Create the JAR with:
-        ./gradlew build
-
-    The generated JAR contains all dependencies and can then be run using:
-        java -jar TopSecret.jar
+Files created at runtime in the working directory:
+    credentials.cip - ciphered username/password lines
+    roles.txt       - admin and user role lists
+    data.db         - the SQLite database
