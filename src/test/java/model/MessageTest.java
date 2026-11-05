@@ -12,8 +12,8 @@ public class MessageTest {
                 -1,
                 -1,
                 "Agent P",
-                "Unknown",
-                "None",
+                "1990-01-01",
+                null,
                 "");
 
         Message testMessage = new Message(
