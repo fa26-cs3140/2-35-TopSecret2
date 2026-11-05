@@ -328,7 +328,7 @@ public class ControllerTest {
     @Test
     void addEntryRejectsBadType() {
         when(access.isAdmin("boss")).thenReturn(true);
-        assertEquals("Invalid option", controller.addEntry("alice", "bogus", List.of()));
+        assertEquals("Invalid option", controller.addEntry("boss", "bogus", List.of()));
     }
 
     @Test
