@@ -1,9 +1,10 @@
+package view;
+
 import control.Controller;
 import control.ControllerInterface;
 import control.MessageManager;
 import model.*;
 import org.junit.jupiter.api.*;
-import view.TerminalView;
 
 import java.io.*;
 import java.util.*;

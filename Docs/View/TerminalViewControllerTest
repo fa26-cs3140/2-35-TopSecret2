@@ -1,0 +1,15 @@
+
+Scenario: userLoginAndBrowseMissionsIntegrationTest | Verifies that a regular user can log in, browse missions, and view a mission listing through the terminal interface.
+GIVEN an existing user named alice with a valid password and regular-user access, and a mission named Operation Eclipse
+WHEN alice logs in, selects Browse Missions, views the mission list, and returns to the main menu
+THEN the application exits successfully and the terminal output contains Login successful., Browse missions, and Operation Eclipse.
+
+Scenario: adminCreatesFacilityIntegrationTest | Verifies that an administrator can log in and create a facility through the terminal interface.
+GIVEN an existing administrator account and a facility named Headquarters with abbreviation HQ
+WHEN the administrator logs in, selects Facilities, chooses to add a facility, and enters the facility details
+THEN the application exits successfully, the terminal output contains the login confirmation, facility prompts, and Headquarters, and the data store's addFacility method is called.
+
+Scenario: userChangesPasswordIntegrationTest | Verifies that a regular user can log in and change their password through the terminal interface.
+GIVEN an existing regular user named alice with the password oldPassword
+WHEN alice logs in, selects the change-password option, and enters newPassword as both the new password and confirmation
+THEN the application exits successfully, the terminal output contains the login confirmation, New password:, and Password changed, and the user manager's changePassword method is called with alice, newPassword, and newPassword.
