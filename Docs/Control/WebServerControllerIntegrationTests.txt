@@ -10,4 +10,4 @@ logoutClearsSession - logout removes the session, so the old cookie gets the log
 auditRouteCallsController - audit with a cookie calls the controller and shows its text
 Notes: real WebServer on port 0, mocked ControllerInterface,
 real HttpClient with redirects never.
-Run: .\gradlew test --tests "control.WebServerIntegrationTest" --console=plain
+Run: .\gradlew test --tests "control.WebServerControllerIntegrationTest" --console=plain
