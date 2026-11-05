@@ -1078,27 +1078,216 @@ public class SQLiteDataStore implements DataStoreInterface, AutoCloseable {
     }
     @Override
     public void assignAgentToMission(int agentID, int missionID) {
-        throw new UnsupportedOperationException("Not implemented yet");
+        String agentCheckSql = """
+            SELECT 1 FROM agents WHERE agent_ID = ?
+            """;
+
+        String missionCheckSql = """
+            SELECT 1 FROM missions WHERE mission_ID = ?
+            """;
+
+        String assignmentCheckSql = """
+            SELECT 1 FROM mission_agents
+            WHERE agent_ID = ? AND mission_ID = ?
+            """;
+
+        String insertSql = """
+            INSERT INTO mission_agents (agent_ID, mission_ID)
+            VALUES (?, ?)
+            """;
+
+        try {
+            // Check whether the agent exists
+            try (PreparedStatement pstmt = connection.prepareStatement(agentCheckSql)) {
+                pstmt.setInt(1, agentID);
+
+                try (ResultSet rs = pstmt.executeQuery()) {
+                    if (!rs.next()) {
+                        throw new IllegalArgumentException("Agent does not exist.");
+                    }
+                }
+            }
+
+            // Check whether the mission exists
+            try (PreparedStatement pstmt = connection.prepareStatement(missionCheckSql)) {
+                pstmt.setInt(1, missionID);
+
+                try (ResultSet rs = pstmt.executeQuery()) {
+                    if (!rs.next()) {
+                        throw new IllegalArgumentException("Mission does not exist.");
+                    }
+                }
+            }
+
+            // Check whether the assignment already exists
+            try (PreparedStatement pstmt = connection.prepareStatement(assignmentCheckSql)) {
+                pstmt.setInt(1, agentID);
+                pstmt.setInt(2, missionID);
+
+                try (ResultSet rs = pstmt.executeQuery()) {
+                    if (rs.next()) {
+                        throw new IllegalArgumentException(
+                                "Agent is already assigned to this mission.");
+                    }
+                }
+            }
+
+            // Insert the new assignment
+            try (PreparedStatement pstmt = connection.prepareStatement(insertSql)) {
+                pstmt.setInt(1, agentID);
+                pstmt.setInt(2, missionID);
+                pstmt.executeUpdate();
+            }
+
+        } catch (SQLException e) {
+            throw new IllegalStateException("Failed to assign agent to mission.", e);
+        }
     }
 
     @Override
     public void unassignAgentFromMission(int agentID, int missionID) {
-        throw new UnsupportedOperationException("Not implemented yet");
+        String checkSql = """
+            SELECT 1 FROM mission_agents
+            WHERE agent_ID = ? AND mission_ID = ?
+            """;
+
+        String deleteSql = """
+            DELETE FROM mission_agents
+            WHERE agent_ID = ? AND mission_ID = ?
+            """;
+
+        try {
+            // Check whether the assignment exists
+            try (PreparedStatement pstmt = connection.prepareStatement(checkSql)) {
+                pstmt.setInt(1, agentID);
+                pstmt.setInt(2, missionID);
+
+                try (ResultSet rs = pstmt.executeQuery()) {
+                    if (!rs.next()) {
+                        throw new IllegalArgumentException(
+                                "Agent is not assigned to this mission.");
+                    }
+                }
+            }
+
+            // Remove the assignment
+            try (PreparedStatement pstmt = connection.prepareStatement(deleteSql)) {
+                pstmt.setInt(1, agentID);
+                pstmt.setInt(2, missionID);
+                pstmt.executeUpdate();
+            }
+
+        } catch (SQLException e) {
+            throw new IllegalStateException(
+                    "Failed to unassign agent from mission.", e);
+        }
     }
 
     @Override
     public List<Mission> listMissionsForAgent(int agentID) {
-        throw new UnsupportedOperationException("Not implemented yet");
+        String sql = """
+            SELECT m.*
+            FROM missions m
+            JOIN mission_agents ma
+                ON m.mission_ID = ma.mission_ID
+            WHERE ma.agent_ID = ?
+            """;
+
+        List<Mission> missions = new ArrayList<>();
+
+        try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
+            pstmt.setInt(1, agentID);
+
+            try (ResultSet rs = pstmt.executeQuery()) {
+                while (rs.next()) {
+                    Mission mission = new Mission(
+                            rs.getInt("mission_ID"),
+                            rs.getString("title"),
+                            rs.getInt("facility_ID")
+                    );
+
+                    missions.add(mission);
+                }
+            }
+
+        } catch (SQLException e) {
+            throw new IllegalStateException(
+                    "Failed to retrieve missions for agent: " + agentID, e);
+        }
+
+        return missions;
     }
 
     @Override
     public List<Agent> listAgentsForMission(int missionID) {
-        throw new UnsupportedOperationException("Not implemented yet");
+        String sql = """
+            SELECT a.*
+            FROM agents a
+            JOIN mission_agents ma
+                ON a.agent_ID = ma.agent_ID
+            WHERE ma.mission_ID = ?
+            """;
+
+        List<Agent> agents = new ArrayList<>();
+
+        try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
+            pstmt.setInt(1, missionID);
+
+            try (ResultSet rs = pstmt.executeQuery()) {
+                while (rs.next()) {
+                    Agent agent = new Agent(
+                            rs.getInt("agent_ID"),
+                            rs.getInt("facility_ID"),
+                            rs.getString("name"),
+                            rs.getString("date_of_birth"),
+                            rs.getString("date_of_death"),
+                            rs.getString("notes")
+                    );
+
+                    agents.add(agent);
+                }
+            }
+
+        } catch (SQLException e) {
+            throw new IllegalStateException(
+                    "Failed to retrieve agents for mission: " + missionID, e);
+        }
+
+        return agents;
     }
 
     @Override
     public List<Brief> listBriefsForMission(int missionID) {
-        throw new UnsupportedOperationException("Not implemented yet");
+        String sql = """
+            SELECT * FROM briefs
+            WHERE mission_ID = ?
+            """;
+
+        List<Brief> briefs = new ArrayList<>();
+
+        try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
+            pstmt.setInt(1, missionID);
+
+            try (ResultSet rs = pstmt.executeQuery()) {
+                while (rs.next()) {
+                    Brief brief = new Brief(
+                            rs.getInt("brief_ID"),
+                            rs.getInt("mission_ID"),
+                            rs.getString("title"),
+                            rs.getString("date"),
+                            rs.getString("content")
+                    );
+
+                    briefs.add(brief);
+                }
+            }
+
+        } catch (SQLException e) {
+            throw new IllegalStateException(
+                    "Failed to retrieve briefs for mission: " + missionID, e);
+        }
+
+        return briefs;
     }
 
     @Override
