@@ -19,7 +19,6 @@ import org.mockito.ArgumentCaptor;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doThrow;
@@ -214,7 +213,7 @@ public class ControllerTest {
     @Test
     void listEntriesListsAgents() {
         when(store.listAgents()).thenReturn(List.of(
-                new Agent(1, null, 2, "Ghost", "1990-01-01", "2000-01-01", "Notes")));
+                new Agent(1, 2, "Ghost", "1990-01-01", "2000-01-01", "Notes")));
         assertEquals("1 : Ghost", controller.listEntries("alice", "agents"));
     }
 
@@ -250,7 +249,7 @@ public class ControllerTest {
 
     @Test
     void readEntryPrintsAgent() {
-        when(store.getAgent(1)).thenReturn(new Agent(1, 5, 2, "Ghost", "1990-01-01", "2000-01-01", "Notes"));
+        when(store.getAgent(1)).thenReturn(new Agent(1, 2, "Ghost", "1990-01-01", "2000-01-01", "Notes"));
         assertEquals("Name: Ghost\nDoB: 1990-01-01\nDoDeath: 2000-01-01\nNotes: Notes",
                 controller.readEntry("alice", "agents", 1));
     }
@@ -299,12 +298,11 @@ public class ControllerTest {
     void addEntryAddsAgentWithoutMission() {
         when(access.isAdmin("boss")).thenReturn(true);
         when(store.listAgents()).thenReturn(List.of(
-                new Agent(9, null, 2, "Ghost", "1990-01-01", "2000-01-01", "Notes")));
+                new Agent(9, 2, "Ghost", "1990-01-01", "2000-01-01", "Notes")));
         assertEquals("9 : Ghost", controller.addEntry("boss", "agents",
                 List.of("2", "Ghost", "1990-01-01", "2000-01-01", "Notes")));
         ArgumentCaptor<Agent> captor = ArgumentCaptor.forClass(Agent.class);
         verify(store).addAgent(captor.capture());
-        assertNull(captor.getValue().getMissionID());
         assertEquals(2, captor.getValue().getFacilityID());
         assertEquals("Ghost", captor.getValue().getName());
     }
@@ -330,7 +328,7 @@ public class ControllerTest {
     @Test
     void addEntryRejectsBadType() {
         when(access.isAdmin("boss")).thenReturn(true);
-        assertEquals("Invalid option", controller.addEntry("boss", "bogus", List.of()));
+        assertEquals("Invalid option", controller.addEntry("alice", "bogus", List.of()));
     }
 
     @Test
@@ -365,15 +363,14 @@ public class ControllerTest {
     @Test
     void editEntryKeepsAgentMission() {
         when(access.isAdmin("boss")).thenReturn(true);
-        when(store.getAgent(1)).thenReturn(new Agent(1, 5, 2, "Ghost", "1990-01-01", "2000-01-01", "Notes"));
+        when(store.getAgent(1)).thenReturn(new Agent(1, 2, "Ghost", "1990-01-01", "2000-01-01", "Notes"));
         when(store.listAgents()).thenReturn(List.of(
-                new Agent(1, 5, 3, "Ghost2", "1990-01-01", "2000-01-01", "Notes2")));
+                new Agent(1, 3, "Ghost2", "1990-01-01", "2000-01-01", "Notes2")));
         assertEquals("1 : Ghost2", controller.editEntry("boss", "agents", 1,
                 List.of("3", "Ghost2", "1990-01-01", "2000-01-01", "Notes2")));
         ArgumentCaptor<Agent> captor = ArgumentCaptor.forClass(Agent.class);
         verify(store).updateAgent(captor.capture());
         assertEquals(1, captor.getValue().getAgentID());
-        assertEquals(5, captor.getValue().getMissionID());
         assertEquals(3, captor.getValue().getFacilityID());
     }
 
@@ -449,11 +446,11 @@ public class ControllerTest {
 
     @Test
     void sendMessageFindsAgentCaseInsensitively() throws TopSecretException {
-        Agent ghost = new Agent(1, null, 2, "Ghost", "1990-01-01", "2000-01-01", "Notes");
+        Agent ghost = new Agent(1, 2, "Ghost", "1990-01-01", "2000-01-01", "Notes");
         when(store.listAgents()).thenReturn(List.of(ghost));
         assertEquals("Message sent to Ghost", controller.sendMessage("alice", "ghost", "Hello"));
         ArgumentCaptor<Agent> agentCaptor = ArgumentCaptor.forClass(Agent.class);
-        verify(messages).sendMessage(agentCaptor.capture(), any(String.class));
+        verify(messages).createMessage(agentCaptor.capture(), any(String.class));
         assertEquals("Ghost", agentCaptor.getValue().getName());
     }
 
@@ -464,7 +461,7 @@ public class ControllerTest {
 
     @Test
     void viewMessagesShowsOwnMessages() throws TopSecretException {
-        Agent ghost = new Agent(1, null, 2, "Ghost", "1990-01-01", "2000-01-01", "Notes");
+        Agent ghost = new Agent(1, 2, "Ghost", "1990-01-01", "2000-01-01", "Notes");
         when(store.listAgents()).thenReturn(List.of(ghost));
         when(messages.retrieveMessages(any(Agent.class))).thenReturn(List.of(
                 new Message(ghost, "Hello"), new Message(ghost, "World")));
@@ -478,7 +475,7 @@ public class ControllerTest {
 
     @Test
     void viewMessagesEmptyListIsEmpty() {
-        Agent ghost = new Agent(1, null, 2, "Ghost", "1990-01-01", "2000-01-01", "Notes");
+        Agent ghost = new Agent(1, 2, "Ghost", "1990-01-01", "2000-01-01", "Notes");
         when(store.listAgents()).thenReturn(List.of(ghost));
         assertEquals("No messages", controller.viewMessages("ghost"));
     }
