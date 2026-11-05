@@ -380,7 +380,7 @@ public class Controller implements ControllerInterface {
             return "No agent found with this name";
         }
         try {
-            messages.sendMessage(recipient, message);
+            messages.createMessage(recipient, message);
             return "Message sent to " + recipient.getName();
         } catch (TopSecretException e){
             return e.getMessage();
