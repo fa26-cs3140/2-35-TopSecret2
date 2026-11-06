@@ -1,0 +1,28 @@
+model.ModelSQLiteDataStoreIntegrationTest
+-----------------------------------------------------
+~ tempDir: Path {@TempDir}
+- databaseUrl: String
+- store: model.SQLiteDataStore
+- headquarters: model.Facility
+- outpost: model.Facility
+-----------------------------------------------------
+~ setUp(): void {@BeforeEach}
+~ tearDown(): void {@AfterEach}
+- newAgent(facility: model.Facility, name: String): model.Agent
+- newMission(facility: model.Facility, title: String): model.Mission
+- hasAgent(agents: List<model.Agent>, agent: model.Agent): boolean {static}
+- hasMission(missions: List<model.Mission>, mission: model.Mission): boolean {static}
+- seededAgent(name: String): model.Agent
+~ seededAgentsAreAssignedToTheirTsvMissions(): void {@Test}
+~ seededDataOnlyReferencesExistingRecords(): void {@Test}
+~ jointOperationKeepsEachAgentsHomeFacility(): void {@Test}
+~ agentCanServeMissionsRunByDifferentFacilities(): void {@Test}
+~ newMissionStartsWithNoBriefsOrAgents(): void {@Test}
+~ briefsStayWithTheirOwnMission(): void {@Test}
+~ updatingMissionKeepsBriefsAndAgents(): void {@Test}
+~ unassigningOneMissionKeepsOtherAssignments(): void {@Test}
+~ rejectedAssignmentsDoNotChangeData(): void {@Test}
+~ missionsRequireAnExistingFacility(): void {@Test}
+~ dataSurvivesReopeningTheDatabase(): void {@Test}
+-----------------------------------------------------
+Uses: model.SQLiteDataStore, model.Facility, model.Mission, model.Brief, model.Agent
