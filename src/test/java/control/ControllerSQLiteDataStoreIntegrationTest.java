@@ -128,16 +128,17 @@ public class ControllerSQLiteDataStoreIntegrationTest {
 
     @Test
     void assignAgentToMissionWorksOnRealStore() {
-        assertEquals("Agent 2 assigned to mission 1",
-                controller.assignAgentToMission("boss", 2, 1));
-        assertEquals(1, store.listAgentsForMission(1).size());
-        assertEquals("Ghost", store.listAgentsForMission(1).get(0).getName());
+        // Mission 2 starts empty: the seed assigns Vanguard to mission 1.
+        assertEquals("Agent 2 assigned to mission 2",
+                controller.assignAgentToMission("boss", 2, 2));
+        assertEquals(1, store.listAgentsForMission(2).size());
+        assertEquals("Ghost", store.listAgentsForMission(2).get(0).getName());
     }
 
     @Test
     void assignAgentToMissionRejectsUnknownAgent() {
         assertEquals("Agent does not exist.",
-                controller.assignAgentToMission("boss", 999, 1));
-        assertTrue(store.listAgentsForMission(1).isEmpty());
+                controller.assignAgentToMission("boss", 999, 2));
+        assertTrue(store.listAgentsForMission(2).isEmpty());
     }
 }
