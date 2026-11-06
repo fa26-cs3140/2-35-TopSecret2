@@ -70,25 +70,25 @@ public class MessageManagerSQLiteDataStoreTest {
     @Test
     void retrievalTest1() {
         List<Message> returnedMessages = null;
-        Message lastAgent2Message = null;
+        Message lastAgent5Message = null;
 
-        Agent tsvAgent2 = dataStore.getAgent(2);
+        Agent tsvAgent5 = dataStore.getAgent(5);
 
         try {
-            returnedMessages = messageManager.retrieveMessages(tsvAgent2);
+            returnedMessages = messageManager.retrieveMessages(tsvAgent5);
         } catch (TopSecretException e) {
             fail();
         }
 
         // Fail if there's no last element in list
         try {
-            lastAgent2Message = returnedMessages.getLast();
+            lastAgent5Message = returnedMessages.getLast();
         } catch (NoSuchElementException e) {
             fail();
         }
 
         assertEquals("This is not a friendship; it's a spaceship."
-                , lastAgent2Message.getMessageContent());
+                , lastAgent5Message.getMessageContent());
 
 
     }
