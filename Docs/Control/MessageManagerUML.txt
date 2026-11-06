@@ -5,5 +5,5 @@ MessageManager
 #dataStore: model.DataStoreInterface
 ------------------------------
 +MessageManager(dataStore: model.DataStoreInterface)
-+createMessage(message: Message)
++createMessage(message: Message): Message
 +retrieveMessages(user: model.User): List<Message>
