@@ -1,8 +1,10 @@
-Message
+package: model
 
-contents: String
-recipient: model.User
-—————————
+Message
+------------------------
+-contents: String
+-recipient: model.User
+------------------------
 +Message(recipient: model.User, contents: String)
 +getMessageContent(): String
-+getRecipient(): model.User
++getRecipient(): model.Agent
