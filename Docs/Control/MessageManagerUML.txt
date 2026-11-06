@@ -4,6 +4,6 @@ MessageManager
 ------------------------------
 #dataStore: model.DataStoreInterface
 ------------------------------
-+MessageManager(dataStore: model.DataStoreInterface)
-+createMessage(message: Message): Message
-+retrieveMessages(user: model.User): List<Message>
++MessageManager(dataStore: DataStoreInterface)
++createMessage(recipient: Agent, content: String): Message
++retrieveMessages(agent: Agent): List<Message>
