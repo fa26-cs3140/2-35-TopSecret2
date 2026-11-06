@@ -1,0 +1,18 @@
+MessageManagerSQLiteDataStoreTest
+------------------------
+Before each test, a temporary database is created and loaded with data
+from the TSV files in dataset.
+
+creationTest: Tests creating a message intended for Cinder's user. It
+first checks if the message returned by the method is correct. Then, it
+retrieves the messages for Cinder from the database ensures the new member
+is present.
+
+retrievalTest1: Retrieves the list of messages for Ghost. Ensures that the
+message in the TSV file for Ghost is in the returned list.
+
+retrievalTest2: Retrieves the list of messages for Vanguard. Ensures that the
+message in the TSV file for Vanguard is in the returned list.
+
+retrievalTest3: Retrieves the list of messages for Mirage. Ensures that the
+message in the TSV file for Mirage is in the returned list.
