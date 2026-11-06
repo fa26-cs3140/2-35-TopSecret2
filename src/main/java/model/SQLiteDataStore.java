@@ -427,8 +427,30 @@ public class SQLiteDataStore implements DataStoreInterface, AutoCloseable {
      */
     @Override
     public Mission updateMission(Mission mission) {
-        return null;
+        String sql = """
+        UPDATE missions
+        SET title = ?, facility_ID = ?
+        WHERE mission_ID = ?
+        """;
+
+        try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
+
+            pstmt.setString(1, mission.getTitle());
+            pstmt.setInt(2, mission.getFacilityID());
+            pstmt.setInt(3, mission.getMissionID());
+
+            if (pstmt.executeUpdate() == 0) {
+                throw new IllegalArgumentException("Mission does not exist.");
+            }
+
+            return mission;
+
+        } catch (SQLException e) {
+            throw new IllegalArgumentException(
+                    "Failed to update mission. model.Facility may not exist", e);
+        }
     }
+
 
 
     /**
@@ -696,8 +718,34 @@ public class SQLiteDataStore implements DataStoreInterface, AutoCloseable {
      */
     @Override
     public Agent updateAgent(Agent agent) {
-        return null;
+        String sql = """
+        UPDATE agents
+        SET facility_ID = ?, name = ?,
+            date_of_birth = ?, date_of_death = ?, notes = ?
+        WHERE agent_ID = ?
+        """;
+
+        try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
+
+            pstmt.setInt(1, agent.getFacilityID());
+            pstmt.setString(2, agent.getName());
+            pstmt.setString(3, agent.getDate_of_birth());
+            pstmt.setString(4, agent.getDate_of_death());
+            pstmt.setString(5, agent.getNotes());
+            pstmt.setInt(6, agent.getAgentID());
+
+            if (pstmt.executeUpdate() == 0) {
+                throw new IllegalArgumentException("Agent does not exist.");
+            }
+
+            return agent;
+
+        } catch (SQLException e) {
+            throw new IllegalArgumentException(
+                    "Failed to update model.Agent. Facility may not exist.", e);
+        }
     }
+
 
     /**
      * add a facility to the database, the facilityID will be ignored and automatically assigned by the database
@@ -748,8 +796,30 @@ public class SQLiteDataStore implements DataStoreInterface, AutoCloseable {
      */
     @Override
     public Facility updateFacility(Facility facility) {
-        return null;
+        String sql = """
+            UPDATE facilities
+            SET name = ?, abbreviation = ?
+            WHERE facility_ID = ?
+            """;
+
+        try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
+
+            pstmt.setString(1, facility.getName());
+            pstmt.setString(2, facility.getAbbreviation());
+            pstmt.setInt(3, facility.getFacilityID());
+
+            if (pstmt.executeUpdate() == 0) {
+                throw new IllegalArgumentException("Facility does not exist.");
+            }
+
+            return facility;
+
+        } catch (SQLException e) {
+            throw new IllegalArgumentException(
+                    "Failed to update facility. model.Facility name or abbreviation already exists", e);
+        }
     }
+
 
     /**
      * add a model.Brief to the database, the briefID will be ignored and automatically assigned by the database
@@ -804,8 +874,32 @@ public class SQLiteDataStore implements DataStoreInterface, AutoCloseable {
      */
     @Override
     public Brief updateBrief(Brief brief) {
-        return null;
+        String sql = """
+            UPDATE briefs
+            SET mission_ID = ?, title = ?, date = ?, content = ?
+            WHERE brief_ID = ?
+            """;
+
+        try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
+
+            pstmt.setInt(1, brief.getMissionID());
+            pstmt.setString(2, brief.getTitle());
+            pstmt.setString(3, brief.getDate());
+            pstmt.setString(4, brief.getContent());
+            pstmt.setInt(5, brief.getBriefID());
+
+            if (pstmt.executeUpdate() == 0) {
+                throw new IllegalArgumentException("Brief does not exist.");
+            }
+
+            return brief;
+
+        } catch (SQLException e) {
+            throw new IllegalArgumentException(
+                    "Failed to update model.Brief. model.Mission may not exist", e);
+        }
     }
+
 
 
     /**
