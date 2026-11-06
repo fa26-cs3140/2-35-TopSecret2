@@ -1,6 +1,9 @@
+Package: control
+
 MessageManager
-
-+MessageManager(userAccess: model.UserManagerInterface, dataStore: model.DataStoreInterface)
-
+------------------------------
+#dataStore: model.DataStoreInterface
+------------------------------
++MessageManager(dataStore: model.DataStoreInterface)
 +createMessage(message: Message)
 +retrieveMessages(user: model.User): List<Message>
