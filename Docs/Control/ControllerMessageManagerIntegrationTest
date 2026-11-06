@@ -1,0 +1,14 @@
+Controller MessageManager integration tests
+-------------------------------------------
+ControllerMessageManagerIntegrationTest.sendMessagePersistsRealMessage - sent message is in the store
+ControllerMessageManagerIntegrationTest.viewMessagesReturnsRealMessage - matching user reads the message
+ControllerMessageManagerIntegrationTest.viewMessagesReturnsNoMessagesWhenNone - no message means No messages
+ControllerMessageManagerIntegrationTest.viewMessagesReturnsNoMessagesForUnknownUser - unknown user sees nothing
+ControllerMessageManagerIntegrationTest.sendMessageRejectsUnknownAgent - unknown agent sends nothing
+ControllerMessageManagerIntegrationTest.sendMessageFindsSeededAgentByName - seeded agent found by name
+ControllerMessageManagerIntegrationTest.viewMessagesJoinsMultipleMessages - two messages join with a newline
+Notes: real MessageManager over a real SQLiteDataStore on a
+test database behind the full Controller; users, access, and
+audit stay mocked. The manager's user side stays mocked; it
+is stored but never used by create or retrieve.
+Run: .\gradlew test --tests "control.ControllerMessageManagerIntegrationTest" --console=plain
