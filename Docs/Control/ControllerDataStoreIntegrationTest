@@ -1,0 +1,21 @@
+Controller SQLiteDataStore integration tests
+--------------------------------------------
+ControllerSQLiteDataStoreIntegrationTest.listEntriesShowsSeededFacilities - list shows the seeded facilities
+ControllerSQLiteDataStoreIntegrationTest.listEntriesShowsSeededAgents - list shows the seeded agents
+ControllerSQLiteDataStoreIntegrationTest.listEntriesShowsSeededMissions - list shows the seeded missions
+ControllerSQLiteDataStoreIntegrationTest.readEntryShowsSeededBrief - read shows a seeded brief
+ControllerSQLiteDataStoreIntegrationTest.readEntryShowsSeededAgent - read shows a seeded agent
+ControllerSQLiteDataStoreIntegrationTest.readEntryNotFoundOnRealStore - unknown id reports not found
+ControllerSQLiteDataStoreIntegrationTest.addEntryPersistsBriefInRealStore - added brief is in the store
+ControllerSQLiteDataStoreIntegrationTest.addEntryPersistsAgentInRealStore - added agent is in the store
+ControllerSQLiteDataStoreIntegrationTest.addEntryPersistsFacilityInRealStore - added facility is in the store
+ControllerSQLiteDataStoreIntegrationTest.editEntryUpdatesRealBrief - edited brief title changes in the store
+ControllerSQLiteDataStoreIntegrationTest.editEntryRejectsUnknownIdOnRealStore - unknown id reports not found
+ControllerSQLiteDataStoreIntegrationTest.assignAgentToMissionWorksOnRealStore - assignment lands in the join table
+ControllerSQLiteDataStoreIntegrationTest.assignAgentToMissionRejectsUnknownAgent - unknown agent reports not found
+Notes: real SQLiteDataStore on a test database behind the full
+Controller; users, access, audit, and messages stay mocked.
+The test database seeds the dataset TSVs (6 facilities, 100
+missions, 100 briefs, 10 agents). editEntryUpdatesRealBrief
+fails until the store implements the update methods.
+Run: .\gradlew test --tests "control.ControllerSQLiteDataStoreIntegrationTest" --console=plain
