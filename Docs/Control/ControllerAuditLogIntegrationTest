@@ -1,0 +1,13 @@
+Controller AuditLog integration tests
+-------------------------------------
+ControllerAuditLogIntegrationTest.readEntryLogsRealReadAction - read writes a real READ row
+ControllerAuditLogIntegrationTest.addEntryLogsRealCreateAction - add writes a real CREATE row
+ControllerAuditLogIntegrationTest.reviewAuditLogShowsRealEntries - review shows the logged rows
+ControllerAuditLogIntegrationTest.readEntrySkipsAuditWhenUserUnknown - no log row when the user is unknown
+ControllerAuditLogIntegrationTest.reviewAuditLogRejectsStandardUser - standard user cannot review the audit log
+ControllerAuditLogIntegrationTest.readEntryNotFoundLogsNothing - not-found read writes no row
+Notes: real AuditLog over a real SQLiteDataStore on a test
+database behind the full Controller; users, access, and
+messages stay mocked. The acting user is seeded into the
+store first, since log rows reference their user.
+Run: .\gradlew test --tests "control.ControllerAuditLogIntegrationTest" --console=plain
