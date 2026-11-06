@@ -1,0 +1,85 @@
+
+Scenario: serverStartsOnAvailablePort | Verifies that the WebServer is initialized and starts on an available port.
+GIVEN a WebServer instance configured with port 0
+WHEN the server is started
+THEN the server is not null and its assigned port is greater than 0.
+
+Scenario: startCanBeCalledMoreThanOnce | Verifies that calling start again does not change the server's assigned port.
+GIVEN a running WebServer instance
+WHEN start is called a second time
+THEN the server retains its original port.
+
+Scenario: rootDisplaysLoginPageWhenNotLoggedIn | Verifies that the root page displays the login form when no user session exists.
+GIVEN a running WebServer with no authenticated session
+WHEN a GET request is sent to `/`
+THEN the response has status 200 and contains Login, username, and password, and the controller receives no interactions.
+
+Scenario: loginGetDisplaysLoginForm | Verifies that a GET request to the login endpoint displays the login form.
+GIVEN a running WebServer
+WHEN a GET request is sent to `/login`
+THEN the response has status 200 and contains Login and a form with action `/login`.
+
+Scenario: loginFailsWithIncorrectCredentials | Verifies that invalid credentials do not create an authenticated session.
+GIVEN a login attempt for alice with an incorrect password
+WHEN a POST request is sent to `/login`
+THEN the response has status 200, displays the invalid-credentials message and login form, does not set a session cookie, and calls verifyLogin with the submitted credentials.
+
+Scenario: loginSucceedsAndCreatesSession | Verifies that valid credentials create a session and redirect to the main page.
+GIVEN valid login credentials for alice
+WHEN a POST request is sent to `/login`
+THEN the response has status 302, redirects to `/`, sets a session cookie with the HttpOnly attribute, and calls verifyLogin with alice's credentials.
+
+Scenario: rootDisplaysMainMenuAfterLogin | Verifies that an authenticated user can access the main menu.
+GIVEN alice has successfully logged in and the controller returns the main menu options
+WHEN a GET request is sent to `/` with alice's session cookie
+THEN the response has status 200 and contains Main Menu, Browse Briefs, Browse Agents, Review Audit Log, and `/logout`, and the controller's showMainMenu method is called for alice.
+
+Scenario: browseDisplaysRecords | Verifies that an authenticated user can browse records.
+GIVEN alice has logged in and the controller returns a brief listing
+WHEN a GET request is sent to `/browse?type=briefs` with alice's session cookie
+THEN the response has status 200 and contains Browse briefs, Mission Brief, and Read a Record, and listEntries is called with alice and briefs.
+
+Scenario: browseHandlesMissingType | Verifies that browsing without a record type passes an empty type to the controller.
+GIVEN alice has logged in and the controller returns No records.
+WHEN a GET request is sent to `/browse` with alice's session cookie
+THEN the response has status 200 and contains Browse and No records., and listEntries is called with alice and an empty record type.
+
+Scenario: readDisplaysSelectedRecord | Verifies that an authenticated user can view a selected record.
+GIVEN alice has logged in and the controller returns details for brief ID 12
+WHEN a GET request is sent to `/read?type=briefs&id=12` with alice's session cookie
+THEN the response has status 200 and contains Read briefs, Operation Alpha, and Back to Browse briefs, and readEntry is called with alice, briefs, and ID 12.
+
+Scenario: readHandlesInvalidID | Verifies that an invalid record ID displays an error without calling the controller's readEntry method.
+GIVEN alice has logged in
+WHEN a GET request is sent to `/read?type=briefs&id=invalid` with alice's session cookie
+THEN the response has status 200, contains Invalid option, and readEntry is never called.
+
+Scenario: auditDisplaysAuditLog | Verifies that an authenticated user can view the audit log.
+GIVEN alice has logged in and the controller returns an audit log entry
+WHEN a GET request is sent to `/audit` with alice's session cookie
+THEN the response has status 200 and contains Audit Log and User alice logged in., and reviewAuditLog is called for alice.
+
+Scenario: browseRequiresLogin | Verifies that the browse endpoint requires authentication.
+GIVEN no authenticated session
+WHEN a GET request is sent to `/browse?type=briefs`
+THEN the response has status 200, displays the login page, and the controller receives no interactions.
+
+Scenario: readRequiresLogin | Verifies that the read endpoint requires authentication.
+GIVEN no authenticated session
+WHEN a GET request is sent to `/read?type=briefs&id=1`
+THEN the response has status 200, displays the login page, and the controller receives no interactions.
+
+Scenario: auditRequiresLogin | Verifies that the audit endpoint requires authentication.
+GIVEN no authenticated session
+WHEN a GET request is sent to `/audit`
+THEN the response has status 200, displays the login page, and the controller receives no interactions.
+
+Scenario: logoutRemovesSession | Verifies that logging out invalidates the session and redirects to the login page.
+GIVEN alice has successfully logged in
+WHEN a GET request is sent to `/logout` with alice's session cookie, followed by a GET request to `/` using the same cookie
+THEN the logout response has status 302 and redirects to `/`, the response expires the session cookie with Max-Age=0, and the subsequent root request displays the login page without calling showMainMenu.
+
+Scenario: unknownPathDisplaysErrorPage | Verifies that an unrecognized endpoint displays an error page.
+GIVEN a running WebServer
+WHEN a GET request is sent to `/unknown`
+THEN the response has status 200 and contains Error and Unknown page., and the controller receives no interactions.
