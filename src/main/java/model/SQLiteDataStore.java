@@ -30,6 +30,7 @@ public class SQLiteDataStore implements DataStoreInterface, AutoCloseable {
         importDatasetTsv("missions.tsv", "missions");
         importDatasetTsv("briefs.tsv", "briefs");
         importDatasetTsv("agents.tsv", "agents");
+        importDatasetTsv("messages.tsv", "messages");
     }
 
     @Override
