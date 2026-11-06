@@ -72,11 +72,6 @@ public class MessageManagerSQLiteDataStoreTest {
 
     }
 
-    @AfterEach
-    void tearDown() {
-        dataStore.close();
-    }
-
     @Test
     void retrievalTest1() {
         List<Message> returnedMessages = null;
