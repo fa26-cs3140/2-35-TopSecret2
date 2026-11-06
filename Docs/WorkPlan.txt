@@ -16,3 +16,5 @@ Due by Wednesday morning:
 Due by class Thursday:
 -Run tests on your end/ensure software works
 -Make any requested changes to code (per groupchat)
+
+Due by EOD Thursday
