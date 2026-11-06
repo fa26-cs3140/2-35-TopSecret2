@@ -1,16 +1,12 @@
-Controller integration tests
-------------------------------
-ControllerIntegrationTest.hasUsersFalseOnFreshDatabase - fresh test database has no users
-ControllerIntegrationTest.hasUsersTrueAfterUserCreated - user created through the real UserManager shows up
-ControllerIntegrationTest.verifyLoginSucceedsWithRealUserManager - real password setup then good login verifies
-ControllerIntegrationTest.verifyLoginFailsWithWrongPassword - real password setup then wrong login fails
+Controller UserManager integration tests
+----------------------------------------
+ControllerUserManagerIntegrationTest.hasUsersFalseOnFreshDatabase - fresh test database has no users
+ControllerUserManagerIntegrationTest.hasUsersTrueAfterUserCreated - user created through the real UserManager shows up
+ControllerUserManagerIntegrationTest.verifyLoginSucceedsWithRealUserManager - real password setup then good login verifies
+ControllerUserManagerIntegrationTest.verifyLoginFailsWithWrongPassword - real password setup then wrong login fails
 Notes: real SQLiteDataStore on a test database plus a real
-UserManager behind the Controller stub; access, audit, and
-messages stay mocked. Needs C's one-word change (public
-test-database constructor) or the file moves to
-src/test/java/model; ciphers/key.txt must be on the test
+UserManager behind the full Controller; access, audit, and
+messages stay mocked. ciphers/key.txt must be on the test
 classpath; credentials.cip is deleted before and after each
-test. WebServer integration tests return in week 2, when the
-server is implemented (that file is in recoverable trash
-until then).
+test.
 Run: .\gradlew test --tests "control.ControllerUserManagerIntegrationTest" --console=plain
