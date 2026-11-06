@@ -1,0 +1,17 @@
+Controller AccessControl integration tests
+------------------------------------------
+ControllerAccessControlIntegrationTest.adminSeesAdminOptions - admin menu shows the admin-only options
+ControllerAccessControlIntegrationTest.standardUserSeesNoAdminOptions - standard menu hides the admin-only options
+ControllerAccessControlIntegrationTest.addEntryRejectsStandardUser - standard user cannot add, store untouched
+ControllerAccessControlIntegrationTest.manageAccessPromotesWithRealRoles - promote makes a standard user an admin
+ControllerAccessControlIntegrationTest.manageAccessDemotesWithRealRoles - demote takes admin back to standard
+ControllerAccessControlIntegrationTest.manageAccessRejectsNonAdminCaller - only an admin can promote or demote
+ControllerAccessControlIntegrationTest.manageAccessRejectsSelfDemotion - an admin cannot demote themself
+ControllerAccessControlIntegrationTest.createUserRejectsStandardUser - standard user cannot create users
+ControllerAccessControlIntegrationTest.reviewAuditLogRejectsStandardUser - standard user cannot review the audit log
+ControllerAccessControlIntegrationTest.browseMainMenuHidesAddEditForStandardUser - add and edit only on the admin browse menu
+ControllerAccessControlIntegrationTest.listUsernamesExcludesCaller - admin list leaves the caller out
+Notes: real AccessControl with in-memory roles (admin boss,
+standard alice and bob) behind the full Controller; users,
+store, audit, and messages stay mocked.
+Run: .\gradlew test --tests "control.ControllerAccessControlIntegrationTest" --console=plain
