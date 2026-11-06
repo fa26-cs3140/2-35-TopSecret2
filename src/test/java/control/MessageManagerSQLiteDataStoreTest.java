@@ -1,6 +1,7 @@
 package control;
 
 import model.*;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
@@ -14,7 +15,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.fail;
 
 public class MessageManagerSQLiteDataStoreTest {
-    private DataStoreInterface dataStore;
+    private SQLiteDataStore dataStore;
     private MessageManager messageManager;
 
     @TempDir
@@ -28,6 +29,10 @@ public class MessageManagerSQLiteDataStoreTest {
         String dbLocation = "jdbc:sqlite:" + tempDir.resolve("test.db");
         dataStore = new model.SQLiteDataStore(dbLocation);
         messageManager = new MessageManager(dataStore);
+    }
+    @AfterEach
+    void tearDown() {
+        dataStore.close();
     }
 
     @Test
