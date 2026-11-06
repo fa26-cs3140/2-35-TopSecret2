@@ -1,0 +1,19 @@
+MessageTest
+------------------------
+testCase1: Tests Message with Agent recipient with regular strings but
+irregular IDs and also a non-empty string
+
+testCase2: Tests Message with Agent recipient with regular IDs but
+irregular strings and also a non-empty string
+
+testCase3: Tests Message with Agent recipient with all regular fields and
+also a non-empty string
+
+testCase4: Tests Message with Agent recipient with regular strings but
+irregular IDs also an empty string
+
+testCase5: Tests Message with Agent recipient with regular IDs but
+irregular strings and also an empty string
+
+testCase6: Tests Message with Agent recipient with all regular fields and
+also an empty string
