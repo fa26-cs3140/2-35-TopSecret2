@@ -38,7 +38,7 @@ public class ControllerMessageManagerIntegrationTest {
         String databaseUrl = "jdbc:sqlite:" + tempDir.resolve("test.db");
         store = new SQLiteDataStore(databaseUrl);
         courier = store.addAgent(new Agent(1, "Courier", "1990-05-05", null, "Test agent"));
-        MessageManager messages = new MessageManager(mock(UserManagerInterface.class), store);
+        MessageManager messages = new MessageManager(store);
         controller = new Controller(mock(UserManagerInterface.class),
                 mock(AccessControlInterface.class), store,
                 mock(AuditLogInterface.class), messages);

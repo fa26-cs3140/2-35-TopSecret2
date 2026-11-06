@@ -10,11 +10,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MessageManager {
-    protected UserManagerInterface userAccess;
     protected DataStoreInterface dataStore;
 
-    public MessageManager(UserManagerInterface userAccess, DataStoreInterface dataStore) {
-        this.userAccess = userAccess;
+    public MessageManager(DataStoreInterface dataStore) {
         this.dataStore = dataStore;
     }
 

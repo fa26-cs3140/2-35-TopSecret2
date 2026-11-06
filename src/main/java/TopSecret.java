@@ -32,7 +32,7 @@ public class TopSecret {
         }
         AccessControlInterface access = new AccessControl(adminSet, userSet, Paths.get("roles.txt"));
         AuditLogInterface audit = new AuditLog(store);
-        MessageManager messages = new MessageManager(users, store);
+        MessageManager messages = new MessageManager(store);
         ControllerInterface controller = new Controller(users, access, store, audit, messages);
 
         boolean isWeb = false;
