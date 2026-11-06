@@ -1,0 +1,28 @@
+MessageManagerTest
+------------------------
+constructorTest: Tests whether or not constructor properly sets dataStore
+field
+
+creationTest1: Tests creating a message with a non-empty string and a regular
+Agent object
+
+creationTest2: Tests creating a message with an empty string and a regular
+Agent object
+
+creationTest3: Tests creating a message with a non-empty string and an
+irregular Agent object
+
+creationTest4: Tests creating a message with an empty string and an
+irregular Agent object
+
+retrievalTest1: Tests retrieving messages for a regular Agent object with
+no available messages
+
+retrievalTest2: Tests retrieving messages for an irregular Agent object with
+no available messages
+
+retrievalTest3: Tests retrieving messages for a regular Agent object with
+available message
+
+retrievalTest4: Tests retrieving messages for an irregular Agent object
+with available message
