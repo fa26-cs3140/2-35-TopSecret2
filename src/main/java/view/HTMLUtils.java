@@ -42,6 +42,7 @@ public class HTMLUtils {
     }
 
     /**
+     * @param heading the text of the heading
      * Generates a heading.
      */
     public static String createHeading(String heading) {
@@ -56,6 +57,8 @@ public class HTMLUtils {
     }
 
     /**
+     * @param url href link of the url
+     * @param label label of the link
      * Generates a hyperlink.
      */
     public static String createLink(String url, String label) {
