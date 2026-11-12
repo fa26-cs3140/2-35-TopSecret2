@@ -5,19 +5,25 @@ control Interface
 +hasUsers(): boolean
 +verifyLogin(String username, String password): boolean
 +needsPasswordSetup(String username): boolean
-+createFirstAccount(String username, String pass1, String passConfirm): String
-+changePassword(String username, String pass1, String passConfirm): String
++createFirstAccount(String username, String password1, String passwordConfirm): String
++changePassword(String username, String password1, String passwordConfirm): String
 +createUser(String adminUser, String newUser): String
 +manageAccess(String adminUser, String targetUser, String action): String
 +listUsernames(String username): String
 +isAdmin(String username): boolean
-+showMainMenu(String username): String
-+browseMainMenu(String username, String itemType): string
-+listEntries(String username, String itemType): string
-+readEntry(String username, String itemType, int id): string
-+addEntry(String username, String, String<> fields): string
-+editEntry(String username, String itemType, int id, List<String> fields): String
++showMainMenu(String username): String [Changed - only if countries renumbers the menu]
++browseMainMenu(String username, String itemType): String [Changed - "countries"]
++listEntries(String username, String itemType): String [Changed - "countries"]
++readEntry(String username, String itemType, int id): String [Changed - "countries" and related items]
++addEntry(String username, String itemType, List<String> fields): String [Changed - "countries", facility countryID]
++editEntry(String username, String itemType, int id, List<String> fields): String [Changed - "countries", facility countryID, EDIT audit]
 +reviewAuditLog(String username): String
 +assignAgentToMission(String username, Int agentID, Int missionID): String
 +sendMessage(String username, String agentName, String message): String
 +viewMessages(String username): String
++getFormFields(String username, String itemType, int id): List<FormField> [New]
++searchEntries(String username, String query): String [New]
++listMessages(String username): String [New]
++readMessage(String username, int messageId): String [New]
++listWebSessions(String username): String [New]
++deleteWebSession(String username, String token): String [New]
