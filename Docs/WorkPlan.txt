@@ -1,20 +1,8 @@
-Due before class 10/29
--Proposed UML/interfaces
--Prepare to discuss implementation
-Due by Saturday 10/31 morning
--Complete documentation, tests (and test documentation), and interfaces/stubs
-Group tasks:
-Eltaf - wireframe for webview
-Srikar - Updated UML diagram
-Jaime - updated ERD
-Sebastian - work plan/file organization
+Due by Class 11/12:
+Proposed interfaces
+Proposed Changes
 
-Due by Wednesday morning:
--Completed code
--Communciate any issues/changes with group members
-
-Due by class Thursday:
--Run tests on your end/ensure software works
--Make any requested changes to code (per groupchat)
-
-Due by EOD Thursday
+Due by EOD Friday, 11/13
+Interfaces
+stubbed out classes
+Tests (blackbox)

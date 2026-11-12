@@ -215,4 +215,14 @@ public interface DataStoreInterface {
 
     List<Message> listMessagesForAgent(Agent recipient);
 
+    Country addCountry(Country country);
+
+    Country getCountry(int countryID);
+
+    List<Country> listCountries();
+
+    Country updateCountry(Country country);
+
+    List<Facility> listFacilitiesForCountry(int countryID);
+
 }

@@ -1437,4 +1437,29 @@ public class SQLiteDataStore implements DataStoreInterface, AutoCloseable {
         return messages;
 
         }
+
+    @Override
+    public Country addCountry(Country country) {
+        return null;
+    }
+
+    @Override
+    public Country getCountry(int countryID) {
+        return null;
+    }
+
+    @Override
+    public List<Country> listCountries() {
+        return new ArrayList<>();
+    }
+
+    @Override
+    public Country updateCountry(Country country) {
+        return null;
+    }
+
+    @Override
+    public List<Facility> listFacilitiesForCountry(int countryID) {
+        return new ArrayList<>();
+    }
 }
