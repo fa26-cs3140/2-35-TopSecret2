@@ -3,7 +3,7 @@ Package: control
 WebServer
 ------------------------------
 -controller: ControllerInterface
--sessions: Map<String, String>
+-sessions: SessionManager
 -port: int
 -server: HttpServer
 -view: WebView
