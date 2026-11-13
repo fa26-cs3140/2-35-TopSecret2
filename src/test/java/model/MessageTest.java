@@ -3,7 +3,7 @@ package model;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class MessageTest {
     // Agent with regular strings but irregular IDs
@@ -52,6 +52,7 @@ public class MessageTest {
         assertEquals(
                 testContent1,
                 testMessage.getMessageContent());
+        assertFalse(testMessage.isRead());
     }
 
     @Test
@@ -65,32 +66,35 @@ public class MessageTest {
         assertEquals(
                 testContent1,
                 testMessage.getMessageContent());
+        assertFalse(testMessage.isRead());
     }
 
     @Test
     void testCase3() {
         Message testMessage = new Message(sampleUser3,
                 sampleAgent3,
-                testContent1);
+                testContent1, false);
 
         assertEquals(sampleUser3, testMessage.getSender());
         assertEquals(sampleAgent3, testMessage.getRecipient());
         assertEquals(
                 testContent1,
                 testMessage.getMessageContent());
+        assertFalse(testMessage.isRead());
     }
 
     @Test
     void testCase4() {
         Message testMessage = new Message(sampleUser1,
                 sampleAgent1,
-                testContent2);
+                testContent2,true);
 
         assertEquals(sampleUser1, testMessage.getSender());
         assertEquals(sampleAgent1, testMessage.getRecipient());
         assertEquals(
                 testContent2,
                 testMessage.getMessageContent());
+        assertTrue(testMessage.isRead());
     }
 
     @Test
@@ -104,6 +108,7 @@ public class MessageTest {
         assertEquals(
                 testContent2,
                 testMessage.getMessageContent());
+        assertFalse(testMessage.isRead());
     }
 
     @Test
@@ -117,5 +122,6 @@ public class MessageTest {
         assertEquals(
                 testContent2,
                 testMessage.getMessageContent());
+        assertFalse(testMessage.isRead());
     }
 }

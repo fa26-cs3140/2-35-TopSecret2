@@ -1,29 +1,30 @@
-Scenario: testCase1 | Verifies that a Message stores and returns the sender, recipient, and non-empty message content with default agent IDs.
+
+Scenario: testCase1 | Verifies that a Message stores and returns the sender, recipient, and non-empty content, and defaults to unread.
 GIVEN a user with ID 1, an agent with default IDs, and non-empty message content
-WHEN a Message is created with these values
-THEN getSender, getRecipient, and getMessageContent return the expected user, agent, and message content.
+WHEN a Message is created using the three-argument constructor
+THEN getSender, getRecipient, and getMessageContent return the expected values, and isRead returns false.
 
-Scenario: testCase2 | Verifies that a Message stores and returns the sender, recipient, and non-empty message content with an empty agent name and unusual dates.
+Scenario: testCase2 | Verifies that a Message stores and returns the sender, recipient, and non-empty content with irregular agent fields, and defaults to unread.
 GIVEN a user with ID 2, an agent with IDs 2 and 3, an empty name, unusual dates, and non-empty message content
-WHEN a Message is created with these values
-THEN getSender, getRecipient, and getMessageContent return the expected user, agent, and message content.
+WHEN a Message is created using the three-argument constructor
+THEN getSender, getRecipient, and getMessageContent return the expected values, and isRead returns false.
 
-Scenario: testCase3 | Verifies that a Message stores and returns the sender, recipient, and non-empty message content with regular agent fields.
-GIVEN a user with ID 3, an agent with IDs 7 and 1, and non-empty message content
-WHEN a Message is created with these values
-THEN getSender, getRecipient, and getMessageContent return the expected user, agent, and message content.
+Scenario: testCase3 | Verifies that a Message created with an explicit unread status stores and returns its sender, recipient, and non-empty content.
+GIVEN a user with ID 3, an agent with regular fields, and non-empty message content
+WHEN a Message is created using the four-argument constructor with read set to false
+THEN getSender, getRecipient, and getMessageContent return the expected values, and isRead returns false.
 
-Scenario: testCase4 | Verifies that a Message stores and returns the sender, recipient, and empty message content.
+Scenario: testCase4 | Verifies that a Message can store empty content and an explicitly read status.
 GIVEN a user with ID 1, an agent with default IDs, and empty message content
-WHEN a Message is created with these values
-THEN getSender, getRecipient, and getMessageContent return the expected user, agent, and empty message content.
+WHEN a Message is created using the four-argument constructor with read set to true
+THEN getSender, getRecipient, and getMessageContent return the expected values, and isRead returns true.
 
-Scenario: testCase5 | Verifies that a Message stores and returns the sender, recipient, and empty message content with an empty agent name and unusual dates.
+Scenario: testCase5 | Verifies that a Message stores and returns the sender, recipient, and empty content, and defaults to unread.
 GIVEN a user with ID 3, an agent with IDs 2 and 3, an empty name, unusual dates, and empty message content
-WHEN a Message is created with these values
-THEN getSender, getRecipient, and getMessageContent return the expected user, agent, and empty message content.
+WHEN a Message is created using the three-argument constructor
+THEN getSender, getRecipient, and getMessageContent return the expected values, and isRead returns false.
 
-Scenario: testCase6 | Verifies that a Message stores and returns the sender, recipient, and empty message content with regular agent fields.
-GIVEN a user with ID 2, an agent with IDs 7 and 1, and empty message content
-WHEN a Message is created with these values
-THEN getSender, getRecipient, and getMessageContent return the expected user, agent, and empty message content.
+Scenario: testCase6 | Verifies that a Message stores and returns the sender, recipient, and empty content, and defaults to unread.
+GIVEN a user with ID 2, an agent with regular fields, and empty message content
+WHEN a Message is created using the three-argument constructor
+THEN getSender, getRecipient, and getMessageContent return the expected values, and isRead returns false.
