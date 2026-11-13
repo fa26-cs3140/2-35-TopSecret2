@@ -1,19 +1,29 @@
-MessageTest
-------------------------
-testCase1: Tests Message with Agent recipient with regular strings but
-irregular IDs and also a non-empty string
+Scenario: testCase1 | Verifies that a Message stores and returns the sender, recipient, and non-empty message content with default agent IDs.
+GIVEN a user with ID 1, an agent with default IDs, and non-empty message content
+WHEN a Message is created with these values
+THEN getSender, getRecipient, and getMessageContent return the expected user, agent, and message content.
 
-testCase2: Tests Message with Agent recipient with regular IDs but
-irregular strings and also a non-empty string
+Scenario: testCase2 | Verifies that a Message stores and returns the sender, recipient, and non-empty message content with an empty agent name and unusual dates.
+GIVEN a user with ID 2, an agent with IDs 2 and 3, an empty name, unusual dates, and non-empty message content
+WHEN a Message is created with these values
+THEN getSender, getRecipient, and getMessageContent return the expected user, agent, and message content.
 
-testCase3: Tests Message with Agent recipient with all regular fields and
-also a non-empty string
+Scenario: testCase3 | Verifies that a Message stores and returns the sender, recipient, and non-empty message content with regular agent fields.
+GIVEN a user with ID 3, an agent with IDs 7 and 1, and non-empty message content
+WHEN a Message is created with these values
+THEN getSender, getRecipient, and getMessageContent return the expected user, agent, and message content.
 
-testCase4: Tests Message with Agent recipient with regular strings but
-irregular IDs also an empty string
+Scenario: testCase4 | Verifies that a Message stores and returns the sender, recipient, and empty message content.
+GIVEN a user with ID 1, an agent with default IDs, and empty message content
+WHEN a Message is created with these values
+THEN getSender, getRecipient, and getMessageContent return the expected user, agent, and empty message content.
 
-testCase5: Tests Message with Agent recipient with regular IDs but
-irregular strings and also an empty string
+Scenario: testCase5 | Verifies that a Message stores and returns the sender, recipient, and empty message content with an empty agent name and unusual dates.
+GIVEN a user with ID 3, an agent with IDs 2 and 3, an empty name, unusual dates, and empty message content
+WHEN a Message is created with these values
+THEN getSender, getRecipient, and getMessageContent return the expected user, agent, and empty message content.
 
-testCase6: Tests Message with Agent recipient with all regular fields and
-also an empty string
+Scenario: testCase6 | Verifies that a Message stores and returns the sender, recipient, and empty message content with regular agent fields.
+GIVEN a user with ID 2, an agent with IDs 7 and 1, and empty message content
+WHEN a Message is created with these values
+THEN getSender, getRecipient, and getMessageContent return the expected user, agent, and empty message content.
