@@ -1,9 +1,13 @@
-Package: control
+package: control
 
 MessageManager
-------------------------------
-#dataStore: model.DataStoreInterface
-------------------------------
-+MessageManager(dataStore: DataStoreInterface)
-+createMessage(recipient: Agent, content: String): Message
-+retrieveMessages(agent: Agent): List<Message>
+-----------------------------------------------------
+# dataStore: DataStoreInterface {protected}
+-----------------------------------------------------
++ MessageManager(dataStore: DataStoreInterface)
++ createMessage(sender: User, recipient: Agent, contents: String): Message
+  throws TopSecretException
++ retrieveMessages(agent: Agent): List<Message>
+  throws TopSecretException
++ readMessage(msg: Message): Message
+  throws TopSecretException
