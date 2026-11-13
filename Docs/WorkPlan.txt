@@ -6,3 +6,12 @@ Due by EOD Friday, 11/13
 Interfaces
 stubbed out classes
 Tests (blackbox)
+
+Model goals (for 11/20):
+Add countries to facilities
+Add read status for messages
+Test coverage
+Update ERD with changes
+Get agent by Name
+Get user by Name
+Better data validation
