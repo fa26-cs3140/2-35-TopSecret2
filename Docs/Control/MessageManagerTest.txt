@@ -1,28 +1,49 @@
-MessageManagerTest
-------------------------
-constructorTest: Tests whether or not constructor properly sets dataStore
-field
+Scenario: constructorTest | Verify the MessageManager stores the supplied data store.
+GIVEN a mocked data store
+WHEN a MessageManager is constructed with the mocked data store
+THEN the MessageManager's dataStore field references the supplied data store
 
-creationTest1: Tests creating a message with a non-empty string and a regular
-Agent object
+Scenario: creationTest1 | Verify message creation with a regular agent and non-empty content.
+GIVEN a user, a regular agent, and non-empty message content
+WHEN createMessage is called
+THEN the data store receives the message, and the created message has the supplied sender, recipient, and content with unread status
 
-creationTest2: Tests creating a message with an empty string and a regular
-Agent object
+Scenario: creationTest2 | Verify message creation with empty content and a regular agent.
+GIVEN a user, a regular agent, and empty message content
+WHEN createMessage is called
+THEN the data store receives the message, and the created message has the supplied sender, recipient, and empty content with unread status
 
-creationTest3: Tests creating a message with a non-empty string and an
-irregular Agent object
+Scenario: creationTest3 | Verify message creation with an agent containing irregular string fields.
+GIVEN a user, an agent with irregular string fields, and non-empty message content
+WHEN createMessage is called
+THEN the data store receives the message, and the created message has the supplied sender, recipient, and content with unread status
 
-creationTest4: Tests creating a message with an empty string and an
-irregular Agent object
+Scenario: creationTest4 | Verify message creation with empty content and an agent containing irregular string fields.
+GIVEN a user, an agent with irregular string fields, and empty message content
+WHEN createMessage is called
+THEN the data store receives the message, and the created message has the supplied sender, recipient, and empty content with unread status
 
-retrievalTest1: Tests retrieving messages for a regular Agent object with
-no available messages
+Scenario: retrievalTest1 | Verify retrieval of an empty message list for a regular agent.
+GIVEN a regular agent and a data store configured to return an empty message list
+WHEN retrieveMessages is called for the agent
+THEN the data store is queried for that agent and the returned list is empty
 
-retrievalTest2: Tests retrieving messages for an irregular Agent object with
-no available messages
+Scenario: retrievalTest2 | Verify retrieval of an empty message list for an agent with irregular string fields.
+GIVEN an agent with irregular string fields and a data store configured to return an empty message list
+WHEN retrieveMessages is called for the agent
+THEN the data store is queried for that agent and the returned list is empty
 
-retrievalTest3: Tests retrieving messages for a regular Agent object with
-available message
+Scenario: retrievalTest3 | Verify retrieval of a message list containing one message.
+GIVEN a regular agent and a data store configured to return a list containing sampleMessage1
+WHEN retrieveMessages is called for the agent
+THEN the data store is queried for that agent and the returned list matches the configured list
 
-retrievalTest4: Tests retrieving messages for an irregular Agent object
-with available message
+Scenario: retrievalTest4 | Verify retrieval of a message list containing a message addressed to another agent.
+GIVEN an agent with irregular string fields and a data store configured to return a list containing sampleMessage2
+WHEN retrieveMessages is called for the agent
+THEN the data store is queried for that agent and the returned list matches the configured list
+
+Scenario: readMessageTest1 | Verify marking a message as read and updating it in the data store.
+GIVEN an unread message
+WHEN readMessage is called for the message
+THEN the data store receives an updated message with the same ID, sender, recipient, and content, and its read status is true
