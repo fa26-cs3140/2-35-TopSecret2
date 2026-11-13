@@ -5,6 +5,7 @@ public class Message {
     private Agent recipient;
     private String content;
     private boolean isRead;
+    private int messageID;
 
     /**\
      * used to store existing Messages
@@ -13,7 +14,8 @@ public class Message {
      * @param content
      * @param isRead
      */
-    public Message(User sender, Agent recipient, String content, boolean isRead) {
+    public Message(int messageID, User sender, Agent recipient, String content, boolean isRead) {
+        this.messageID = messageID;
         this.sender = sender;
         this.recipient = recipient;
         this.content = content;
@@ -21,12 +23,13 @@ public class Message {
     }
 
     /**
-     * used to create a new Message
+     * used to create a new Message. isRead set to false and messageID set to -1 by default
      * @param sender
      * @param recipient
      * @param content
      */
     public Message(User sender, Agent recipient, String content) {
+        this.messageID = -1;
         this.sender = sender;
         this.recipient = recipient;
         this.content = content;
@@ -45,5 +48,8 @@ public class Message {
     }
     public boolean isRead() {
         return isRead;
+    }
+    public int getMessageID() {
+        return messageID;
     }
 }
