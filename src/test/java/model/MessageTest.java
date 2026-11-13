@@ -53,6 +53,7 @@ public class MessageTest {
                 testContent1,
                 testMessage.getMessageContent());
         assertFalse(testMessage.isRead());
+        assertEquals(-1,testMessage.getMessageID());
     }
 
     @Test
@@ -67,11 +68,12 @@ public class MessageTest {
                 testContent1,
                 testMessage.getMessageContent());
         assertFalse(testMessage.isRead());
+        assertEquals(-1,testMessage.getMessageID());
     }
 
     @Test
     void testCase3() {
-        Message testMessage = new Message(sampleUser3,
+        Message testMessage = new Message(1, sampleUser3,
                 sampleAgent3,
                 testContent1, false);
 
@@ -81,11 +83,12 @@ public class MessageTest {
                 testContent1,
                 testMessage.getMessageContent());
         assertFalse(testMessage.isRead());
+        assertEquals(1,testMessage.getMessageID());
     }
 
     @Test
     void testCase4() {
-        Message testMessage = new Message(sampleUser1,
+        Message testMessage = new Message(2,sampleUser1,
                 sampleAgent1,
                 testContent2,true);
 
@@ -95,6 +98,7 @@ public class MessageTest {
                 testContent2,
                 testMessage.getMessageContent());
         assertTrue(testMessage.isRead());
+        assertEquals(2,testMessage.getMessageID());
     }
 
     @Test
@@ -109,6 +113,7 @@ public class MessageTest {
                 testContent2,
                 testMessage.getMessageContent());
         assertFalse(testMessage.isRead());
+        assertEquals(-1,testMessage.getMessageID());
     }
 
     @Test
@@ -123,5 +128,6 @@ public class MessageTest {
                 testContent2,
                 testMessage.getMessageContent());
         assertFalse(testMessage.isRead());
+        assertEquals(-1,testMessage.getMessageID());
     }
 }
