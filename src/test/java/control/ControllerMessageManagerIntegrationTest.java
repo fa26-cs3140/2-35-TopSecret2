@@ -41,7 +41,7 @@ public class ControllerMessageManagerIntegrationTest {
         MessageManager messages = new MessageManager(store);
         controller = new Controller(mock(UserManagerInterface.class),
                 mock(AccessControlInterface.class), store,
-                mock(AuditLogInterface.class), messages);
+                mock(AuditLogInterface.class), messages, mock(SessionManager.class));
     }
 
     @AfterEach
