@@ -2,12 +2,30 @@ WebServerController integration tests
 ------------------------------
 unauthenticatedRootShowsLoginForm - root without a cookie shows the login form
 invalidLoginShowsErrorWithoutCookie - bad credentials show "Invalid username or password." and set no cookie
-validLoginSetsSessionCookie - good credentials redirect with a session cookie and no Max-Age/Expires
+validLoginSetsSessionCookie - good credentials redirect with a session cookie and Max-Age=1800
 authenticatedBrowseCallsController - browse with a cookie calls the controller and shows its text
 browseWithoutCookieShowsLoginForm - browse without a cookie shows the login form and never touches the controller
 unknownPathReturnsErrorPageNotCrash - unknown path returns an error page, never a crash
 logoutClearsSession - logout removes the session, so the old cookie gets the login form again
 auditRouteCallsController - audit with a cookie calls the controller and shows its text
-Notes: real WebServer on port 0, mocked ControllerInterface,
-real HttpClient with redirects never.
+createRouteNonAdminShowsNotAllowed - GET /create as a non-admin calls getFormFields and returns 200 (body assertion is week 2)
+createRouteAdminShowsFormFields - GET /create as an admin calls getFormFields with id 0 and returns 200
+createPostAdminRedirects - POST /create as an admin calls addEntry and returns 200 in week 1, 302 to /browse in week 2
+editRouteAdminShowsFormFields - GET /edit as an admin calls getFormFields with the id and returns 200
+editRouteNonAdminShowsNotAllowed - GET /edit as a non-admin calls getFormFields and returns 200 (body assertion is week 2)
+messagesRouteListsMessages - GET /messages as a logged-in user calls listMessages and shows its text
+messagesRouteRequiresLogin - GET /messages without a cookie shows the login form and never touches the controller
+Notes: real WebServer on port 0, mocked ControllerInterface
+and a real SessionManager with the system clock,
+real HttpClient with redirects never. The real
+SessionManager is used so login, logout, and
+validate behave for real: a mock would not
+revoke on logout, so logoutClearsSession would
+fail. The login cookie now has Max-Age=1800.
+The old assertion that the cookie has no Max-Age
+is wrong in HW7 and is updated in the test code.
+The POST /create and POST /edit tests in week 1
+only prove the redirect. The fields list is
+built in week 2, so no week 1 test posts real
+field values.
 Run: .\gradlew test --tests "control.WebServerControllerIntegrationTest" --console=plain
