@@ -3,6 +3,7 @@ Proposed interfaces
 Proposed Changes
 
 Due by EOD Friday, 11/13
+Update Docs
 Interfaces
 stubbed out classes
 Tests (blackbox)
