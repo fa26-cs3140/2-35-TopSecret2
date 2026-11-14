@@ -9,6 +9,6 @@ control implements ControllerInterface
 -messages: MessageManager
 -sessions: SessionManager
 ------------------------------
-+control(users: model.UserManagerInterface, access: model.AccessControlInterface, store: model.DataStoreInterface, audit: model.AuditLogInterface, messages: MessageManager)
++control(users: model.UserManagerInterface, access: model.AccessControlInterface, store: model.DataStoreInterface, audit: model.AuditLogInterface, messages: MessageManager, sessions: SessionManager) [Changed]
 [Everything else from ControllerInterface]
 ------------------------------
