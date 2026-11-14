@@ -14,4 +14,6 @@ ControllerAccessControlIntegrationTest.listUsernamesExcludesCaller - admin list 
 Notes: real AccessControl with in-memory roles (admin boss,
 standard alice and bob) behind the full Controller; users,
 store, audit, and messages stay mocked.
+The Controller is constructed with a mocked
+SessionManager as its 6th argument.
 Run: .\gradlew test --tests "control.ControllerAccessControlIntegrationTest" --console=plain
