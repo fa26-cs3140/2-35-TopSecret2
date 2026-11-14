@@ -42,7 +42,7 @@ public class ControllerUserManagerIntegrationTest {
         store = new model.SQLiteDataStore(databaseUrl);
         users = new UserManager(store);
         controller = new Controller(users, mock(AccessControlInterface.class),
-                store, mock(AuditLogInterface.class), mock(MessageManager.class));
+                store, mock(AuditLogInterface.class), mock(MessageManager.class), mock(SessionManager.class));
     }
 
     @AfterEach
