@@ -9,4 +9,6 @@ UserManager behind the full Controller; access, audit, and
 messages stay mocked. ciphers/key.txt must be on the test
 classpath; credentials.cip is deleted before and after each
 test.
+The Controller is constructed with a mocked
+SessionManager as its 6th argument.
 Run: .\gradlew test --tests "control.ControllerUserManagerIntegrationTest" --console=plain
