@@ -38,7 +38,7 @@ public class ControllerSQLiteDataStoreIntegrationTest {
         AccessControlInterface access = mock(AccessControlInterface.class);
         when(access.isAdmin("boss")).thenReturn(true);
         controller = new Controller(mock(UserManagerInterface.class), access,
-                store, mock(AuditLogInterface.class), mock(MessageManager.class));
+                store, mock(AuditLogInterface.class), mock(MessageManager.class), mock(SessionManager.class));
     }
 
     @AfterEach
