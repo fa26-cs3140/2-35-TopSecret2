@@ -46,7 +46,7 @@ public class ControllerAuditLogIntegrationTest {
         User boss = store.addUser(new User(-1, "boss"));
         when(users.getUserByUsername("boss")).thenReturn(boss);
         controller = new Controller(users, access, store, audit,
-                mock(MessageManager.class));
+                mock(MessageManager.class), mock(SessionManager.class));
     }
 
     @AfterEach
