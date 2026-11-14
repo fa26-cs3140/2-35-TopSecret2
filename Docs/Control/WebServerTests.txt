@@ -1,7 +1,11 @@
 WebServer tests
 ------------------------------
-startAndStopDoNotThrow - constructing the server and calling start then stop throws nothing
-stopBeforeStartDoesNotThrow - calling stop on a never-started server throws nothing
+startAndStopDoNotThrow - constructing the server with a mocked SessionManager and calling start then stop throws nothing
+stopBeforeStartDoesNotThrow - calling stop on a never-started server with a mocked SessionManager throws nothing
 Notes: start/stop safety only; routing, sessions, and HTTP
-behavior are covered by the WebServerIntegrationTest suite.
+behavior are covered by the WebServerControllerIntegrationTest
+suite. The constructor takes a SessionManager as its
+2nd argument. The run comment in WebServerTest.java
+says "control.WebServerTest". Leave the package as
+control. Do not change it to controller.
 Run: .\gradlew test --tests "control.WebServerTest" --console=plain
