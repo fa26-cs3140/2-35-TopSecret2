@@ -56,4 +56,21 @@ public interface ControllerInterface {
     // Messages (HW6, D's feature, terminal only, not on the web)
     String sendMessage(String username, String agentName, String message);
     String viewMessages(String username);
+
+    // HW7: web create/edit forms (B)
+    record FormField(String field, String label, String value, String type, List<String> options) {
+    }
+
+    List<FormField> getFormFields(String username, String itemType, int id);
+
+    // HW7: terminal search (D supplies the store search)
+    String searchEntries(String username, String query);
+
+    // HW7: web messaging centre (C's feature, B routes it)
+    String listMessages(String username);
+    String readMessage(String username, int messageId);
+
+    // HW7: web sessions (D's access control, B wires it)
+    String listWebSessions(String username);
+    String deleteWebSession(String username, String token);
 }
