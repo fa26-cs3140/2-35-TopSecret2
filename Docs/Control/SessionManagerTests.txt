@@ -1,0 +1,16 @@
+SessionManager tests
+---------------------
+createSessionReturnsToken - createSession returns a non-empty token
+validateReturnsUsername - validate returns the username for its token
+validateUnknownTokenReturnsNull - validate returns null for an unknown token
+createSessionGivesDifferentTokens - two sessions for the same user get different tokens
+listSessionsEmptyAtStart - listSessions is empty before any session is created
+listSessionsShowsCreatedSessions - listSessions shows both created sessions
+revokeSessionRemovesSession - revoke returns true, and validate returns null after it
+revokeUnknownTokenReturnsFalse - revoke returns false for an unknown token
+listSessionsAfterRevoke - listSessions has one session left after a revoke
+Notes: a fixed clock is used, so no test has to sleep.
+Week 1 only: sessions are stored, nothing expires yet.
+The expiry tests land in week 2, when validate expires
+a session after 30 minutes inactive.
+Run: .\gradlew test --tests "control.SessionManagerTest" --console=plain
