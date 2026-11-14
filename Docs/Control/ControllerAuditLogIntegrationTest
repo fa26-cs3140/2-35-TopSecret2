@@ -10,4 +10,6 @@ Notes: real AuditLog over a real SQLiteDataStore on a test
 database behind the full Controller; users, access, and
 messages stay mocked. The acting user is seeded into the
 store first, since log rows reference their user.
+The Controller is constructed with a mocked
+SessionManager as its 6th argument.
 Run: .\gradlew test --tests "control.ControllerAuditLogIntegrationTest" --console=plain
