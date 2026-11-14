@@ -11,4 +11,6 @@ Notes: real MessageManager over a real SQLiteDataStore on a
 test database behind the full Controller; users, access, and
 audit stay mocked. The manager's user side stays mocked; it
 is stored but never used by create or retrieve.
+The Controller is constructed with a mocked
+SessionManager as its 6th argument.
 Run: .\gradlew test --tests "control.ControllerMessageManagerIntegrationTest" --console=plain
