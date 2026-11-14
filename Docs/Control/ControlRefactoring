@@ -1,126 +1,82 @@
+Control refactoring
+-------------------
+Control package only: Controller.java, ControllerInterface.java,
+WebServer.java, MessageManager.java, and the wiring in TopSecret.java.
+Run: .\gradlew cleanTest test --console=plain
+
+1) Re-run the suite first.
+Shipped run is 305/309, 4 failures in MessageManagerSQLiteDataStoreTest
+(file-lock on TempDir cleanup). WebViewWebServerTest (17 tests) has no
+recorded run. Without a green baseline you cannot tell a refactor
+regression from a failure that was already there.
+
 2) Fix addEntry and editEntry on a short field list.
-Controller.java:256,295. They only catch
-IllegalArgumentException, but fields.get(0..4) throws
-IndexOutOfBoundsException on a short list, and that
-escapes past the controller. The terminal always sends
-a full list, so this never fired there. A web POST built
-from form fields will hit it, and the result is a 500
-instead of an error page. Check fields.size() first,
-or catch IndexOutOfBoundsException as well.
+Controller.java:256,295. They only catch IllegalArgumentException, but
+fields.get(0..4) throws IndexOutOfBoundsException on a short list. Check
+fields.size() first, or catch it too. The terminal always sends a full
+list. A web POST will not.
 
 3) Log edits.
-LoggedAction has only READ = 0 and CREATE = 1, so
-editEntry has no audit line (Controller.java:331).
-D adds EDIT = 2. B adds one audit.log line in
-editEntry. Without it every web edit is unaudited,
-and TA checklist 9 fails. reviewAuditLog already
-prints any other value as "edit", so nothing else
-changes.
+LoggedAction has only READ = 0 and CREATE = 1. Add EDIT = 2, and add one
+audit.log line in editEntry (Controller.java:331). Without it every web
+edit is unaudited. reviewAuditLog already prints any other value as
+"edit", so nothing else changes.
 
 4) Collapse the 8 audit blocks into one helper.
-Controller.java:215,225,235,245 (readEntry) and
-263,269,275,281 (addEntry). The same 3 lines appear
-8 times: getUserByUsername, a null check, audit.log.
-Only the action and the record string change. One
-helper means the EDIT line from item 3 is a 9th
-call, not a 9th copy, and a change to the null
-check happens once. Note: this is a private helper
-in the controller. HW7 asks for decomposition into
-smaller testable functions, so this is the agreed
-exception to the no-private-helpers preference.
-If you keep that preference, keep all 8 copies
-and accept a 9th. Do not do half of it.
+Controller.java:215,225,235,245 and 263,269,275,281. Same 3 lines, 8
+times: getUserByUsername, a null check, audit.log. One helper means the
+EDIT line from item 3 is a 9th call, not a 9th copy.
 
 5) Use switch on itemType, not 4 if-else chains.
-Controller.java has itemType.equals 18 times:
-browseMainMenu, listEntries, readEntry, addEntry,
-editEntry. A switch with the same 4 cases and the
-same default ("Invalid option") reads the same and
-makes adding "countries" one case per method instead
-of one else-if per method. No helper needed, so this
-one does not touch the preference in item 4. Keep
-itemType a String. The web passes it as a query
-parameter, so an enum would only add parsing.
+Controller.java has itemType.equals 18 times: browseMainMenu, listEntries,
+readEntry, addEntry, editEntry. A switch with the same 4 cases and the
+same default ("Invalid option") makes adding "countries" one case per
+method. Keep itemType a String. The web passes it as a query parameter.
 
 6) Split WebServer.start() into one handler per route.
-WebServer.java:52-234. start() is 183 lines: 6 local
-lambdas and 6 route handlers in one method. That was
-fine for 6 read-only routes. /create, /edit and
-/messages would add 4 more handlers to the same
-method. Extract the two pure helpers first (escape,
-parseForm), then one handler per route (handleRoot,
-handleLogin, handleBrowse, handleRead, handleAudit,
-handleLogout). start() then only creates the server
-and registers the routes. Same preference note as
-item 4. Do not change routing or cookies in this
-change, or the tests cannot prove it was behaviour
-preserving.
+WebServer.java:52-234. start() is 183 lines: 6 local lambdas and 6 route
+handlers in one method. Extract the two pure helpers first (escape,
+parseForm), then one handler per route. start() then only creates the
+server and registers the routes. Do not change routing or cookies in
+this change.
 
 7) Collapse the two agent-by-name scans into one lookup.
-Controller.java:373 and 396. sendMessage and
-viewMessages both loop listAgents() and take the
-first name match, case-insensitively. One helper
-findAgentByName does it once, and the new
-listMessages and readMessage need the same rule.
-Do not cache agents in the controller. Each call
-loads the whole list, which is fine at this size,
-and a cache would go stale on every agent add.
-A store method getAgentByName is D's call.
+Controller.java:373 and 396. sendMessage and viewMessages both loop
+listAgents() and take the first name match, case-insensitively. One
+lookup does it once. Do not cache agents in the controller. Each call
+loads the whole list, which is fine at this size, and a cache would go
+stale on every agent add.
 
 8) Fix viewMessages formatting and narrow the try.
-Controller.java:394-419. It has "}try{" on one line,
-blank lines inside, and the try wraps the whole
-body. Only retrieveMessages can throw, so only
-that call belongs in the try. Zero behaviour change.
+Controller.java:394-419. It has "}try{" on one line, blank lines inside,
+and the try wraps the whole body. Only retrieveMessages can throw, so
+only that call belongs in the try. Zero behaviour change.
 
-9) Delete the dead imports in MessageManager.
-MessageManager.java:6,9. UserManagerInterface and
-ArrayList are both unused. The first one lies: it
-suggests the old 2-arg constructor still exists.
-It does not. The constructor is MessageManager(store).
+9) Fix the stale comments.
+Controller.java:24 says "main menu 1-9". It is 1-11. Controller.java:140
+says users see "1-5 and 9". They see 1-5, 9 and 11. WebServerTest.java
+says the integration file "is in recoverable trash until then". It exists.
 
-10) Fix the stale comments.
-Controller.java:24 says "main menu 1-9". It is 1-11.
-Controller.java:140 says users see "1-5 and 9". They
-see 1-5, 9 and 11. WebServerTest.java says the
-integration file "is in recoverable trash until
-then". It exists (WebServerControllerIntegrationTest,
-8 tests), and the run comment uses the wrong package
-(controller. not control.). Fix the comment in the
-same commit as the code it describes.
+10) Cache isAdmin once in showMainMenu.
+Controller.java:142-163 calls access.isAdmin twice for the same username.
+One boolean at the top, used for both admin blocks. One line, zero risk.
 
-11) Cache isAdmin once in showMainMenu.
-Controller.java:142-163 calls access.isAdmin twice
-for the same username. One boolean at the top, used
-for both admin blocks. One line, zero risk.
+11) Guard the login POST body, and say what sendPage does.
+WebServer.java:162 reads the whole body with no limit. Cap it, or reject
+a large Content-Length with an error page. WebServer.java:117-126 catches
+IOException and ignores it. Keep the behaviour, state the decision.
 
-12) Guard the login POST body, and say what sendPage does.
-WebServer.java:162 reads the whole body with no limit.
-Cap it, or reject a large Content-Length with an
-error page. WebServer.java:117-126 catches IOException
-and ignores it. The comment says the client went away,
-which is a fair choice, but a swallowed exception with
-no trace cannot be told apart from a real failure.
-Keep the behaviour, state the decision.
+Do not:
+- Split Controller into one controller per type. It is 420 lines, and the
+split breaks ControllerTest (58 tests), TerminalView, and WebServer for
+no measured benefit. Item 5 is the proportionate version.
+- Rename public methods. The names are HW5/HW6 settled, and the views
+and tests use them.
+- Change String-returning methods to return objects. The String contract
+is the terminal/web seam: the same text to the terminal, wrapped in HTML
+for web.
+- Add caching in the controller. See item 7.
 
-13) Tell A about the browseMessages EOF loop and the
-dead Browse Messages link.
-TerminalView.browseMessages has no -1 check, so EOF
-loops forever printing "Invalid option.". Every other
-menu returns on -1. WebView.mainMenuView falls back
-to adding all links, including /browse?type=messages,
-which returns "Invalid option". HW7 gives messages
-its own /messages route, so the link can go. Neither
-file is control code. B flags it, A fixes it.
-
-14) Tell D about createUser, the "model." strings, the
-dead trigger, and hasPermission.
-UserManager.createUser returns the pre-insert object
-instead of the store's return, so the id can be wrong
-after a deletion. There are 12 user-visible "model."
-strings (SQLiteDataStore has 10). The dead trigger
-sets agents.mission_ID, a column that no longer
-exists. hasPermission is never called by production
-code and has no "edit" action, so there are two
-admin checks that can drift. None of these is control
-code. B flags them, D fixes them.
+Order: 1, then 2, 3, 4, 5, 6, then 8-11. Do 7 with the feature, since the
+feature needs the same lookup. Update Docs/Control in the same commit as
+the code, never separately.
