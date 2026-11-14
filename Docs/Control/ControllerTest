@@ -58,8 +58,30 @@ sendMessageHandlesUnknownAgent - unknown agent returns "No agent found with this
 viewMessagesShowsOwnMessages - "ghost" sees own messages joined with newlines
 viewMessagesWithoutAgentIsEmpty - no matching agent returns "No messages"
 viewMessagesEmptyListIsEmpty - empty message list returns "No messages"
+getFormFieldsReturnsEmptyStub - admin getFormFields for briefs, id 0, returns an empty list
+getFormFieldsRefusesNonAdminStub - non-admin getFormFields returns an empty list
+getFormFieldsUnknownTypeStub - admin getFormFields for an unknown type returns an empty list
+getFormFieldsNoUserTypeStub - admin getFormFields for "users" returns an empty list
+getFormFieldsCountriesStub - admin getFormFields for countries, id 0, returns an empty list
+searchEntriesReturnsNoMatchesStub - any query returns "No matches"
+searchEntriesEmptyQueryStub - an empty query returns "No matches"
+listMessagesReturnsNoMessagesStub - a user with an agent and no messages sees "No messages"
+listMessagesUnknownUserStub - a user with no matching agent sees "No messages"
+readMessageReturnsNotFoundStub - any message id returns "No message found with this id"
+listWebSessionsReturnsEmptyStub - admin listWebSessions returns ""
+listWebSessionsRefusesNonAdminStub - non-admin listWebSessions returns "Not allowed"
+deleteWebSessionReturnsEmptyStub - admin deleteWebSession returns ""
+deleteWebSessionRefusesNonAdminStub - non-admin deleteWebSession returns "Not allowed"
 Notes: collaborators are Mockito mocks; every method is
 tested on its real returned text, reusing the HW5
-UserInterface wording and inputs. No listUsernames tests:
-the 18-method interface has no listUsernames.
+UserInterface wording and inputs. The interface has
+19 methods plus 6 new HW7 methods and the FormField
+record. ControllerTest setUp mocks a SessionManager
+and passes it as the 6th constructor argument.
+The 14 new tests above are stub tests. They pass
+against the stubs in Controller.java. In week 2,
+replace their expected values with the real
+behaviour and keep the test names. The sendMessage
+and viewMessages tests were updated for the new
+Message shape.
 Run: .\gradlew test --tests "control.ControllerTest" --console=plain
