@@ -8,9 +8,9 @@ WebServer
 -server: HttpServer
 -view: WebView
 ------------------------------
-+WebServer(controller: ControllerInterface, port: int)
++WebServer(controller: ControllerInterface, sessions: SessionManager, port: int) [Changed]
 +getPort(): int
-+start(): void
++start(): void [Changed - new routes, Max-Age=1800 cookie]
 +stop(): void
 ------------------------------
 Purpose: the browser's adapter to the controller. A browser
@@ -54,17 +54,16 @@ controller's question, "is this user allowed to do this?"
 typing /audit into the address bar is still refused: this
 class identifies them fine, and the controller says no.
 
-Own sessions: the sessions field is a ConcurrentHashMap
-from token to username, since the server handles requests
-on multiple threads. Login creates a UUID token, puts
-token -> username in the map, and sets the session cookie.
-Logout removes the token from the map and sends back an
-expired session cookie so the browser drops it. The cookie
-is "session=<token>; Path=/; HttpOnly", with no Expires
-and no Max-Age, making it a session cookie that dies when
-the browser closes, as required, and no Secure flag,
-because the site is plain http on localhost. Sessions are
-memory only, so restarting the server logs everyone out.
+Own sessions: sessions live in the shared
+SessionManager, not in this class, so the terminal
+can list and revoke them through the controller.
+Login calls createSession and gets a UUID token.
+Logout calls revokeSession. The cookie is
+"session=<token>; Path=/; HttpOnly; Max-Age=1800",
+re-issued on every authed response, so a session
+stays valid while in use and times out after 30
+minutes inactive. Sessions are memory only, so
+restarting the server logs everyone out.
 
 Translate back: take the String the controller returns and
 wrap it in a page. WebView.generateHTML wraps the text;
@@ -88,10 +87,17 @@ GET  /logout                    remove token, expire cookie, 302 to /
 GET  /browse?type=...           list page from controller.listEntries
 GET  /read?type=...&id=...      record page from controller.readEntry; bad id gives "Invalid option" page
 GET  /audit                     audit page from controller.reviewAuditLog
+GET  /create?type=...           [New] empty form from controller.getFormFields, admin only
+POST /create                    [New] controller.addEntry, then 302 to /browse?type=...
+GET  /edit?type=...&id=...      [New] prefilled form from controller.getFormFields, admin only
+POST /edit                      [New] controller.editEntry, then 302 to /read?type=...&id=...
+GET  /messages                  [New] list page from controller.listMessages
+GET  /messages/read?id=...      [New] one message from controller.readMessage, marks it read
+GET  /messages/new              [New] send form, agent dropdown from controller.listEntries
+POST /messages/new              [New] controller.sendMessage, then 302 to /messages
+GET  /browse?type=countries     [Changed] falls out of the existing /browse route
+GET  /read?type=countries&id=.. [Changed] falls out of the existing /read route
 any other path                  "Unknown page." error page, never a crash
-
-There are no add, edit, create, or message routes: the web
-view is read-only and messages are terminal only.
 
 Does not do: no record logic, no menu logic, no admin
 gating, no audit logic (all Controller); no HTML building
