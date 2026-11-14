@@ -32,15 +32,17 @@ public class Controller implements ControllerInterface {
     private final DataStoreInterface store;
     private final AuditLogInterface audit;
     private final MessageManager messages;
+    private final SessionManager sessions;
 
     public Controller(UserManagerInterface users, AccessControlInterface access,
                       DataStoreInterface store, AuditLogInterface audit,
-                      MessageManager messages) {
+                      MessageManager messages, SessionManager sessions) {
         this.users = users;
         this.access = access;
         this.store = store;
         this.audit = audit;
         this.messages = messages;
+        this.sessions = sessions;
     }
 
     @Override
@@ -380,7 +382,8 @@ public class Controller implements ControllerInterface {
             return "No agent found with this name";
         }
         try {
-            messages.createMessage(recipient, message);
+            User sender = users.getUserByUsername(username);
+            messages.createMessage(sender, recipient, message);
             return "Message sent to " + recipient.getName();
         } catch (TopSecretException e){
             return e.getMessage();
@@ -405,16 +408,55 @@ public class Controller implements ControllerInterface {
             List<Message> found = messages.retrieveMessages(self);
 
 
-        if (found.isEmpty()) {
-            return "No messages";
-        }
-        List<String> lines = new ArrayList<>();
-        for (Message m : found) {
-            lines.add(m.getMessageContent());
-        }
-        return String.join("\n", lines);
+            if (found.isEmpty()) {
+                return "No messages";
+            }
+            List<String> lines = new ArrayList<>();
+            for (Message m : found) {
+                lines.add(m.getMessageContent());
+            }
+            return String.join("\n", lines);
         } catch (TopSecretException e){
             return e.getMessage();
         }
+    }
+
+    // HW7 stubs, week 1. They return a fixed value so the code
+    // compiles and the week 1 tests pass. Week 2 replaces the
+    // stub bodies with the real behaviour.
+    @Override
+    public List<FormField> getFormFields(String username, String itemType, int id) {
+        return List.of();
+    }
+
+    @Override
+    public String searchEntries(String username, String query) {
+        return "No matches";
+    }
+
+    @Override
+    public String listMessages(String username) {
+        return "No messages";
+    }
+
+    @Override
+    public String readMessage(String username, int messageId) {
+        return "No message found with this id";
+    }
+
+    @Override
+    public String listWebSessions(String username) {
+        if (!access.isAdmin(username)) {
+            return "Not allowed";
+        }
+        return "";
+    }
+
+    @Override
+    public String deleteWebSession(String username, String token) {
+        if (!access.isAdmin(username)) {
+            return "Not allowed";
+        }
+        return "";
     }
 }
