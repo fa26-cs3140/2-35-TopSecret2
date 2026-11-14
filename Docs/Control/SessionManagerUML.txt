@@ -1,0 +1,25 @@
+Package: control
+
+SessionManager
+------------------------------
+-sessions: Map<String, Session>
+-clock: Clock
+------------------------------
++SessionManager(clock: Clock)
++createSession(username: String): String
++validate(token: String): String
++listSessions(): List<Session>
++revokeSession(token: String): boolean
+------------------------------
+Purpose: the one place sessions live. Created once
+in TopSecret.main and passed to both Controller and
+WebServer. This reverses the HW6 choice to fold
+sessions into WebServer, because the terminal has
+to list and revoke them and TerminalView only holds
+a ControllerInterface. createSession mints a random
+UUID. validate returns the username, or null if
+unknown or expired, and touches lastActivity, which
+is what makes the 30 minutes slide. The Clock is
+injected so tests can expire a session without
+sleeping. Session is a record with token, username
+and lastActivity.
