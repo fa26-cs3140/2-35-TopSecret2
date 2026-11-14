@@ -1,19 +1,29 @@
-MessageTest
-------------------------
-testCase1: Tests Message with Agent recipient with regular strings but
-irregular IDs and also a non-empty string
+Scenario: testCase1 | Verify the three-argument constructor initializes message fields, defaults to unread, and assigns message ID -1.
+GIVEN a user, an agent with irregular IDs, and non-empty message content
+WHEN a Message is created using the three-argument constructor
+THEN the sender, recipient, and content match the supplied values, the message is unread, and the message ID is -1
 
-testCase2: Tests Message with Agent recipient with regular IDs but
-irregular strings and also a non-empty string
+Scenario: testCase2 | Verify the three-argument constructor with an agent containing irregular string fields.
+GIVEN a user, an agent with irregular string fields, and non-empty message content
+WHEN a Message is created using the three-argument constructor
+THEN the sender, recipient, and content match the supplied values, the message is unread, and the message ID is -1
 
-testCase3: Tests Message with Agent recipient with all regular fields and
-also a non-empty string
+Scenario: testCase3 | Verify the five-argument constructor initializes the supplied message ID and unread status.
+GIVEN a user, an agent, non-empty message content, message ID 1, and read status false
+WHEN a Message is created using the five-argument constructor
+THEN the sender, recipient, content, message ID, and unread status match the supplied values
 
-testCase4: Tests Message with Agent recipient with regular strings but
-irregular IDs also an empty string
+Scenario: testCase4 | Verify the five-argument constructor initializes an empty, read message with message ID 2.
+GIVEN a user, an agent, empty message content, message ID 2, and read status true
+WHEN a Message is created using the five-argument constructor
+THEN the sender, recipient, content, message ID, and read status match the supplied values
 
-testCase5: Tests Message with Agent recipient with regular IDs but
-irregular strings and also an empty string
+Scenario: testCase5 | Verify the three-argument constructor defaults to unread with empty content.
+GIVEN a user, an agent with irregular string fields, and empty message content
+WHEN a Message is created using the three-argument constructor
+THEN the sender, recipient, and empty content match the supplied values, the message is unread, and the message ID is -1
 
-testCase6: Tests Message with Agent recipient with all regular fields and
-also an empty string
+Scenario: testCase6 | Verify the three-argument constructor defaults to unread with empty content.
+GIVEN a user, an agent, and empty message content
+WHEN a Message is created using the three-argument constructor
+THEN the sender, recipient, and empty content match the supplied values, the message is unread, and the message ID is -1

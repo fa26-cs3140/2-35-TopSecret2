@@ -1,10 +1,17 @@
 package: model
 
 Message
-------------------------
--contents: String
--recipient: model.User
-------------------------
-+Message(recipient: model.User, contents: String)
-+getMessageContent(): String
-+getRecipient(): model.Agent
+-----------------------------------------------------
+- sender: User
+- recipient: Agent
+- content: String
+- isRead: boolean
+- messageID: int
+-----------------------------------------------------
++ Message(messageID: int, sender: User, recipient: Agent, content: String, isRead: boolean)
++ Message(sender: User, recipient: Agent, content: String)
++ getMessageContent(): String
++ getSender(): User
++ getRecipient(): Agent
++ isRead(): boolean
++ getMessageID(): int

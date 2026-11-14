@@ -1,12 +1,7 @@
 package control;
 
-import model.Agent;
-import model.DataStoreInterface;
-import model.Message;
-import model.UserManagerInterface;
-import model.TopSecretException;
+import model.*;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class MessageManager {
@@ -16,8 +11,8 @@ public class MessageManager {
         this.dataStore = dataStore;
     }
 
-    public Message createMessage(Agent recipient, String contents) throws TopSecretException {
-        Message newMessage = new Message(
+    public Message createMessage(User sender, Agent recipient, String contents) throws TopSecretException {
+        Message newMessage = new Message(sender,
                 recipient,
                 contents);
 
@@ -40,5 +35,17 @@ public class MessageManager {
         }
 
         return availableMessages;
+    }
+
+    /**
+     * changes the read status of a message to true
+     * @param msg
+     * @throws TopSecretException
+     * @return The updated message
+     */
+    public Message readMessage(Message msg) throws TopSecretException {
+        Message newMsg = new Message(msg.getMessageID(),msg.getSender(),msg.getRecipient(),msg.getMessageContent(),true);
+        dataStore.updateMessage(newMsg);
+        return newMsg;
     }
 }
