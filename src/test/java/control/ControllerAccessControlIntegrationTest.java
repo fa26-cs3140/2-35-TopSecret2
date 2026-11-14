@@ -34,7 +34,7 @@ public class ControllerAccessControlIntegrationTest {
         users = mock(UserManagerInterface.class);
         store = mock(DataStoreInterface.class);
         controller = new Controller(users, access, store,
-                mock(AuditLogInterface.class), mock(MessageManager.class));
+                mock(AuditLogInterface.class), mock(MessageManager.class), mock(SessionManager.class));
     }
 
     @Test
