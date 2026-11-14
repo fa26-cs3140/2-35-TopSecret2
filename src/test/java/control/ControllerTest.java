@@ -38,6 +38,7 @@ public class ControllerTest {
     private DataStoreInterface store;
     private AuditLogInterface audit;
     private MessageManager messages;
+    private SessionManager sessions;
     private Controller controller;
 
     @BeforeEach
@@ -47,7 +48,8 @@ public class ControllerTest {
         store = mock(DataStoreInterface.class);
         audit = mock(AuditLogInterface.class);
         messages = mock(MessageManager.class);
-        controller = new Controller(users, access, store, audit, messages);
+        sessions = mock(SessionManager.class);
+        controller = new Controller(users, access, store, audit, messages, sessions);
     }
 
     @Test
@@ -448,9 +450,10 @@ public class ControllerTest {
     void sendMessageFindsAgentCaseInsensitively() throws TopSecretException {
         Agent ghost = new Agent(1, 2, "Ghost", "1990-01-01", "2000-01-01", "Notes");
         when(store.listAgents()).thenReturn(List.of(ghost));
+        when(users.getUserByUsername("alice")).thenReturn(new User(1, "alice"));
         assertEquals("Message sent to Ghost", controller.sendMessage("alice", "ghost", "Hello"));
         ArgumentCaptor<Agent> agentCaptor = ArgumentCaptor.forClass(Agent.class);
-        verify(messages).createMessage(agentCaptor.capture(), any(String.class));
+        verify(messages).createMessage(any(User.class), agentCaptor.capture(), any(String.class));
         assertEquals("Ghost", agentCaptor.getValue().getName());
     }
 
@@ -464,7 +467,8 @@ public class ControllerTest {
         Agent ghost = new Agent(1, 2, "Ghost", "1990-01-01", "2000-01-01", "Notes");
         when(store.listAgents()).thenReturn(List.of(ghost));
         when(messages.retrieveMessages(any(Agent.class))).thenReturn(List.of(
-                new Message(ghost, "Hello"), new Message(ghost, "World")));
+                new Message(new User(1, "ghost"), ghost, "Hello"),
+                new Message(new User(1, "ghost"), ghost, "World")));
         assertEquals("Hello\nWorld", controller.viewMessages("ghost"));
     }
 
@@ -478,5 +482,89 @@ public class ControllerTest {
         Agent ghost = new Agent(1, 2, "Ghost", "1990-01-01", "2000-01-01", "Notes");
         when(store.listAgents()).thenReturn(List.of(ghost));
         assertEquals("No messages", controller.viewMessages("ghost"));
+    }
+
+    // HW7 stub tests, week 1. They pass against the stubs in
+    // Controller.java. In week 2, replace their expected
+    // values with the real behaviour and keep the test names.
+    @Test
+    void getFormFieldsReturnsEmptyStub() {
+        when(access.isAdmin("boss")).thenReturn(true);
+        assertTrue(controller.getFormFields("boss", "briefs", 0).isEmpty());
+    }
+
+    @Test
+    void getFormFieldsRefusesNonAdminStub() {
+        when(access.isAdmin("alice")).thenReturn(false);
+        assertTrue(controller.getFormFields("alice", "briefs", 0).isEmpty());
+    }
+
+    @Test
+    void getFormFieldsUnknownTypeStub() {
+        when(access.isAdmin("boss")).thenReturn(true);
+        assertTrue(controller.getFormFields("boss", "nope", 0).isEmpty());
+    }
+
+    @Test
+    void getFormFieldsNoUserTypeStub() {
+        when(access.isAdmin("boss")).thenReturn(true);
+        assertTrue(controller.getFormFields("boss", "users", 0).isEmpty());
+    }
+
+    @Test
+    void getFormFieldsCountriesStub() {
+        when(access.isAdmin("boss")).thenReturn(true);
+        assertTrue(controller.getFormFields("boss", "countries", 0).isEmpty());
+    }
+
+    @Test
+    void searchEntriesReturnsNoMatchesStub() {
+        assertEquals("No matches", controller.searchEntries("alice", "Ghost"));
+    }
+
+    @Test
+    void searchEntriesEmptyQueryStub() {
+        assertEquals("No matches", controller.searchEntries("alice", ""));
+    }
+
+    @Test
+    void listMessagesReturnsNoMessagesStub() {
+        Agent ghost = new Agent(1, 2, "Ghost", "1990-01-01", "2000-01-01", "Notes");
+        when(store.listAgents()).thenReturn(List.of(ghost));
+        assertEquals("No messages", controller.listMessages("ghost"));
+    }
+
+    @Test
+    void listMessagesUnknownUserStub() {
+        assertEquals("No messages", controller.listMessages("alice"));
+    }
+
+    @Test
+    void readMessageReturnsNotFoundStub() {
+        assertEquals("No message found with this id", controller.readMessage("ghost", 1));
+    }
+
+    @Test
+    void listWebSessionsReturnsEmptyStub() {
+        when(access.isAdmin("boss")).thenReturn(true);
+        assertEquals("", controller.listWebSessions("boss"));
+    }
+
+    @Test
+    void listWebSessionsRefusesNonAdminStub() {
+        when(access.isAdmin("alice")).thenReturn(false);
+        assertEquals("Not allowed", controller.listWebSessions("alice"));
+    }
+
+    @Test
+    void deleteWebSessionReturnsEmptyStub() {
+        when(access.isAdmin("boss")).thenReturn(true);
+        assertEquals("", controller.deleteWebSession("boss", "token-1"));
+    }
+
+    @Test
+    void deleteWebSessionRefusesNonAdminStub() {
+        when(access.isAdmin("alice")).thenReturn(false);
+        assertEquals("Not allowed", controller.deleteWebSession("alice", "token-1"));
     }
 }
