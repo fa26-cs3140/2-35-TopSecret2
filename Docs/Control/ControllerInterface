@@ -27,3 +27,21 @@ control Interface
 +readMessage(String username, int messageId): String [New]
 +listWebSessions(String username): String [New]
 +deleteWebSession(String username, String token): String [New]
+
+Package: control
+-----------------------
+FormField [New]
+----------------------
++field: String
++label: String
++value: String
++type: String
++options: List<String>
+----------------------
+One field of a create or edit form. field is the form
+parameter name, in addEntry/editEntry order. label is
+the text beside the input. value is the current value,
+or "" for a new record. type is "text", "number" or
+"date". options is empty except for a foreign key,
+where it holds "id : label" lines and value holds the
+selected id.
