@@ -6,7 +6,9 @@ import java.util.concurrent.CountDownLatch;
 import control.Controller;
 import control.ControllerInterface;
 import control.MessageManager;
+import control.SessionManager;
 import control.WebServer;
+import java.time.Clock;
 import model.AccessControl;
 import model.AccessControlInterface;
 import model.AuditLog;
@@ -33,7 +35,8 @@ public class TopSecret {
         AccessControlInterface access = new AccessControl(adminSet, userSet, Paths.get("roles.txt"));
         AuditLogInterface audit = new AuditLog(store);
         MessageManager messages = new MessageManager(store);
-        ControllerInterface controller = new Controller(users, access, store, audit, messages);
+        SessionManager sessions = new SessionManager(Clock.systemUTC());
+        ControllerInterface controller = new Controller(users, access, store, audit, messages, sessions);
 
         boolean isWeb = false;
         for (String arg : args) {
@@ -47,7 +50,7 @@ public class TopSecret {
                 System.out.println("No user accounts exist. Create a user in the terminal first.");
                 System.exit(1);
             }
-            WebServer web = new WebServer(controller, 3002);
+            WebServer web = new WebServer(controller, sessions, 3002);
             try {
                 web.start();
             } catch (IOException e) {
