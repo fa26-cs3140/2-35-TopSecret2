@@ -23,7 +23,7 @@ import static org.mockito.Mockito.when;
 // Mockito-mocked ControllerInterface, and a real HttpClient.
 // No browser needed. The mocked controller lets these tests
 // prove routing, cookies, and gating.
-// Run: .\gradlew test --tests "control.WebServerIntegrationTest" --console=plain
+// Run: .\gradlew test --tests "control.WebServerControllerIntegrationTest" --console=plain
 public class WebServerControllerIntegrationTest {
     private ControllerInterface controller;
     private SessionManager sessions;
@@ -50,8 +50,8 @@ public class WebServerControllerIntegrationTest {
 
     // Logs in through the mocked controller and returns the raw
     // session cookie value, e.g. "session=<token>". Also asserts
-    // the login contract: a 302, a session cookie, and no expiry
-    // attributes (a session cookie dies with the browser).
+    // the login contract: a 302, a session cookie with
+    // Max-Age=1800, and no Expires attribute.
     private String loginAndGetCookie() throws Exception {
         when(controller.verifyLogin("alice", "Pass123")).thenReturn(true);
         HttpRequest request = HttpRequest.newBuilder()
@@ -179,6 +179,7 @@ public class WebServerControllerIntegrationTest {
                         .header("Cookie", cookie).GET().build(),
                 HttpResponse.BodyHandlers.ofString());
         assertEquals(200, response.statusCode());
+        assertTrue(response.body().contains("Not allowed"));
         verify(controller).getFormFields("alice", "briefs", 0);
     }
 
@@ -192,22 +193,48 @@ public class WebServerControllerIntegrationTest {
                         .header("Cookie", cookie).GET().build(),
                 HttpResponse.BodyHandlers.ofString());
         assertEquals(200, response.statusCode());
+        assertTrue(response.body().contains("<form"));
+        assertTrue(response.body().contains("Title"));
         verify(controller).getFormFields("boss", "briefs", 0);
     }
 
     @Test
     void createPostAdminRedirects() throws Exception {
         String cookie = loginAsBossAndGetCookie();
-        when(controller.addEntry("boss", "briefs", List.of())).thenReturn("1 : Title");
+        when(controller.getFormFields("boss", "briefs", 0)).thenReturn(List.of(
+                new ControllerInterface.FormField("missionID", "Mission ID", "", "number", List.of("1 : Op")),
+                new ControllerInterface.FormField("title", "Brief title", "", "text", List.of()),
+                new ControllerInterface.FormField("date", "Date", "", "date", List.of()),
+                new ControllerInterface.FormField("content", "Brief content", "", "text", List.of())));
+        when(controller.addEntry("boss", "briefs", List.of("1", "Title", "2026-01-01", "Content")))
+                .thenReturn("1 : Title");
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create(base + "/create"))
                 .header("Content-Type", "application/x-www-form-urlencoded")
                 .header("Cookie", cookie)
-                .POST(HttpRequest.BodyPublishers.ofString("type=briefs"))
+                .POST(HttpRequest.BodyPublishers.ofString("type=briefs&missionID=1&title=Title&date=2026-01-01&content=Content"))
+                .build();
+        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+        assertEquals(302, response.statusCode());
+        assertEquals("/browse?type=briefs", response.headers().firstValue("Location").orElse(""));
+        verify(controller).addEntry("boss", "briefs", List.of("1", "Title", "2026-01-01", "Content"));
+    }
+
+    @Test
+    void createPostNonAdminShowsNotAllowed() throws Exception {
+        String cookie = loginAndGetCookie();
+        when(controller.getFormFields("alice", "briefs", 0)).thenReturn(List.of());
+        when(controller.addEntry("alice", "briefs", List.of())).thenReturn("Not allowed");
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create(base + "/create"))
+                .header("Content-Type", "application/x-www-form-urlencoded")
+                .header("Cookie", cookie)
+                .POST(HttpRequest.BodyPublishers.ofString("type=briefs&title=Title"))
                 .build();
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
         assertEquals(200, response.statusCode());
-        verify(controller).addEntry("boss", "briefs", List.of());
+        assertTrue(response.body().contains("Not allowed"));
+        verify(controller).addEntry("alice", "briefs", List.of());
     }
 
     @Test
@@ -220,6 +247,8 @@ public class WebServerControllerIntegrationTest {
                         .header("Cookie", cookie).GET().build(),
                 HttpResponse.BodyHandlers.ofString());
         assertEquals(200, response.statusCode());
+        assertTrue(response.body().contains("<form"));
+        assertTrue(response.body().contains("Old title"));
         verify(controller).getFormFields("boss", "briefs", 1);
     }
 
@@ -232,7 +261,30 @@ public class WebServerControllerIntegrationTest {
                         .header("Cookie", cookie).GET().build(),
                 HttpResponse.BodyHandlers.ofString());
         assertEquals(200, response.statusCode());
+        assertTrue(response.body().contains("Not allowed"));
         verify(controller).getFormFields("alice", "briefs", 1);
+    }
+
+    @Test
+    void editPostAdminRedirects() throws Exception {
+        String cookie = loginAsBossAndGetCookie();
+        when(controller.getFormFields("boss", "briefs", 1)).thenReturn(List.of(
+                new ControllerInterface.FormField("missionID", "Mission ID", "1", "number", List.of("1 : Op")),
+                new ControllerInterface.FormField("title", "Brief title", "Old title", "text", List.of()),
+                new ControllerInterface.FormField("date", "Date", "2026-01-01", "date", List.of()),
+                new ControllerInterface.FormField("content", "Brief content", "Content", "text", List.of())));
+        when(controller.editEntry("boss", "briefs", 1, List.of("1", "New title", "2026-01-01", "Content")))
+                .thenReturn("1 : New title");
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create(base + "/edit"))
+                .header("Content-Type", "application/x-www-form-urlencoded")
+                .header("Cookie", cookie)
+                .POST(HttpRequest.BodyPublishers.ofString("type=briefs&id=1&missionID=1&title=New title&date=2026-01-01&content=Content"))
+                .build();
+        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+        assertEquals(302, response.statusCode());
+        assertEquals("/read?type=briefs&id=1", response.headers().firstValue("Location").orElse(""));
+        verify(controller).editEntry("boss", "briefs", 1, List.of("1", "New title", "2026-01-01", "Content"));
     }
 
     @Test
@@ -255,5 +307,60 @@ public class WebServerControllerIntegrationTest {
                 HttpResponse.BodyHandlers.ofString());
         assertTrue(response.body().contains("<form"));
         verifyNoInteractions(controller);
+    }
+
+    @Test
+    void messagesReadRouteShowsMessage() throws Exception {
+        String cookie = loginAndGetCookie();
+        when(controller.readMessage("alice", 3)).thenReturn("3 : Hello");
+        HttpResponse<String> response = client.send(
+                HttpRequest.newBuilder().uri(URI.create(base + "/messages/read?id=3"))
+                        .header("Cookie", cookie).GET().build(),
+                HttpResponse.BodyHandlers.ofString());
+        assertEquals(200, response.statusCode());
+        assertTrue(response.body().contains("3 : Hello"));
+        verify(controller).readMessage("alice", 3);
+    }
+
+    @Test
+    void messagesNewRouteShowsForm() throws Exception {
+        String cookie = loginAndGetCookie();
+        when(controller.listEntries("alice", "agents")).thenReturn("1 : Ghost");
+        HttpResponse<String> response = client.send(
+                HttpRequest.newBuilder().uri(URI.create(base + "/messages/new"))
+                        .header("Cookie", cookie).GET().build(),
+                HttpResponse.BodyHandlers.ofString());
+        assertEquals(200, response.statusCode());
+        assertTrue(response.body().contains("<form"));
+        assertTrue(response.body().contains("Ghost"));
+        verify(controller).listEntries("alice", "agents");
+    }
+
+    @Test
+    void messagesNewPostRedirects() throws Exception {
+        String cookie = loginAndGetCookie();
+        when(controller.sendMessage("alice", "Ghost", "Hello")).thenReturn("Message sent to Ghost");
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create(base + "/messages/new"))
+                .header("Content-Type", "application/x-www-form-urlencoded")
+                .header("Cookie", cookie)
+                .POST(HttpRequest.BodyPublishers.ofString("agentName=Ghost&message=Hello"))
+                .build();
+        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+        assertEquals(302, response.statusCode());
+        assertEquals("/messages", response.headers().firstValue("Location").orElse(""));
+        verify(controller).sendMessage("alice", "Ghost", "Hello");
+    }
+
+    @Test
+    void authedResponseReissuesCookie() throws Exception {
+        String cookie = loginAndGetCookie();
+        when(controller.listEntries("alice", "briefs")).thenReturn("1 : Title");
+        HttpResponse<String> response = client.send(
+                HttpRequest.newBuilder().uri(URI.create(base + "/browse?type=briefs"))
+                        .header("Cookie", cookie).GET().build(),
+                HttpResponse.BodyHandlers.ofString());
+        assertEquals(200, response.statusCode());
+        assertTrue(response.headers().firstValue("Set-Cookie").orElse("").contains("Max-Age=1800"));
     }
 }
