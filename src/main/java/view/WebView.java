@@ -73,7 +73,8 @@ public class WebView {
                 {"/browse?type=agents", "Browse Agents"},
                 {"/browse?type=facilities", "Browse Facilities"},
                 {"/browse?type=missions", "Browse Missions"},
-                {"/browse?type=messages", "Browse Messages"}
+                {"/browse?type=countries", "Browse Countries"},
+                {"/messages", "Send or view messages"}
         };
 
         StringBuilder links = new StringBuilder("<ul>");
