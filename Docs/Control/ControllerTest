@@ -18,34 +18,45 @@ manageAccessRefusesNonAdmin - non-admin manageAccess returns "Not allowed"
 manageAccessRejectsBadAction - unknown action returns "Invalid option"
 listUsernamesExcludesCaller - admin list excludes the caller, others joined with newlines
 listUsernamesRefusesNonAdmin - non-admin list returns "Not allowed" and users is never touched
-showMainMenuShowsAdminOptions - admin menu shows all 11 options
-showMainMenuHidesAdminOptions - standard menu shows 1-5, 9 and 11 only
+showMainMenuShowsAdminOptions - admin menu shows all 12 options
+showMainMenuHidesAdminOptions - standard menu shows 1-6, 10 and 12 only
 browseMainMenuShowsAdminOptions - admin browse menu shows List, Read, Add, Edit, Back
 browseMainMenuHidesAdminOptions - standard browse menu shows List, Read, Back only
 browseMainMenuRejectsBadType - unknown type returns "Invalid option"
+browseMainMenuAcceptsCountries - countries browse menu shows List, Read, Add, Edit, Back
 listEntriesListsBriefs - briefs list as "id : title" lines
 listEntriesListsAgents - agents list as "id : name" lines
 listEntriesListsFacilities - facilities list as "id : name" lines
 listEntriesListsMissions - missions list as "id : title" lines
+listEntriesListsCountries - countries list as "id : name" lines
 listEntriesRejectsBadType - unknown type returns "Invalid option"
 readEntryPrintsBriefAndAudits - brief read prints Title/Date/Content and logs a READ audit for "briefs 1"
 readEntryPrintsAgent - agent read prints Name/DoB/DoDeath/Notes
 readEntryPrintsFacility - facility read prints Name/Abbreviation
 readEntryPrintsMission - mission read prints Title/Facility ID
+readEntryPrintsCountry - country read prints Name
 readEntryHandlesUnknownId - unknown brief id returns "No brief found with this id"
 readEntryRejectsBadType - unknown type returns "Invalid option"
 addEntryAddsBriefAuditsAndRelists - admin brief add audits CREATE "briefs 7" and relists
-addEntryAddsAgentWithoutMission - admin agent add passes null missionID and relists
+addEntryAddsAgentWithoutMission - admin agent add captures facilityID and name and relists
 addEntryAddsMission - admin mission add captures title and facilityID and relists
+addEntryAddsFacility - admin facility add captures name and abbreviation and relists
+addEntryAddsFacilityWithCountry - admin facility add with a country id parses it and still adds the facility
+addEntryAddsCountry - admin country add captures the name and relists
 addEntryRefusesNonAdmin - non-admin add returns "Not allowed" and store is never touched
 addEntryRejectsBadType - unknown type returns "Invalid option"
 addEntryReturnsBadNumberMessage - non-numeric missionID returns the parse message
+addEntryShortListIsNotEnoughFields - a short field list returns "Not enough fields" and store is never touched
 addEntryReturnsStoreMessage - store throwing returns its message
 editEntryEditsBriefAndRelists - brief edit updates id/missionID/title and relists
-editEntryKeepsAgentMission - agent edit keeps the existing missionID (5) while facility changes
+editEntryKeepsAgentMission - agent edit updates facilityID and name and relists
 editEntryRefusesNonAdmin - non-admin edit returns "Not allowed" and store is never touched
 editEntryHandlesUnknownId - unknown brief id returns "No brief found with this id"
 editEntryRejectsBadType - unknown type returns "Invalid option"
+editEntryShortListIsNotEnoughFields - a short field list returns "Not enough fields" and store is never touched
+editEntryEditsFacility - facility edit updates name and abbreviation and relists
+editEntryEditsCountry - country edit updates the name and relists
+editEntryEditsBriefAuditsEdit - brief edit logs an EDIT audit for "briefs 1"
 editEntryReturnsStoreMessage - store throwing on update returns its message
 reviewAuditLogFormatsEntries - audit log formats as "time : user : read/create : record" lines
 reviewAuditLogRefusesNonAdmin - non-admin audit review returns "Not allowed"
@@ -58,30 +69,43 @@ sendMessageHandlesUnknownAgent - unknown agent returns "No agent found with this
 viewMessagesShowsOwnMessages - "ghost" sees own messages joined with newlines
 viewMessagesWithoutAgentIsEmpty - no matching agent returns "No messages"
 viewMessagesEmptyListIsEmpty - empty message list returns "No messages"
-getFormFieldsReturnsEmptyStub - admin getFormFields for briefs, id 0, returns an empty list
-getFormFieldsRefusesNonAdminStub - non-admin getFormFields returns an empty list
-getFormFieldsUnknownTypeStub - admin getFormFields for an unknown type returns an empty list
-getFormFieldsNoUserTypeStub - admin getFormFields for "users" returns an empty list
-getFormFieldsCountriesStub - admin getFormFields for countries, id 0, returns an empty list
-searchEntriesReturnsNoMatchesStub - any query returns "No matches"
-searchEntriesEmptyQueryStub - an empty query returns "No matches"
-listMessagesReturnsNoMessagesStub - a user with an agent and no messages sees "No messages"
-listMessagesUnknownUserStub - a user with no matching agent sees "No messages"
-readMessageReturnsNotFoundStub - any message id returns "No message found with this id"
-listWebSessionsReturnsEmptyStub - admin listWebSessions returns ""
-listWebSessionsRefusesNonAdminStub - non-admin listWebSessions returns "Not allowed"
-deleteWebSessionReturnsEmptyStub - admin deleteWebSession returns ""
-deleteWebSessionRefusesNonAdminStub - non-admin deleteWebSession returns "Not allowed"
+getFormFieldsReturnsNewBriefFields - new brief form has 4 fields in order, missionID options from the store
+getFormFieldsReturnsEditBriefFields - edit brief form prefills missionID, title, date, content
+getFormFieldsReturnsNewAgentFields - new agent form has 5 fields, facilityID options from the store
+getFormFieldsReturnsNewFacilityFields - new facility form has 3 fields, countryID options from the store
+getFormFieldsReturnsNewMissionFields - new mission form has 2 fields, facilityID options from the store
+getFormFieldsReturnsNewCountryFields - new country form has 1 field, the name
+getFormFieldsReturnsEditCountryFields - edit country form prefills the name
+getFormFieldsUnknownIdReturnsEmpty - edit for an unknown id returns an empty list
+getFormFieldsRefusesNonAdmin - non-admin getFormFields returns an empty list
+getFormFieldsUnknownTypeReturnsEmpty - unknown type returns an empty list
+getFormFieldsNoUserType - "users" type returns an empty list
+searchEntriesFindsBriefByTitle - search finds a brief by its title
+searchEntriesIsCaseInsensitive - search matches case-insensitively
+searchEntriesFindsAcrossTypes - search finds matches across types, briefs first
+searchEntriesReturnsNoMatches - no match returns "No matches"
+searchEntriesEmptyQueryReturnsNoMatches - an empty query returns "No matches"
+listMessagesShowsOwnMessages - own messages list as "id : content", unread marked
+listMessagesUnknownUserIsEmpty - a user with no matching agent sees "No messages"
+listMessagesEmptyListIsEmpty - empty message list returns "No messages"
+listMessagesReturnsExceptionMessage - retrieveMessages throwing returns the exception message
+readMessageMarksFoundMessageRead - reading a message marks it read and returns "id : content"
+readMessageUnknownIdReturnsNotFound - an unknown message id returns "No message found with this id"
+readMessageUnknownUserReturnsNotFound - a user with no matching agent gets "No message found with this id"
+listWebSessionsListsSessions - admin list shows "token : username : lastActivity" lines
+listWebSessionsEmptyIsEmpty - admin list with no sessions returns ""
+listWebSessionsRefusesNonAdmin - non-admin list returns "Not allowed"
+deleteWebSessionRevokesAndRelists - admin delete revokes the token and returns the updated list
+deleteWebSessionUnknownTokenReturnsNotFound - an unknown token returns "No session found with this token"
+deleteWebSessionRefusesNonAdmin - non-admin delete returns "Not allowed"
 Notes: collaborators are Mockito mocks; every method is
 tested on its real returned text, reusing the HW5
 UserInterface wording and inputs. The interface has
 19 methods plus 6 new HW7 methods and the FormField
 record. ControllerTest setUp mocks a SessionManager
 and passes it as the 6th constructor argument.
-The 14 new tests above are stub tests. They pass
-against the stubs in Controller.java. In week 2,
-replace their expected values with the real
-behaviour and keep the test names. The sendMessage
-and viewMessages tests were updated for the new
-Message shape.
+The 14 stub tests from week 1 are now real tests:
+form fields, search, messages, and web sessions.
+The menu tests now expect 12 options, and countries
+have list, read, add, and edit tests.
 Run: .\gradlew test --tests "control.ControllerTest" --console=plain
