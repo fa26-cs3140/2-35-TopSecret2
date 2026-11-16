@@ -3,14 +3,14 @@ Package: control
 WebServer
 ------------------------------
 -controller: ControllerInterface
--sessions: SessionManager
+-sessionManager: SessionManager
 -port: int
 -server: HttpServer
 -view: WebView
 ------------------------------
-+WebServer(controller: ControllerInterface, sessions: SessionManager, port: int) [Changed]
++WebServer(controller: ControllerInterface, sessions: SessionManager, port: int)
 +getPort(): int
-+start(): void [Changed - new routes, Max-Age=1800 cookie]
++start(): void
 +stop(): void
 ------------------------------
 Purpose: the browser's adapter to the controller. A browser
@@ -24,8 +24,8 @@ controller method, and hands the answer back as a page.
 Built on com.sun.net.httpserver.HttpServer: part of the JDK,
 not a web framework, serving plain HTML only, no CSS, no
 Javascript, and no new dependencies. Request handlers are
-lambdas registered inside start(), not private helper
-methods, so the whole request path reads in one place. Port
+one private method per route, registered in start(), so
+start() only creates the server and registers the routes. Port
 is a constructor argument so tests can use a free port
 while the application uses 3002. start() is a no-op if the
 server is already started; stop() is null-safe and
@@ -45,8 +45,8 @@ becomes showMainMenu, and POST /login and GET /logout run
 the session steps below.
 
 Identify the requester: read the session token from the
-Cookie header and resolve it in the sessions map to a
-username. A missing, unknown, or removed token gets the
+Cookie header and resolve it through the SessionManager
+to a username. A missing, unknown, or removed token gets the
 login form instead of the requested page. This answers "who
 is this request from?", which is different from the
 controller's question, "is this user allowed to do this?"
@@ -87,16 +87,16 @@ GET  /logout                    remove token, expire cookie, 302 to /
 GET  /browse?type=...           list page from controller.listEntries
 GET  /read?type=...&id=...      record page from controller.readEntry; bad id gives "Invalid option" page
 GET  /audit                     audit page from controller.reviewAuditLog
-GET  /create?type=...           [New] empty form from controller.getFormFields, admin only
-POST /create                    [New] controller.addEntry, then 302 to /browse?type=...
-GET  /edit?type=...&id=...      [New] prefilled form from controller.getFormFields, admin only
-POST /edit                      [New] controller.editEntry, then 302 to /read?type=...&id=...
-GET  /messages                  [New] list page from controller.listMessages
-GET  /messages/read?id=...      [New] one message from controller.readMessage, marks it read
-GET  /messages/new              [New] send form, agent dropdown from controller.listEntries
-POST /messages/new              [New] controller.sendMessage, then 302 to /messages
-GET  /browse?type=countries     [Changed] falls out of the existing /browse route
-GET  /read?type=countries&id=.. [Changed] falls out of the existing /read route
+GET  /create?type=...           empty form from controller.getFormFields, admin only
+POST /create                    controller.addEntry, then 302 to /browse?type=...
+GET  /edit?type=...&id=...      prefilled form from controller.getFormFields, admin only
+POST /edit                      controller.editEntry, then 302 to /read?type=...&id=...
+GET  /messages                  list page from controller.listMessages
+GET  /messages/read?id=...      one message from controller.readMessage, marks it read
+GET  /messages/new              send form, agent dropdown from controller.listEntries
+POST /messages/new              controller.sendMessage, then 302 to /messages
+GET  /browse?type=countries     falls out of the existing /browse route
+GET  /read?type=countries&id=.. falls out of the existing /read route
 any other path                  "Unknown page." error page, never a crash
 
 Does not do: no record logic, no menu logic, no admin
