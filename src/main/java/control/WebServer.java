@@ -2,11 +2,13 @@ package control;
 
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpServer;
+import view.HTMLUtils;
 import view.WebView;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -72,6 +74,8 @@ public class WebServer {
         server.createContext("/create", this::handleCreate);
         server.createContext("/edit", this::handleEdit);
         server.createContext("/messages", this::handleMessages);
+        server.createContext("/messages/read", this::handleMessagesRead);
+        server.createContext("/messages/new", this::handleMessagesNew);
         server.start();
     }
 
@@ -134,11 +138,10 @@ public class WebServer {
         return null;
     }
 
-    // Who this request is from, or null when logged out.
+    // Who this token belongs to, or null when logged out.
     // The guard runs before any controller call, so an
     // unauthenticated request never touches the controller.
-    private String sessionUser(HttpExchange exchange) {
-        String token = sessionToken(exchange);
+    private String sessionUser(String token) {
         return token == null ? null : sessionManager.validate(token);
     }
 
@@ -155,6 +158,50 @@ public class WebServer {
         }
     }
 
+    // Send a 200 page and re-issue the session cookie, so
+    // the 30 minutes slide while the session is in use.
+    private void sendPage(HttpExchange exchange, String page, String token) {
+        if (token != null) {
+            exchange.getResponseHeaders().set("Set-Cookie", "session=" + token + "; Path=/; HttpOnly; Max-Age=1800");
+        }
+        sendPage(exchange, page);
+    }
+
+    // A create or edit form from the controller's fields.
+    // A field with options becomes a dropdown; the rest
+    // become inputs of their type, prefilled with the value.
+    private String formHtml(String action, String type, int id, List<ControllerInterface.FormField> fields) {
+        StringBuilder form = new StringBuilder();
+        form.append("<form method=\"post\" action=\"").append(action).append("\">");
+        form.append("<input type=\"hidden\" name=\"type\" value=\"").append(escape(type)).append("\">");
+        if (id != 0) {
+            form.append("<input type=\"hidden\" name=\"id\" value=\"").append(id).append("\">");
+        }
+        for (ControllerInterface.FormField field : fields) {
+            form.append(escape(field.label())).append(": ");
+            if (!field.options().isEmpty()) {
+                form.append("<select name=\"").append(escape(field.field())).append("\">");
+                for (String option : field.options()) {
+                    int sep = option.indexOf(" : ");
+                    String value = sep < 0 ? option : option.substring(0, sep);
+                    String label = sep < 0 ? option : option.substring(sep + 3);
+                    form.append("<option value=\"").append(escape(value)).append("\"");
+                    if (value.equals(field.value())) {
+                        form.append(" selected");
+                    }
+                    form.append(">").append(escape(label)).append("</option>");
+                }
+                form.append("</select>");
+            } else {
+                form.append("<input type=\"").append(escape(field.type())).append("\" name=\"")
+                        .append(escape(field.field())).append("\" value=\"").append(escape(field.value())).append("\">");
+            }
+            form.append("<br>");
+        }
+        form.append("<input type=\"submit\" value=\"Save\"></form>");
+        return form.toString();
+    }
+
     // Root: the main menu when logged in, the login form
     // otherwise. This context also catches unknown paths,
     // which get an error page, never a crash.
@@ -163,11 +210,12 @@ public class WebServer {
             sendPage(exchange, wrapText("Error", "Unknown page."));
             return;
         }
-        String username = sessionUser(exchange);
+        String token = sessionToken(exchange);
+        String username = sessionUser(token);
         if (username == null) {
             sendPage(exchange, LOGIN_PAGE);
         } else {
-            sendPage(exchange, wrapText("Main menu", controller.showMainMenu(username)));
+            sendPage(exchange, wrapText("Main menu", controller.showMainMenu(username)), token);
         }
     }
 
@@ -211,18 +259,20 @@ public class WebServer {
 
     // Browse: the record list for one type.
     private void handleBrowse(HttpExchange exchange) throws IOException {
-        String username = sessionUser(exchange);
+        String token = sessionToken(exchange);
+        String username = sessionUser(token);
         if (username == null) {
             sendPage(exchange, LOGIN_PAGE);
             return;
         }
         String type = parseForm(exchange.getRequestURI().getRawQuery()).getOrDefault("type", "");
-        sendPage(exchange, wrapText("Browse: " + type, controller.listEntries(username, type)));
+        sendPage(exchange, wrapText("Browse: " + type, controller.listEntries(username, type)), token);
     }
 
     // Read: one full record.
     private void handleRead(HttpExchange exchange) throws IOException {
-        String username = sessionUser(exchange);
+        String token = sessionToken(exchange);
+        String username = sessionUser(token);
         if (username == null) {
             sendPage(exchange, LOGIN_PAGE);
             return;
@@ -233,20 +283,21 @@ public class WebServer {
         try {
             id = Integer.parseInt(params.getOrDefault("id", ""));
         } catch (NumberFormatException e) {
-            sendPage(exchange, wrapText("Read", "Invalid option"));
+            sendPage(exchange, wrapText("Read", "Invalid option"), token);
             return;
         }
-        sendPage(exchange, wrapText("Read: " + type, controller.readEntry(username, type, id)));
+        sendPage(exchange, wrapText("Read: " + type, controller.readEntry(username, type, id)), token);
     }
 
     // Audit: the audit log, admin-gated by the controller.
     private void handleAudit(HttpExchange exchange) throws IOException {
-        String username = sessionUser(exchange);
+        String token = sessionToken(exchange);
+        String username = sessionUser(token);
         if (username == null) {
             sendPage(exchange, LOGIN_PAGE);
             return;
         }
-        sendPage(exchange, wrapText("Audit log", controller.reviewAuditLog(username)));
+        sendPage(exchange, wrapText("Audit log", controller.reviewAuditLog(username)), token);
     }
 
     // Logout: drop the session and expire the cookie, then
@@ -263,35 +314,55 @@ public class WebServer {
     }
 
     // Create: empty form for a new record, admin only.
-    // Week 1 stub: the FormField list is shown as plain
-    // text, not a form. A form needs a form helper from
-    // the view, and none exists yet.
+    // GET shows the form built from the controller's fields;
+    // POST sends the field values back in field order and
+    // redirects to the browse list.
     private void handleCreate(HttpExchange exchange) throws IOException {
-        String username = sessionUser(exchange);
+        String token = sessionToken(exchange);
+        String username = sessionUser(token);
         if (username == null) {
             sendPage(exchange, LOGIN_PAGE);
             return;
         }
         if (!"POST".equalsIgnoreCase(exchange.getRequestMethod())) {
             String type = parseForm(exchange.getRequestURI().getRawQuery()).getOrDefault("type", "");
-            sendPage(exchange, wrapText("Create: " + type, controller.getFormFields(username, type, 0).toString()));
+            List<ControllerInterface.FormField> fields = controller.getFormFields(username, type, 0);
+            if (fields.isEmpty()) {
+                sendPage(exchange, wrapText("Create: " + type, controller.isAdmin(username) ? "Invalid option" : "Not allowed"), token);
+                return;
+            }
+            sendPage(exchange, HTMLUtils.createPage("Create: " + type, formHtml("/create", type, 0, fields) + HTMLUtils.createBackLink()), token);
             return;
         }
         String body = new String(exchange.getRequestBody().readAllBytes(), StandardCharsets.UTF_8);
         Map<String, String> params = parseForm(body);
         String type = params.getOrDefault("type", "");
+        List<ControllerInterface.FormField> fields = controller.getFormFields(username, type, 0);
+        List<String> values = new ArrayList<>();
+        for (ControllerInterface.FormField field : fields) {
+            values.add(params.getOrDefault(field.field(), ""));
+        }
         String result;
         try {
-            result = controller.addEntry(username, type, List.of());
+            result = controller.addEntry(username, type, values);
         } catch (RuntimeException e) {
             result = e.getMessage();
         }
-        sendPage(exchange, wrapText("Create: " + type, result));
+        if (result == null || "Not allowed".equals(result) || "Invalid option".equals(result)
+                || "Not enough fields".equals(result) || result.startsWith("No ")) {
+            sendPage(exchange, wrapText("Create: " + type, result == null ? "Something went wrong." : result), token);
+            return;
+        }
+        exchange.getResponseHeaders().set("Location", "/browse?type=" + type);
+        exchange.sendResponseHeaders(302, -1);
+        exchange.close();
     }
 
-    // Edit: prefilled form, admin only. Week 1 stub, as /create.
+    // Edit: prefilled form, admin only. POST redirects to
+    // the record's read page.
     private void handleEdit(HttpExchange exchange) throws IOException {
-        String username = sessionUser(exchange);
+        String token = sessionToken(exchange);
+        String username = sessionUser(token);
         if (username == null) {
             sendPage(exchange, LOGIN_PAGE);
             return;
@@ -303,31 +374,122 @@ public class WebServer {
             try {
                 id = Integer.parseInt(params.getOrDefault("id", ""));
             } catch (NumberFormatException e) {
-                sendPage(exchange, wrapText("Edit", "Invalid option"));
+                sendPage(exchange, wrapText("Edit", "Invalid option"), token);
                 return;
             }
-            sendPage(exchange, wrapText("Edit: " + type, controller.getFormFields(username, type, id).toString()));
+            List<ControllerInterface.FormField> fields = controller.getFormFields(username, type, id);
+            if (fields.isEmpty()) {
+                sendPage(exchange, wrapText("Edit: " + type, controller.isAdmin(username) ? "Invalid option" : "Not allowed"), token);
+                return;
+            }
+            sendPage(exchange, HTMLUtils.createPage("Edit: " + type, formHtml("/edit", type, id, fields) + HTMLUtils.createBackLink()), token);
             return;
         }
         String body = new String(exchange.getRequestBody().readAllBytes(), StandardCharsets.UTF_8);
         Map<String, String> params = parseForm(body);
         String type = params.getOrDefault("type", "");
+        int id;
+        try {
+            id = Integer.parseInt(params.getOrDefault("id", "0"));
+        } catch (NumberFormatException e) {
+            sendPage(exchange, wrapText("Edit", "Invalid option"), token);
+            return;
+        }
+        List<ControllerInterface.FormField> fields = controller.getFormFields(username, type, id);
+        List<String> values = new ArrayList<>();
+        for (ControllerInterface.FormField field : fields) {
+            values.add(params.getOrDefault(field.field(), ""));
+        }
         String result;
         try {
-            result = controller.editEntry(username, type, Integer.parseInt(params.getOrDefault("id", "0")), List.of());
+            result = controller.editEntry(username, type, id, values);
         } catch (RuntimeException e) {
             result = e.getMessage();
         }
-        sendPage(exchange, wrapText("Edit: " + type, result));
+        if (result == null || "Not allowed".equals(result) || "Invalid option".equals(result)
+                || "Not enough fields".equals(result) || result.startsWith("No ")) {
+            sendPage(exchange, wrapText("Edit: " + type, result == null ? "Something went wrong." : result), token);
+            return;
+        }
+        exchange.getResponseHeaders().set("Location", "/read?type=" + type + "&id=" + id);
+        exchange.sendResponseHeaders(302, -1);
+        exchange.close();
     }
 
-    // Messages: list, any logged-in user. Week 1 stub.
+    // Messages: the list, a form to read one by id, and a
+    // link to send a new one. Any logged-in user.
     private void handleMessages(HttpExchange exchange) throws IOException {
-        String username = sessionUser(exchange);
+        String token = sessionToken(exchange);
+        String username = sessionUser(token);
         if (username == null) {
             sendPage(exchange, LOGIN_PAGE);
             return;
         }
-        sendPage(exchange, wrapText("Messages", controller.listMessages(username)));
+        String page = HTMLUtils.createPage("Messages",
+                HTMLUtils.createTextBlock(controller.listMessages(username))
+                        + HTMLUtils.createIDForm("/messages/read", "Message ID:")
+                        + HTMLUtils.createLink("/messages/new", "Send a message")
+                        + HTMLUtils.createBackLink());
+        sendPage(exchange, page, token);
+    }
+
+    // Read one message by id. Reading marks it read.
+    private void handleMessagesRead(HttpExchange exchange) throws IOException {
+        String token = sessionToken(exchange);
+        String username = sessionUser(token);
+        if (username == null) {
+            sendPage(exchange, LOGIN_PAGE);
+            return;
+        }
+        Map<String, String> params = parseForm(exchange.getRequestURI().getRawQuery());
+        int id;
+        try {
+            id = Integer.parseInt(params.getOrDefault("id", ""));
+        } catch (NumberFormatException e) {
+            sendPage(exchange, wrapText("Messages", "Invalid option"), token);
+            return;
+        }
+        sendPage(exchange, wrapText("Messages", controller.readMessage(username, id)), token);
+    }
+
+    // Send a message: GET shows the form, with the agent
+    // dropdown from the controller's agent list; POST sends
+    // it and redirects back to the list.
+    private void handleMessagesNew(HttpExchange exchange) throws IOException {
+        String token = sessionToken(exchange);
+        String username = sessionUser(token);
+        if (username == null) {
+            sendPage(exchange, LOGIN_PAGE);
+            return;
+        }
+        if (!"POST".equalsIgnoreCase(exchange.getRequestMethod())) {
+            StringBuilder form = new StringBuilder("<form method=\"post\" action=\"/messages/new\">Agent: <select name=\"agentName\">");
+            for (String line : controller.listEntries(username, "agents").split("\n")) {
+                int sep = line.indexOf(" : ");
+                if (sep < 0) {
+                    continue;
+                }
+                String name = line.substring(sep + 3);
+                form.append("<option value=\"").append(escape(name)).append("\">").append(escape(name)).append("</option>");
+            }
+            form.append("</select><br>Message: <input name=\"message\"><br><input type=\"submit\" value=\"Send\"></form>");
+            sendPage(exchange, HTMLUtils.createPage("Send a message", form.toString() + HTMLUtils.createBackLink()), token);
+            return;
+        }
+        String body = new String(exchange.getRequestBody().readAllBytes(), StandardCharsets.UTF_8);
+        Map<String, String> params = parseForm(body);
+        String result;
+        try {
+            result = controller.sendMessage(username, params.getOrDefault("agentName", ""), params.getOrDefault("message", ""));
+        } catch (RuntimeException e) {
+            result = e.getMessage();
+        }
+        if (result != null && result.startsWith("Message sent to ")) {
+            exchange.getResponseHeaders().set("Location", "/messages");
+            exchange.sendResponseHeaders(302, -1);
+            exchange.close();
+            return;
+        }
+        sendPage(exchange, wrapText("Send a message", result == null ? "Something went wrong." : result), token);
     }
 }
