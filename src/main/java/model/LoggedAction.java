@@ -4,6 +4,7 @@ public class LoggedAction {
     // Action constants
     public static final int READ = 0;
     public static final int CREATE = 1;
+    public static final int EDIT = 2;
 
     private int action;
     private User user;
