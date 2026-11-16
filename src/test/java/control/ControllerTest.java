@@ -1,10 +1,12 @@
 package control;
 
+import java.time.Instant;
 import java.util.List;
 import model.AccessControlInterface;
 import model.Agent;
 import model.AuditLogInterface;
 import model.Brief;
+import model.Country;
 import model.DataStoreInterface;
 import model.Facility;
 import model.LoggedAction;
@@ -176,14 +178,14 @@ public class ControllerTest {
     void showMainMenuShowsAdminOptions() {
         when(access.isAdmin("boss")).thenReturn(true);
         assertEquals("1. Browse briefs\n2. Browse agents\n3. Browse facilities\n4. Browse missions\n"
-                + "5. Change Password\n6. Create a new user\n7. Promote or Demote users\n8. Review audit log\n"
-                + "9. Send or view messages\n10. Assign agent to mission\n11. Exit/logout\nEnter an option number:", controller.showMainMenu("boss"));
+                + "5. Browse countries\n6. Change Password\n7. Create a new user\n8. Promote or Demote users\n9. Review audit log\n"
+                + "10. Send or view messages\n11. Assign agent to mission\n12. Exit/logout\nEnter an option number:", controller.showMainMenu("boss"));
     }
 
     @Test
     void showMainMenuHidesAdminOptions() {
         assertEquals("1. Browse briefs\n2. Browse agents\n3. Browse facilities\n4. Browse missions\n"
-                + "5. Change Password\n9. Send or view messages\n11. Exit/logout\nEnter an option number:", controller.showMainMenu("alice"));
+                + "5. Browse countries\n6. Change Password\n10. Send or view messages\n12. Exit/logout\nEnter an option number:", controller.showMainMenu("alice"));
     }
 
     @Test
@@ -202,6 +204,13 @@ public class ControllerTest {
     @Test
     void browseMainMenuRejectsBadType() {
         assertEquals("Invalid option", controller.browseMainMenu("boss", "bogus"));
+    }
+
+    @Test
+    void browseMainMenuAcceptsCountries() {
+        when(access.isAdmin("boss")).thenReturn(true);
+        assertEquals("1. List countries\n2. Read countries\n3. Add countries\n4. Edit countries\n"
+                + "5. Go back to main menu\nEnter an option number:", controller.browseMainMenu("boss", "countries"));
     }
 
     @Test
@@ -229,6 +238,12 @@ public class ControllerTest {
     void listEntriesListsMissions() {
         when(store.listMissions()).thenReturn(List.of(new Mission(1, "Op", 2)));
         assertEquals("1 : Op", controller.listEntries("alice", "missions"));
+    }
+
+    @Test
+    void listEntriesListsCountries() {
+        when(store.listCountries()).thenReturn(List.of(new Country(1, "France")));
+        assertEquals("1 : France", controller.listEntries("alice", "countries"));
     }
 
     @Test
@@ -269,6 +284,12 @@ public class ControllerTest {
     }
 
     @Test
+    void readEntryPrintsCountry() {
+        when(store.getCountry(1)).thenReturn(new Country(1, "France"));
+        assertEquals("Name: France", controller.readEntry("alice", "countries", 1));
+    }
+
+    @Test
     void readEntryHandlesUnknownId() {
         assertEquals("No brief found with this id", controller.readEntry("alice", "briefs", 99));
     }
@@ -299,6 +320,8 @@ public class ControllerTest {
     @Test
     void addEntryAddsAgentWithoutMission() {
         when(access.isAdmin("boss")).thenReturn(true);
+        when(store.addAgent(any(Agent.class))).thenReturn(
+                new Agent(9, 2, "Ghost", "1990-01-01", "2000-01-01", "Notes"));
         when(store.listAgents()).thenReturn(List.of(
                 new Agent(9, 2, "Ghost", "1990-01-01", "2000-01-01", "Notes")));
         assertEquals("9 : Ghost", controller.addEntry("boss", "agents",
@@ -312,12 +335,47 @@ public class ControllerTest {
     @Test
     void addEntryAddsMission() {
         when(access.isAdmin("boss")).thenReturn(true);
+        when(store.addMission(any(Mission.class))).thenReturn(new Mission(3, "Op", 2));
         when(store.listMissions()).thenReturn(List.of(new Mission(3, "Op", 2)));
         assertEquals("3 : Op", controller.addEntry("boss", "missions", List.of("Op", "2")));
         ArgumentCaptor<Mission> captor = ArgumentCaptor.forClass(Mission.class);
         verify(store).addMission(captor.capture());
         assertEquals("Op", captor.getValue().getTitle());
         assertEquals(2, captor.getValue().getFacilityID());
+    }
+
+    @Test
+    void addEntryAddsFacility() {
+        when(access.isAdmin("boss")).thenReturn(true);
+        when(store.addFacility(any(Facility.class))).thenReturn(new Facility(1, "HQ", "H"));
+        when(store.listFacilities()).thenReturn(List.of(new Facility(1, "HQ", "H")));
+        assertEquals("1 : HQ", controller.addEntry("boss", "facilities", List.of("HQ", "H")));
+        ArgumentCaptor<Facility> captor = ArgumentCaptor.forClass(Facility.class);
+        verify(store).addFacility(captor.capture());
+        assertEquals("HQ", captor.getValue().getName());
+        assertEquals("H", captor.getValue().getAbbreviation());
+    }
+
+    @Test
+    void addEntryAddsFacilityWithCountry() {
+        when(access.isAdmin("boss")).thenReturn(true);
+        when(store.addFacility(any(Facility.class))).thenReturn(new Facility(1, "HQ", "H"));
+        when(store.listFacilities()).thenReturn(List.of(new Facility(1, "HQ", "H")));
+        assertEquals("1 : HQ", controller.addEntry("boss", "facilities", List.of("HQ", "H", "1")));
+        ArgumentCaptor<Facility> captor = ArgumentCaptor.forClass(Facility.class);
+        verify(store).addFacility(captor.capture());
+        assertEquals("HQ", captor.getValue().getName());
+    }
+
+    @Test
+    void addEntryAddsCountry() {
+        when(access.isAdmin("boss")).thenReturn(true);
+        when(store.addCountry(any(Country.class))).thenReturn(new Country(1, "France"));
+        when(store.listCountries()).thenReturn(List.of(new Country(1, "France")));
+        assertEquals("1 : France", controller.addEntry("boss", "countries", List.of("France")));
+        ArgumentCaptor<Country> captor = ArgumentCaptor.forClass(Country.class);
+        verify(store).addCountry(captor.capture());
+        assertEquals("France", captor.getValue().getName());
     }
 
     @Test
@@ -338,6 +396,13 @@ public class ControllerTest {
         when(access.isAdmin("boss")).thenReturn(true);
         assertEquals("For input string: \"abc\"", controller.addEntry("boss", "briefs",
                 List.of("abc", "Title", "2026-01-01", "Content")));
+    }
+
+    @Test
+    void addEntryShortListIsNotEnoughFields() {
+        when(access.isAdmin("boss")).thenReturn(true);
+        assertEquals("Not enough fields", controller.addEntry("boss", "briefs", List.of("1", "Title")));
+        verifyNoInteractions(store);
     }
 
     @Test
@@ -394,6 +459,50 @@ public class ControllerTest {
     void editEntryRejectsBadType() {
         when(access.isAdmin("boss")).thenReturn(true);
         assertEquals("Invalid option", controller.editEntry("boss", "bogus", 1, List.of()));
+    }
+
+    @Test
+    void editEntryShortListIsNotEnoughFields() {
+        when(access.isAdmin("boss")).thenReturn(true);
+        assertEquals("Not enough fields", controller.editEntry("boss", "briefs", 1, List.of("1", "Title")));
+        verifyNoInteractions(store);
+    }
+
+    @Test
+    void editEntryEditsFacility() {
+        when(access.isAdmin("boss")).thenReturn(true);
+        when(store.getFacility(1)).thenReturn(new Facility(1, "Old", "O"));
+        when(store.listFacilities()).thenReturn(List.of(new Facility(1, "New", "N")));
+        assertEquals("1 : New", controller.editEntry("boss", "facilities", 1, List.of("New", "N", "1")));
+        ArgumentCaptor<Facility> captor = ArgumentCaptor.forClass(Facility.class);
+        verify(store).updateFacility(captor.capture());
+        assertEquals(1, captor.getValue().getFacilityID());
+        assertEquals("New", captor.getValue().getName());
+    }
+
+    @Test
+    void editEntryEditsCountry() {
+        when(access.isAdmin("boss")).thenReturn(true);
+        when(store.getCountry(1)).thenReturn(new Country(1, "Old"));
+        when(store.listCountries()).thenReturn(List.of(new Country(1, "France")));
+        assertEquals("1 : France", controller.editEntry("boss", "countries", 1, List.of("France")));
+        ArgumentCaptor<Country> captor = ArgumentCaptor.forClass(Country.class);
+        verify(store).updateCountry(captor.capture());
+        assertEquals(1, captor.getValue().getCountryID());
+        assertEquals("France", captor.getValue().getName());
+    }
+
+    @Test
+    void editEntryEditsBriefAuditsEdit() {
+        when(access.isAdmin("boss")).thenReturn(true);
+        when(store.getBrief(1)).thenReturn(new Brief(1, 1, "Old", "2026-01-01", "Content"));
+        when(users.getUserByUsername("boss")).thenReturn(new User(1, "boss"));
+        controller.editEntry("boss", "briefs", 1, List.of("1", "New", "2026-02-01", "Updated"));
+        ArgumentCaptor<LoggedAction> captor = ArgumentCaptor.forClass(LoggedAction.class);
+        verify(audit).log(captor.capture());
+        assertEquals(LoggedAction.EDIT, captor.getValue().getAction());
+        assertEquals("briefs 1", captor.getValue().getRecord());
+        assertEquals("boss", captor.getValue().getUser().getUsername());
     }
 
     @Test
@@ -484,87 +593,228 @@ public class ControllerTest {
         assertEquals("No messages", controller.viewMessages("ghost"));
     }
 
-    // HW7 stub tests, week 1. They pass against the stubs in
-    // Controller.java. In week 2, replace their expected
-    // values with the real behaviour and keep the test names.
+    // HW7 tests, week 2: form fields, search, messages,
+    // and web sessions, on their real behaviour.
     @Test
-    void getFormFieldsReturnsEmptyStub() {
+    void getFormFieldsReturnsNewBriefFields() {
         when(access.isAdmin("boss")).thenReturn(true);
-        assertTrue(controller.getFormFields("boss", "briefs", 0).isEmpty());
+        when(store.listMissions()).thenReturn(List.of(new Mission(1, "Op", 2)));
+        List<ControllerInterface.FormField> fields = controller.getFormFields("boss", "briefs", 0);
+        assertEquals(4, fields.size());
+        assertEquals("missionID", fields.get(0).field());
+        assertEquals(List.of("1 : Op"), fields.get(0).options());
+        assertEquals("", fields.get(0).value());
+        assertEquals("number", fields.get(0).type());
+        assertEquals(List.of("title", "date", "content"),
+                List.of(fields.get(1).field(), fields.get(2).field(), fields.get(3).field()));
     }
 
     @Test
-    void getFormFieldsRefusesNonAdminStub() {
+    void getFormFieldsReturnsEditBriefFields() {
+        when(access.isAdmin("boss")).thenReturn(true);
+        when(store.getBrief(1)).thenReturn(new Brief(1, 1, "Title", "2026-01-01", "Content"));
+        when(store.listMissions()).thenReturn(List.of(new Mission(1, "Op", 2)));
+        List<ControllerInterface.FormField> fields = controller.getFormFields("boss", "briefs", 1);
+        assertEquals("1", fields.get(0).value());
+        assertEquals("Title", fields.get(1).value());
+        assertEquals("2026-01-01", fields.get(2).value());
+        assertEquals("Content", fields.get(3).value());
+    }
+
+    @Test
+    void getFormFieldsReturnsNewAgentFields() {
+        when(access.isAdmin("boss")).thenReturn(true);
+        when(store.listFacilities()).thenReturn(List.of(new Facility(2, "HQ", "H")));
+        List<ControllerInterface.FormField> fields = controller.getFormFields("boss", "agents", 0);
+        assertEquals(5, fields.size());
+        assertEquals(List.of("2 : HQ"), fields.get(0).options());
+        assertEquals("date_of_birth", fields.get(2).field());
+    }
+
+    @Test
+    void getFormFieldsReturnsNewFacilityFields() {
+        when(access.isAdmin("boss")).thenReturn(true);
+        when(store.listCountries()).thenReturn(List.of(new Country(1, "France")));
+        List<ControllerInterface.FormField> fields = controller.getFormFields("boss", "facilities", 0);
+        assertEquals(3, fields.size());
+        assertEquals("countryID", fields.get(2).field());
+        assertEquals(List.of("1 : France"), fields.get(2).options());
+        assertEquals("", fields.get(2).value());
+    }
+
+    @Test
+    void getFormFieldsReturnsNewMissionFields() {
+        when(access.isAdmin("boss")).thenReturn(true);
+        when(store.listFacilities()).thenReturn(List.of(new Facility(2, "HQ", "H")));
+        List<ControllerInterface.FormField> fields = controller.getFormFields("boss", "missions", 0);
+        assertEquals(2, fields.size());
+        assertEquals(List.of("2 : HQ"), fields.get(1).options());
+    }
+
+    @Test
+    void getFormFieldsReturnsNewCountryFields() {
+        when(access.isAdmin("boss")).thenReturn(true);
+        List<ControllerInterface.FormField> fields = controller.getFormFields("boss", "countries", 0);
+        assertEquals(1, fields.size());
+        assertEquals("name", fields.get(0).field());
+        assertEquals("Country name", fields.get(0).label());
+        assertEquals("", fields.get(0).value());
+    }
+
+    @Test
+    void getFormFieldsReturnsEditCountryFields() {
+        when(access.isAdmin("boss")).thenReturn(true);
+        when(store.getCountry(1)).thenReturn(new Country(1, "France"));
+        List<ControllerInterface.FormField> fields = controller.getFormFields("boss", "countries", 1);
+        assertEquals("France", fields.get(0).value());
+    }
+
+    @Test
+    void getFormFieldsUnknownIdReturnsEmpty() {
+        when(access.isAdmin("boss")).thenReturn(true);
+        assertTrue(controller.getFormFields("boss", "briefs", 99).isEmpty());
+    }
+
+    @Test
+    void getFormFieldsRefusesNonAdmin() {
         when(access.isAdmin("alice")).thenReturn(false);
         assertTrue(controller.getFormFields("alice", "briefs", 0).isEmpty());
     }
 
     @Test
-    void getFormFieldsUnknownTypeStub() {
+    void getFormFieldsUnknownTypeReturnsEmpty() {
         when(access.isAdmin("boss")).thenReturn(true);
         assertTrue(controller.getFormFields("boss", "nope", 0).isEmpty());
     }
 
     @Test
-    void getFormFieldsNoUserTypeStub() {
+    void getFormFieldsNoUserType() {
         when(access.isAdmin("boss")).thenReturn(true);
         assertTrue(controller.getFormFields("boss", "users", 0).isEmpty());
     }
 
     @Test
-    void getFormFieldsCountriesStub() {
-        when(access.isAdmin("boss")).thenReturn(true);
-        assertTrue(controller.getFormFields("boss", "countries", 0).isEmpty());
+    void searchEntriesFindsBriefByTitle() {
+        when(store.listBriefs()).thenReturn(List.of(
+                new Brief(1, 1, "Title", "2026-01-01", "Content"),
+                new Brief(2, 1, "Other", "2026-01-02", "More")));
+        assertEquals("briefs 1 : Title", controller.searchEntries("alice", "Title"));
     }
 
     @Test
-    void searchEntriesReturnsNoMatchesStub() {
+    void searchEntriesIsCaseInsensitive() {
+        when(store.listAgents()).thenReturn(List.of(
+                new Agent(1, 2, "Ghost", "1990-01-01", "2000-01-01", "Notes")));
+        assertEquals("agents 1 : Ghost", controller.searchEntries("alice", "ghost"));
+    }
+
+    @Test
+    void searchEntriesFindsAcrossTypes() {
+        when(store.listBriefs()).thenReturn(List.of(new Brief(1, 1, "Ghost story", "2026-01-01", "Content")));
+        when(store.listAgents()).thenReturn(List.of(new Agent(1, 2, "Ghost", "1990-01-01", "2000-01-01", "Notes")));
+        assertEquals("briefs 1 : Ghost story\nagents 1 : Ghost", controller.searchEntries("alice", "ghost"));
+    }
+
+    @Test
+    void searchEntriesReturnsNoMatches() {
         assertEquals("No matches", controller.searchEntries("alice", "Ghost"));
     }
 
     @Test
-    void searchEntriesEmptyQueryStub() {
+    void searchEntriesEmptyQueryReturnsNoMatches() {
         assertEquals("No matches", controller.searchEntries("alice", ""));
     }
 
     @Test
-    void listMessagesReturnsNoMessagesStub() {
+    void listMessagesShowsOwnMessages() throws TopSecretException {
+        Agent ghost = new Agent(1, 2, "Ghost", "1990-01-01", "2000-01-01", "Notes");
+        when(store.listAgents()).thenReturn(List.of(ghost));
+        when(messages.retrieveMessages(any(Agent.class))).thenReturn(List.of(
+                new Message(3, new User(1, "boss"), ghost, "Hello", false),
+                new Message(4, new User(1, "boss"), ghost, "World", true)));
+        assertEquals("3 : Hello (unread)\n4 : World", controller.listMessages("ghost"));
+    }
+
+    @Test
+    void listMessagesUnknownUserIsEmpty() {
+        assertEquals("No messages", controller.listMessages("alice"));
+    }
+
+    @Test
+    void listMessagesEmptyListIsEmpty() {
         Agent ghost = new Agent(1, 2, "Ghost", "1990-01-01", "2000-01-01", "Notes");
         when(store.listAgents()).thenReturn(List.of(ghost));
         assertEquals("No messages", controller.listMessages("ghost"));
     }
 
     @Test
-    void listMessagesUnknownUserStub() {
-        assertEquals("No messages", controller.listMessages("alice"));
+    void listMessagesReturnsExceptionMessage() throws TopSecretException {
+        Agent ghost = new Agent(1, 2, "Ghost", "1990-01-01", "2000-01-01", "Notes");
+        when(store.listAgents()).thenReturn(List.of(ghost));
+        when(messages.retrieveMessages(any(Agent.class))).thenThrow(new TopSecretException("store down"));
+        assertEquals("store down", controller.listMessages("ghost"));
     }
 
     @Test
-    void readMessageReturnsNotFoundStub() {
+    void readMessageMarksFoundMessageRead() throws TopSecretException {
+        Agent ghost = new Agent(1, 2, "Ghost", "1990-01-01", "2000-01-01", "Notes");
+        Message hello = new Message(3, new User(1, "boss"), ghost, "Hello", false);
+        when(store.listAgents()).thenReturn(List.of(ghost));
+        when(messages.retrieveMessages(any(Agent.class))).thenReturn(List.of(hello));
+        assertEquals("3 : Hello", controller.readMessage("ghost", 3));
+        verify(messages).readMessage(hello);
+    }
+
+    @Test
+    void readMessageUnknownIdReturnsNotFound() throws TopSecretException{
+        Agent ghost = new Agent(1, 2, "Ghost", "1990-01-01", "2000-01-01", "Notes");
+        when(store.listAgents()).thenReturn(List.of(ghost));
+        when(messages.retrieveMessages(any(Agent.class))).thenReturn(List.of());
+        assertEquals("No message found with this id", controller.readMessage("ghost", 3));
+    }
+
+    @Test
+    void readMessageUnknownUserReturnsNotFound() {
         assertEquals("No message found with this id", controller.readMessage("ghost", 1));
     }
 
     @Test
-    void listWebSessionsReturnsEmptyStub() {
+    void listWebSessionsListsSessions() {
+        when(access.isAdmin("boss")).thenReturn(true);
+        when(sessions.listSessions()).thenReturn(List.of(
+                new SessionManager.Session("token-1", "alice", Instant.parse("2026-11-13T00:00:00Z"))));
+        assertEquals("token-1 : alice : 2026-11-13T00:00:00Z", controller.listWebSessions("boss"));
+    }
+
+    @Test
+    void listWebSessionsEmptyIsEmpty() {
         when(access.isAdmin("boss")).thenReturn(true);
         assertEquals("", controller.listWebSessions("boss"));
     }
 
     @Test
-    void listWebSessionsRefusesNonAdminStub() {
-        when(access.isAdmin("alice")).thenReturn(false);
+    void listWebSessionsRefusesNonAdmin() {
         assertEquals("Not allowed", controller.listWebSessions("alice"));
     }
 
     @Test
-    void deleteWebSessionReturnsEmptyStub() {
+    void deleteWebSessionRevokesAndRelists() {
         when(access.isAdmin("boss")).thenReturn(true);
-        assertEquals("", controller.deleteWebSession("boss", "token-1"));
+        when(sessions.revokeSession("token-1")).thenReturn(true);
+        when(sessions.listSessions()).thenReturn(List.of(
+                new SessionManager.Session("token-2", "alice", Instant.parse("2026-11-13T00:00:00Z"))));
+        assertEquals("token-2 : alice : 2026-11-13T00:00:00Z", controller.deleteWebSession("boss", "token-1"));
+        verify(sessions).revokeSession("token-1");
     }
 
     @Test
-    void deleteWebSessionRefusesNonAdminStub() {
-        when(access.isAdmin("alice")).thenReturn(false);
+    void deleteWebSessionUnknownTokenReturnsNotFound() {
+        when(access.isAdmin("boss")).thenReturn(true);
+        assertEquals("No session found with this token", controller.deleteWebSession("boss", "token-1"));
+    }
+
+    @Test
+    void deleteWebSessionRefusesNonAdmin() {
         assertEquals("Not allowed", controller.deleteWebSession("alice", "token-1"));
     }
 }
