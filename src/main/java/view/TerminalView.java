@@ -299,9 +299,9 @@ public class TerminalView {
 
             int choice = -1;
             if (isAdmin()){
-                choice = getInputInt(1,11,controller.showMainMenu(currentUser));
+                choice = getInputInt(1,12,controller.showMainMenu(currentUser));
             }else{
-                choice = getInputInt(controller.showMainMenu(currentUser), 1,5,9,11);
+                choice = getInputInt(controller.showMainMenu(currentUser), 1,6,10,12);
             }
 
             if (choice == -1) {
@@ -323,24 +323,27 @@ public class TerminalView {
                         browseMenu("missions");
                         break;
                     case 5:
-                        changePassword();
+                        browseMenu("countries");
                         break;
                     case 6:
-                        createUser();
+                        changePassword();
                         break;
                     case 7:
-                        manageAccess();
+                        createUser();
                         break;
                     case 8:
-                        reviewAuditLog();
+                        manageAccess();
                         break;
                     case 9:
-                        browseMessages();
+                        reviewAuditLog();
                         break;
                     case 10:
-                        assignAgentToMission();
+                        browseMessages();
                         break;
                     case 11:
+                        assignAgentToMission();
+                        break;
+                    case 12:
                         return;
                     default:
                         System.out.println("Invalid option.");
@@ -360,12 +363,15 @@ public class TerminalView {
                         browseMenu("missions");
                         break;
                     case 5:
+                        browseMenu("countries");
+                        break;
+                    case 6:
                         changePassword();
                         break;
-                    case 9:
+                    case 10:
                         browseMessages();
                         break;
-                    case 11:
+                    case 12:
                         return;
                     default:
                         System.out.println("Invalid option.");
@@ -493,6 +499,9 @@ public class TerminalView {
      *
      * missions:
      * title, facilityID
+     *
+     * countries:
+     * name
      */
     private List<String> promptRecordFields(String itemType) {
 
@@ -569,6 +578,12 @@ public class TerminalView {
                 }
 
                 if (!addRequiredField(fields, "Facility ID: ")) {
+                    return null;
+                }
+                break;
+
+            case "countries":
+                if (!addRequiredField(fields, "Country name: ")) {
                     return null;
                 }
                 break;
