@@ -1,11 +1,37 @@
-WebServer tests
+WebServerController integration tests
 ------------------------------
-startAndStopDoNotThrow - constructing the server with a mocked SessionManager and calling start then stop throws nothing
-stopBeforeStartDoesNotThrow - calling stop on a never-started server with a mocked SessionManager throws nothing
-Notes: start/stop safety only; routing, sessions, and HTTP
-behavior are covered by the WebServerControllerIntegrationTest
-suite. The constructor takes a SessionManager as its
-2nd argument. The run comment in WebServerTest.java
-says "control.WebServerTest". Leave the package as
-control. Do not change it to controller.
-Run: .\gradlew test --tests "control.WebServerTest" --console=plain
+unauthenticatedRootShowsLoginForm - root without a cookie shows the login form
+invalidLoginShowsErrorWithoutCookie - bad credentials show "Invalid username or password." and set no cookie
+validLoginSetsSessionCookie - good credentials redirect with a session cookie and Max-Age=1800
+authenticatedBrowseCallsController - browse with a cookie calls the controller and shows its text
+browseWithoutCookieShowsLoginForm - browse without a cookie shows the login form and never touches the controller
+unknownPathReturnsErrorPageNotCrash - unknown path returns an error page, never a crash
+logoutClearsSession - logout removes the session, so the old cookie gets the login form again
+auditRouteCallsController - audit with a cookie calls the controller and shows its text
+createRouteNonAdminShowsNotAllowed - GET /create as a non-admin shows "Not allowed"
+createRouteAdminShowsFormFields - GET /create as an admin shows the form with its fields
+createPostAdminRedirects - POST /create as an admin posts field values in order and 302s to /browse
+createPostNonAdminShowsNotAllowed - POST /create as a non-admin shows "Not allowed"
+editRouteAdminShowsFormFields - GET /edit as an admin shows the prefilled form
+editRouteNonAdminShowsNotAllowed - GET /edit as a non-admin shows "Not allowed"
+editPostAdminRedirects - POST /edit as an admin posts field values in order and 302s to /read
+messagesRouteListsMessages - GET /messages as a logged-in user calls listMessages and shows its text
+messagesRouteRequiresLogin - GET /messages without a cookie shows the login form and never touches the controller
+messagesReadRouteShowsMessage - GET /messages/read shows the message and marks it read
+messagesNewRouteShowsForm - GET /messages/new shows the send form with the agent dropdown
+messagesNewPostRedirects - POST /messages/new sends the message and 302s to /messages
+authedResponseReissuesCookie - an authed page re-issues the session cookie with Max-Age=1800
+Notes: real WebServer on port 0, mocked ControllerInterface
+and a real SessionManager with the system clock,
+real HttpClient with redirects never. The real
+SessionManager is used so login, logout, and
+validate behave for real: a mock would not
+revoke on logout, so logoutClearsSession would
+fail. The login cookie now has Max-Age=1800.
+The old comment that the login cookie has no
+expiry attributes was wrong in HW7 and is
+corrected in the test code.
+The POST /create and POST /edit tests now post
+real field values in field order and assert the
+302 redirect and the Location header.
+Run: .\gradlew test --tests "control.WebServerControllerIntegrationTest" --console=plain
