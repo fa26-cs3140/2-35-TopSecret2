@@ -71,7 +71,7 @@ public class TerminalViewTest {
 
     @Test
     public void runCreatesFirstAccountAndEntersMainMenu() {
-        createView("alice\npassword\npassword\n11\n");
+        createView("alice\npassword\npassword\n12\n");
 
         when(controller.hasUsers()).thenReturn(false);
         when(controller.createFirstAccount(
@@ -121,7 +121,7 @@ public class TerminalViewTest {
 
     @Test
     public void runLogsInExistingUser() {
-        createView("alice\npassword\n11\n");
+        createView("alice\npassword\n12\n");
         mockSuccessfulLogin(true);
 
         assertEquals(0, view.run());
@@ -133,7 +133,7 @@ public class TerminalViewTest {
 
     @Test
     public void runRetriesAfterIncorrectLogin() {
-        createView("alice\nwrong\nalice\npassword\n11\n");
+        createView("alice\nwrong\nalice\npassword\n12\n");
 
         when(controller.hasUsers()).thenReturn(true);
         when(controller.needsPasswordSetup("alice")).thenReturn(false);
@@ -153,7 +153,7 @@ public class TerminalViewTest {
 
     @Test
     public void runSetsUpPasswordForNewUser() {
-        createView("alice\nnewPassword\nnewPassword\n11\n");
+        createView("alice\nnewPassword\nnewPassword\n12\n");
 
         when(controller.hasUsers()).thenReturn(true);
         when(controller.needsPasswordSetup("alice")).thenReturn(true);
@@ -173,7 +173,7 @@ public class TerminalViewTest {
     @Test
     public void runRetriesLoginWhenPasswordSetupFails() {
         createView(
-                "alice\nfirst\nsecond\nalice\npassword\n11\n"
+                "alice\nfirst\nsecond\nalice\npassword\n12\n"
         );
 
         when(controller.hasUsers()).thenReturn(true);
@@ -199,7 +199,7 @@ public class TerminalViewTest {
 
     @Test
     public void adminCanExitMainMenu() {
-        createView("alice\npassword\n11\n");
+        createView("alice\npassword\n12\n");
         mockSuccessfulLogin(true);
 
         assertEquals(0, view.run());
@@ -209,7 +209,7 @@ public class TerminalViewTest {
 
     @Test
     public void regularUserCanExitMainMenu() {
-        createView("alice\npassword\n6\n");
+        createView("alice\npassword\n12\n");
         mockSuccessfulLogin(false);
 
         assertEquals(0, view.run());
@@ -220,7 +220,7 @@ public class TerminalViewTest {
     @Test
     public void adminCanChangePassword() {
         createView(
-                "alice\npassword\n5\nnewPassword\nnewPassword\n11\n"
+                "alice\npassword\n6\nnewPassword\nnewPassword\n12\n"
         );
         mockSuccessfulLogin(true);
 
@@ -237,7 +237,7 @@ public class TerminalViewTest {
 
     @Test
     public void adminCanCreateUser() {
-        createView("alice\npassword\n6\nbob\n11\n");
+        createView("alice\npassword\n7\nbob\n12\n");
         mockSuccessfulLogin(true);
 
         when(controller.createUser("alice", "bob"))
@@ -250,7 +250,7 @@ public class TerminalViewTest {
 
     @Test
     public void adminCanPromoteUser() {
-        createView("alice\npassword\n7\nPromote bob\n11\n");
+        createView("alice\npassword\n8\nPromote bob\n12\n");
         mockSuccessfulLogin(true);
 
         when(controller.manageAccess("alice", "bob", "Promote"))
@@ -263,7 +263,7 @@ public class TerminalViewTest {
 
     @Test
     public void adminCanDemoteUser() {
-        createView("alice\npassword\n7\nDemote bob\n11\n");
+        createView("alice\npassword\n8\nDemote bob\n12\n");
         mockSuccessfulLogin(true);
 
         when(controller.manageAccess("alice", "bob", "Demote"))
@@ -276,7 +276,7 @@ public class TerminalViewTest {
 
     @Test
     public void adminCanReviewAuditLog() {
-        createView("alice\npassword\n8\n11\n");
+        createView("alice\npassword\n9\n12\n");
         mockSuccessfulLogin(true);
 
         when(controller.reviewAuditLog("alice"))
@@ -290,7 +290,7 @@ public class TerminalViewTest {
     @Test
     public void adminCanReturnFromInvalidManageAccessInput() {
         createView(
-                "alice\npassword\n7\ninvalid input\nPromote bob\n11\n"
+                "alice\npassword\n8\ninvalid input\nPromote bob\n12\n"
         );
         mockSuccessfulLogin(true);
 
@@ -306,7 +306,7 @@ public class TerminalViewTest {
 
     @Test
     public void adminCanOpenBriefsMenu() {
-        createView("alice\npassword\n1\n5\n11\n");
+        createView("alice\npassword\n1\n5\n12\n");
         mockSuccessfulLogin(true);
 
         when(controller.browseMainMenu("alice", "briefs"))
@@ -319,7 +319,7 @@ public class TerminalViewTest {
 
     @Test
     public void adminCanOpenAgentsMenu() {
-        createView("alice\npassword\n2\n5\n11\n");
+        createView("alice\npassword\n2\n5\n12\n");
         mockSuccessfulLogin(true);
 
         when(controller.browseMainMenu("alice", "agents"))
@@ -332,7 +332,7 @@ public class TerminalViewTest {
 
     @Test
     public void adminCanOpenFacilitiesMenu() {
-        createView("alice\npassword\n3\n5\n11\n");
+        createView("alice\npassword\n3\n5\n12\n");
         mockSuccessfulLogin(true);
 
         when(controller.browseMainMenu("alice", "facilities"))
@@ -345,7 +345,7 @@ public class TerminalViewTest {
 
     @Test
     public void adminCanOpenMissionsMenu() {
-        createView("alice\npassword\n4\n5\n11\n");
+        createView("alice\npassword\n4\n5\n12\n");
         mockSuccessfulLogin(true);
 
         when(controller.browseMainMenu("alice", "missions"))
@@ -356,11 +356,24 @@ public class TerminalViewTest {
         verify(controller).browseMainMenu("alice", "missions");
     }
 
+    @Test
+    public void adminCanOpenCountriesMenu() {
+        createView("alice\npassword\n5\n5\n12\n");
+        mockSuccessfulLogin(true);
+
+        when(controller.browseMainMenu("alice", "countries"))
+                .thenReturn("Browse countries");
+
+        assertEquals(0, view.run());
+
+        verify(controller).browseMainMenu("alice", "countries");
+    }
+
     // ---------------- LIST / READ RECORDS ----------------
 
     @Test
     public void adminCanListBriefs() {
-        createView("alice\npassword\n1\n1\n5\n11\n");
+        createView("alice\npassword\n1\n1\n5\n12\n");
         mockSuccessfulLogin(true);
 
         when(controller.browseMainMenu("alice", "briefs"))
@@ -375,7 +388,7 @@ public class TerminalViewTest {
 
     @Test
     public void adminCanReadBrief() {
-        createView("alice\npassword\n1\n2\n12\n5\n11\n");
+        createView("alice\npassword\n1\n2\n12\n5\n12\n");
         mockSuccessfulLogin(true);
 
         when(controller.browseMainMenu("alice", "briefs"))
@@ -389,8 +402,38 @@ public class TerminalViewTest {
     }
 
     @Test
+    public void adminCanListCountries() {
+        createView("alice\npassword\n5\n1\n5\n12\n");
+        mockSuccessfulLogin(true);
+
+        when(controller.browseMainMenu("alice", "countries"))
+                .thenReturn("Browse countries");
+        when(controller.listEntries("alice", "countries"))
+                .thenReturn("Country list");
+
+        assertEquals(0, view.run());
+
+        verify(controller).listEntries("alice", "countries");
+    }
+
+    @Test
+    public void adminCanReadCountry() {
+        createView("alice\npassword\n5\n2\n12\n5\n12\n");
+        mockSuccessfulLogin(true);
+
+        when(controller.browseMainMenu("alice", "countries"))
+                .thenReturn("Browse countries");
+        when(controller.readEntry("alice", "countries", 12))
+                .thenReturn("Country details");
+
+        assertEquals(0, view.run());
+
+        verify(controller).readEntry("alice", "countries", 12);
+    }
+
+    @Test
     public void regularUserCanListAndReadBriefs() {
-        createView("alice\npassword\n1\n1\n2\n12\n3\n6\n");
+        createView("alice\npassword\n1\n1\n2\n12\n3\n11\n");
         mockSuccessfulLogin(false);
 
         when(controller.browseMainMenu("alice", "briefs"))
@@ -411,7 +454,7 @@ public class TerminalViewTest {
 
     @Test
     public void adminCanViewMessages() {
-        createView("alice\npassword\n9\n1\n3\n11\n");
+        createView("alice\npassword\n10\n1\n3\n12\n");
         mockSuccessfulLogin(true);
 
         when(controller.viewMessages("alice"))
@@ -428,7 +471,7 @@ public class TerminalViewTest {
     @Test
     public void adminCanAddBrief() {
         createView(
-                "alice\npassword\n1\n3\n10\nTitle\n2026-11-03\nContent\n5\n11\n"
+                "alice\npassword\n1\n3\n10\nTitle\n2026-11-03\nContent\n5\n12\n"
         );
         mockSuccessfulLogin(true);
 
@@ -449,7 +492,7 @@ public class TerminalViewTest {
     @Test
     public void adminCanAddAgent() {
         createView(
-                "alice\npassword\n2\n3\n4\nAgent Name\n1990-01-01\n\nNotes\n5\n11\n"
+                "alice\npassword\n2\n3\n4\nAgent Name\n1990-01-01\n\nNotes\n5\n12\n"
         );
         mockSuccessfulLogin(true);
 
@@ -470,7 +513,7 @@ public class TerminalViewTest {
     @Test
     public void adminCanAddFacility() {
         createView(
-                "alice\npassword\n3\n3\nFacility Name\nFAC\n5\n11\n"
+                "alice\npassword\n3\n3\nFacility Name\nFAC\n5\n12\n"
         );
         mockSuccessfulLogin(true);
 
@@ -492,7 +535,7 @@ public class TerminalViewTest {
     @Test
     public void adminCanAddMission() {
         createView(
-                "alice\npassword\n4\n3\nMission Title\n7\n5\n11\n"
+                "alice\npassword\n4\n3\nMission Title\n7\n5\n12\n"
         );
         mockSuccessfulLogin(true);
 
@@ -511,8 +554,27 @@ public class TerminalViewTest {
     }
 
     @Test
+    public void adminCanAddCountry() {
+        createView("alice\npassword\n5\n3\nFrance\n5\n12\n");
+        mockSuccessfulLogin(true);
+
+        when(controller.browseMainMenu("alice", "countries"))
+                .thenReturn("Browse countries");
+        when(controller.addEntry(eq("alice"), eq("countries"), anyList()))
+                .thenReturn("Country added.");
+
+        assertEquals(0, view.run());
+
+        verify(controller).addEntry(
+                "alice",
+                "countries",
+                List.of("France")
+        );
+    }
+
+    @Test
     public void adminCanSendMessageToAgent() {
-        createView("alice\npassword\n9\n2\nBob\nMeet at the facility.\n3\n11\n");
+        createView("alice\npassword\n10\n2\nBob\nMeet at the facility.\n3\n12\n");
         mockSuccessfulLogin(true);
 
         when(controller.sendMessage(
@@ -532,7 +594,7 @@ public class TerminalViewTest {
     @Test
     public void adminCanEditBrief() {
         createView(
-                "alice\npassword\n1\n4\n12\n10\nNew title\n2026-11-03\nNew content\n5\n11\n"
+                "alice\npassword\n1\n4\n12\n10\nNew title\n2026-11-03\nNew content\n5\n12\n"
         );
         mockSuccessfulLogin(true);
 
@@ -555,7 +617,7 @@ public class TerminalViewTest {
     @Test
     public void adminCanEditAgent() {
         createView(
-                "alice\npassword\n2\n4\n12\n4\nAgent Name\n1990-01-01\n\nNotes\n5\n11\n"
+                "alice\npassword\n2\n4\n12\n4\nAgent Name\n1990-01-01\n\nNotes\n5\n12\n"
         );
         mockSuccessfulLogin(true);
 
@@ -578,7 +640,7 @@ public class TerminalViewTest {
     @Test
     public void adminCanEditFacility() {
         createView(
-                "alice\npassword\n3\n4\n12\nFacility Name\nFAC\n5\n11\n"
+                "alice\npassword\n3\n4\n12\nFacility Name\nFAC\n5\n12\n"
         );
         mockSuccessfulLogin(true);
 
@@ -601,7 +663,7 @@ public class TerminalViewTest {
     @Test
     public void adminCanEditMission() {
         createView(
-                "alice\npassword\n4\n4\n12\nMission Title\n7\n5\n11\n"
+                "alice\npassword\n4\n4\n12\nMission Title\n7\n5\n12\n"
         );
         mockSuccessfulLogin(true);
 
@@ -622,8 +684,29 @@ public class TerminalViewTest {
     }
 
     @Test
+    public void adminCanEditCountry() {
+        createView("alice\npassword\n5\n4\n12\nFrance\n5\n12\n");
+        mockSuccessfulLogin(true);
+
+        when(controller.browseMainMenu("alice", "countries"))
+                .thenReturn("Browse countries");
+        when(controller.editEntry(
+                eq("alice"), eq("countries"), eq(12), anyList()
+        )).thenReturn("Country updated.");
+
+        assertEquals(0, view.run());
+
+        verify(controller).editEntry(
+                "alice",
+                "countries",
+                12,
+                List.of("France")
+        );
+    }
+
+    @Test
     public void adminCanAssignAgentToMission() {
-        createView("alice\npassword\n10\n4\n7\n11\n");
+        createView("alice\npassword\n11\n4\n7\n12\n");
         mockSuccessfulLogin(true);
 
         when(controller.assignAgentToMission("alice", 4, 7))
