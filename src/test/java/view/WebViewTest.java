@@ -112,7 +112,19 @@ public class WebViewTest {
         assertTrue(actual.contains("Browse Agents"));
         assertTrue(actual.contains("Browse Facilities"));
         assertTrue(actual.contains("Browse Missions"));
-        assertTrue(actual.contains("Browse Messages"));
+        assertTrue(actual.contains("Browse Countries"));
+        assertTrue(actual.contains("Send or view messages"));
+    }
+
+    @Test
+    public void mainMenuViewTest4() {
+        WebView view = new WebView();
+
+        String actual = view.mainMenuView("Browse Countries");
+
+        assertTrue(actual.contains("Browse Countries"));
+        assertTrue(actual.contains("/browse?type=countries"));
+        assertTrue(actual.contains("/logout"));
     }
 
     @Test
