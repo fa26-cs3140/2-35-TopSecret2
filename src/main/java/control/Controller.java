@@ -7,6 +7,7 @@ import model.AccessControlInterface;
 import model.Agent;
 import model.AuditLogInterface;
 import model.Brief;
+import model.Country;
 import model.DataStoreInterface;
 import model.Facility;
 import model.LoggedAction;
@@ -21,7 +22,7 @@ import model.UserManagerInterface;
 // a returned String, and Scanner reads become parameters, with
 // the username passed explicitly instead of a currentUser field.
 // Deliberate HW5-to-HW6 changes, all flagged: missions join the
-// menus (main menu 1-11, browse menu gains Edit at 4, Back at 5);
+// menus (main menu 1-12, browse menu gains Edit at 4, Back at 5);
 // agent creation takes no missionID (missions are assigned
 // later through assignAgentToMission); an invalid itemType in
 // readEntry returns "Invalid option" instead of the old UI's
@@ -139,7 +140,7 @@ public class Controller implements ControllerInterface {
 
 
     // Main menu text. Admin options only for admins; standard
-    // users see 1-5, 9 and 11, like the HW5 menu showed 1-4 and 8.
+    // users see 1-6, 10 and 12, like the HW5 menu showed 1-4 and 8.
     @Override
     public String showMainMenu(String username) {
         boolean admin = access.isAdmin(username);
@@ -148,17 +149,18 @@ public class Controller implements ControllerInterface {
         menu.append("2. Browse agents\n");
         menu.append("3. Browse facilities\n");
         menu.append("4. Browse missions\n");
-        menu.append("5. Change Password\n");
+        menu.append("5. Browse countries\n");
+        menu.append("6. Change Password\n");
         if (admin) {
-            menu.append("6. Create a new user\n");
-            menu.append("7. Promote or Demote users\n");
-            menu.append("8. Review audit log\n");
+            menu.append("7. Create a new user\n");
+            menu.append("8. Promote or Demote users\n");
+            menu.append("9. Review audit log\n");
         }
-        menu.append("9. Send or view messages\n");
+        menu.append("10. Send or view messages\n");
         if (admin) {
-            menu.append("10. Assign agent to mission\n");
+            menu.append("11. Assign agent to mission\n");
         }
-        menu.append("11. Exit/logout\n");
+        menu.append("12. Exit/logout\n");
         menu.append("Enter an option number:");
         return menu.toString();
     }
@@ -172,6 +174,7 @@ public class Controller implements ControllerInterface {
             case "agents":
             case "facilities":
             case "missions":
+            case "countries":
                 break;
             default:
                 return "Invalid option";
@@ -210,6 +213,11 @@ public class Controller implements ControllerInterface {
             case "missions":
                 for (Mission m : store.listMissions()) {
                     lines.add(m.getMissionID() + " : " + m.getTitle());
+                }
+                break;
+            case "countries":
+                for (Country c : store.listCountries()) {
+                    lines.add(c.getCountryID() + " : " + c.getName());
                 }
                 break;
             default:
@@ -253,6 +261,14 @@ public class Controller implements ControllerInterface {
                 audit(username, LoggedAction.READ, itemType + " " + id);
                 return "Title: " + requested.getTitle() + "\nFacility ID: " + requested.getFacilityID();
             }
+            case "countries": {
+                Country requested = store.getCountry(id);
+                if (requested == null) {
+                    return "No country found with this id";
+                }
+                audit(username, LoggedAction.READ, itemType + " " + id);
+                return "Name: " + requested.getName();
+            }
             default:
                 return "Invalid option";
         }
@@ -285,6 +301,10 @@ public class Controller implements ControllerInterface {
                     if (fields.size() < 2) {
                         return "Not enough fields";
                     }
+                    // The country is parsed here so a bad id fails
+                    // like any other bad number, but Facility has
+                    // no country field yet, so it is not stored.
+                    int countryId = fields.size() > 2 ? Integer.parseInt(fields.get(2)) : 0;
                     Facility added = store.addFacility(new Facility(fields.get(0), fields.get(1)));
                     audit(username, LoggedAction.CREATE, "facilities " + added.getFacilityID());
                     break;
@@ -295,6 +315,14 @@ public class Controller implements ControllerInterface {
                     }
                     Mission added = store.addMission(new Mission(fields.get(0), Integer.parseInt(fields.get(1))));
                     audit(username, LoggedAction.CREATE, "missions " + added.getMissionID());
+                    break;
+                }
+                case "countries": {
+                    if (fields.size() < 1) {
+                        return "Not enough fields";
+                    }
+                    Country added = store.addCountry(new Country(fields.get(0)));
+                    audit(username, LoggedAction.CREATE, "countries " + added.getCountryID());
                     break;
                 }
                 default:
@@ -341,6 +369,10 @@ public class Controller implements ControllerInterface {
                     if (store.getFacility(id) == null) {
                         return "No facility found with this id";
                     }
+                    // The country is parsed here so a bad id fails
+                    // like any other bad number, but Facility has
+                    // no country field yet, so it is not stored.
+                    int countryId = fields.size() > 2 ? Integer.parseInt(fields.get(2)) : 0;
                     store.updateFacility(new Facility(id, fields.get(0), fields.get(1)));
                     break;
                 }
@@ -352,6 +384,16 @@ public class Controller implements ControllerInterface {
                         return "No mission found with this id";
                     }
                     store.updateMission(new Mission(id, fields.get(0), Integer.parseInt(fields.get(1))));
+                    break;
+                }
+                case "countries": {
+                    if (fields.size() < 1) {
+                        return "Not enough fields";
+                    }
+                    if (store.getCountry(id) == null) {
+                        return "No country found with this id";
+                    }
+                    store.updateCountry(new Country(id, fields.get(0)));
                     break;
                 }
                 default:
@@ -409,17 +451,21 @@ public class Controller implements ControllerInterface {
         return "Agent " + agentId + " assigned to mission " + missionId;
     }
 
+    // The agent with this name, case-insensitively, or null.
+    private Agent findAgentByName(String name) {
+        for (Agent a : store.listAgents()) {
+            if (a.getName().equalsIgnoreCase(name)) {
+                return a;
+            }
+        }
+        return null;
+    }
+
     // Any logged-in user may send one. The agent is found by
     // name, case-insensitively, first match wins.
     @Override
     public String sendMessage(String username, String agentName, String message) {
-        Agent recipient = null;
-        for (Agent a : store.listAgents()) {
-            if (a.getName().equalsIgnoreCase(agentName)) {
-                recipient = a;
-                break;
-            }
-        }
+        Agent recipient = findAgentByName(agentName);
         if (recipient == null) {
             return "No agent found with this name";
         }
@@ -437,13 +483,7 @@ public class Controller implements ControllerInterface {
     // No admin permission needed.
     @Override
     public String viewMessages(String username) {
-        Agent self = null;
-        for (Agent a : store.listAgents()) {
-            if (a.getName().equalsIgnoreCase(username)) {
-                self = a;
-                break;
-            }
-        }
+        Agent self = findAgentByName(username);
         if (self == null) {
             return "No messages";
         }
@@ -463,26 +503,170 @@ public class Controller implements ControllerInterface {
         return String.join("\n", lines);
     }
 
-    // HW7 stubs, week 1. They return a fixed value so the code
-    // compiles and the week 1 tests pass. Week 2 replaces the
-    // stub bodies with the real behaviour.
     @Override
     public List<FormField> getFormFields(String username, String itemType, int id) {
-        return List.of();
+        if (!access.isAdmin(username) || id < 0) {
+            return List.of();
+        }
+        switch (itemType) {
+            case "briefs": {
+                Brief brief = id == 0 ? null : store.getBrief(id);
+                if (id != 0 && brief == null) {
+                    return List.of();
+                }
+                List<String> missionOptions = new ArrayList<>();
+                for (Mission m : store.listMissions()) {
+                    missionOptions.add(m.getMissionID() + " : " + m.getTitle());
+                }
+                return List.of(
+                        new FormField("missionID", "Mission ID", brief == null ? "" : String.valueOf(brief.getMissionID()), "number", missionOptions),
+                        new FormField("title", "Brief title", brief == null ? "" : brief.getTitle(), "text", List.of()),
+                        new FormField("date", "Date", brief == null ? "" : brief.getDate(), "date", List.of()),
+                        new FormField("content", "Brief content", brief == null ? "" : brief.getContent(), "text", List.of()));
+            }
+            case "agents": {
+                Agent agent = id == 0 ? null : store.getAgent(id);
+                if (id != 0 && agent == null) {
+                    return List.of();
+                }
+                List<String> facilityOptions = new ArrayList<>();
+                for (Facility f : store.listFacilities()) {
+                    facilityOptions.add(f.getFacilityID() + " : " + f.getName());
+                }
+                return List.of(
+                        new FormField("facilityID", "Facility ID", agent == null ? "" : String.valueOf(agent.getFacilityID()), "number", facilityOptions),
+                        new FormField("name", "Agent name", agent == null ? "" : agent.getName(), "text", List.of()),
+                        new FormField("date_of_birth", "Date of birth", agent == null ? "" : agent.getDate_of_birth(), "date", List.of()),
+                        new FormField("date_of_death", "Date of death", agent == null ? "" : agent.getDate_of_death(), "date", List.of()),
+                        new FormField("notes", "Notes", agent == null ? "" : agent.getNotes(), "text", List.of()));
+            }
+            case "facilities": {
+                Facility facility = id == 0 ? null : store.getFacility(id);
+                if (id != 0 && facility == null) {
+                    return List.of();
+                }
+                List<String> countryOptions = new ArrayList<>();
+                for (Country c : store.listCountries()) {
+                    countryOptions.add(c.getCountryID() + " : " + c.getName());
+                }
+                return List.of(
+                        new FormField("name", "Facility name", facility == null ? "" : facility.getName(), "text", List.of()),
+                        new FormField("abbreviation", "Facility abbreviation", facility == null ? "" : facility.getAbbreviation(), "text", List.of()),
+                        new FormField("countryID", "Country", "", "number", countryOptions));
+            }
+            case "missions": {
+                Mission mission = id == 0 ? null : store.getMission(id);
+                if (id != 0 && mission == null) {
+                    return List.of();
+                }
+                List<String> facilityOptions = new ArrayList<>();
+                for (Facility f : store.listFacilities()) {
+                    facilityOptions.add(f.getFacilityID() + " : " + f.getName());
+                }
+                return List.of(
+                        new FormField("title", "Mission title", mission == null ? "" : mission.getTitle(), "text", List.of()),
+                        new FormField("facilityID", "Facility ID", mission == null ? "" : String.valueOf(mission.getFacilityID()), "number", facilityOptions));
+            }
+            case "countries": {
+                Country country = id == 0 ? null : store.getCountry(id);
+                if (id != 0 && country == null) {
+                    return List.of();
+                }
+                return List.of(
+                        new FormField("name", "Country name", country == null ? "" : country.getName(), "text", List.of()));
+            }
+            default:
+                return List.of();
+        }
+    }
+
+    // True when the text holds the query, case-insensitively.
+    private static boolean matches(String text, String needle) {
+        return text != null && text.toLowerCase().contains(needle);
     }
 
     @Override
     public String searchEntries(String username, String query) {
-        return "No matches";
+        if (query == null || query.isBlank()) {
+            return "No matches";
+        }
+        String needle = query.toLowerCase();
+        List<String> lines = new ArrayList<>();
+        for (Brief b : store.listBriefs()) {
+            if (matches(b.getTitle(), needle) || matches(b.getContent(), needle)) {
+                lines.add("briefs " + b.getBriefID() + " : " + b.getTitle());
+            }
+        }
+        for (Agent a : store.listAgents()) {
+            if (matches(a.getName(), needle) || matches(a.getNotes(), needle)) {
+                lines.add("agents " + a.getAgentID() + " : " + a.getName());
+            }
+        }
+        for (Facility f : store.listFacilities()) {
+            if (matches(f.getName(), needle) || matches(f.getAbbreviation(), needle)) {
+                lines.add("facilities " + f.getFacilityID() + " : " + f.getName());
+            }
+        }
+        for (Mission m : store.listMissions()) {
+            if (matches(m.getTitle(), needle)) {
+                lines.add("missions " + m.getMissionID() + " : " + m.getTitle());
+            }
+        }
+        for (Country c : store.listCountries()) {
+            if (matches(c.getName(), needle)) {
+                lines.add("countries " + c.getCountryID() + " : " + c.getName());
+            }
+        }
+        if (lines.isEmpty()) {
+            return "No matches";
+        }
+        return String.join("\n", lines);
     }
 
     @Override
     public String listMessages(String username) {
-        return "No messages";
+        Agent self = findAgentByName(username);
+        if (self == null) {
+            return "No messages";
+        }
+        List<Message> found;
+        try {
+            found = messages.retrieveMessages(self);
+        } catch (TopSecretException e) {
+            return e.getMessage();
+        }
+        if (found.isEmpty()) {
+            return "No messages";
+        }
+        List<String> lines = new ArrayList<>();
+        for (Message m : found) {
+            lines.add(m.getMessageID() + " : " + m.getMessageContent() + (m.isRead() ? "" : " (unread)"));
+        }
+        return String.join("\n", lines);
     }
 
     @Override
     public String readMessage(String username, int messageId) {
+        Agent self = findAgentByName(username);
+        if (self == null) {
+            return "No message found with this id";
+        }
+        List<Message> found;
+        try {
+            found = messages.retrieveMessages(self);
+        } catch (TopSecretException e) {
+            return e.getMessage();
+        }
+        for (Message m : found) {
+            if (m.getMessageID() == messageId) {
+                try {
+                    messages.readMessage(m);
+                } catch (TopSecretException e) {
+                    return e.getMessage();
+                }
+                return m.getMessageID() + " : " + m.getMessageContent();
+            }
+        }
         return "No message found with this id";
     }
 
@@ -491,7 +675,11 @@ public class Controller implements ControllerInterface {
         if (!access.isAdmin(username)) {
             return "Not allowed";
         }
-        return "";
+        List<String> lines = new ArrayList<>();
+        for (SessionManager.Session s : sessions.listSessions()) {
+            lines.add(s.token() + " : " + s.username() + " : " + s.lastActivity());
+        }
+        return String.join("\n", lines);
     }
 
     @Override
@@ -499,6 +687,9 @@ public class Controller implements ControllerInterface {
         if (!access.isAdmin(username)) {
             return "Not allowed";
         }
-        return "";
+        if (!sessions.revokeSession(token)) {
+            return "No session found with this token";
+        }
+        return listWebSessions(username);
     }
 }
