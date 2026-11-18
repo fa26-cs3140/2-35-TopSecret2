@@ -111,8 +111,10 @@ public class SQLiteDataStore implements DataStoreInterface, AutoCloseable {
             String messagesInitSql = """
                     CREATE TABLE IF NOT EXISTS messages (
                         message_ID INTEGER PRIMARY KEY AUTOINCREMENT,
+                        sender_user_ID INTEGER NOT NULL REFRENCES users(user_ID) ON DELETE CASCADE,
                         recipient_agent_ID INTEGER NOT NULL REFERENCES agents(agent_ID) ON DELETE CASCADE,
-                        content TEXT NOT NULL
+                        content TEXT NOT NULL,
+                        read_status INT NOT NULL
                     )
                     """;
 
@@ -577,7 +579,7 @@ public class SQLiteDataStore implements DataStoreInterface, AutoCloseable {
      *
      */
     @Override
-    public Agent getAgent(int id) {
+    public Agent getAgentByID(int id) {
         String sql = """
             SELECT * FROM agents
             WHERE agent_ID = ?
@@ -600,6 +602,35 @@ public class SQLiteDataStore implements DataStoreInterface, AutoCloseable {
             }
         } catch (SQLException e) {
             throw new IllegalStateException("Failed to retrieve agent with ID: " + id, e);
+        }
+
+        return null;
+    }
+
+    @Override
+    public Agent getAgentByName(String name) {
+        String sql = """
+                SELECT * FROM agents WHERE name = ?;
+                """;
+
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setString(1, name);
+
+            try (ResultSet results = stmt.executeQuery()) {
+                if (results.next()) {
+                    return new Agent(
+                            results.getInt("agent_ID"),
+                            results.getInt("facility_ID)"),
+                            name,
+                            results.getString("date_of_birth"),
+                            results.getString("date_of_death"),
+                            results.getString("notes")
+                    );
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(
+                    "Error retrieving agent with name: " + name, e);
         }
 
         return null;
@@ -932,7 +963,7 @@ public class SQLiteDataStore implements DataStoreInterface, AutoCloseable {
 
             while (results.next()) {
                 int userID = results.getInt("user_ID");
-                User user = getUser(userID);
+                User user = getUserByID(userID);
 
                 logs.add(new LoggedAction(
 //                        results.getInt("log_ID"),
@@ -970,7 +1001,7 @@ public class SQLiteDataStore implements DataStoreInterface, AutoCloseable {
 
             try (ResultSet rs = stmt.executeQuery()) {
                 while (rs.next()) {
-                    User user = getUser(userID);
+                    User user = getUserByID(userID);
 
                     logs.add(new LoggedAction(
 //                        results.getInt("log_ID"),
@@ -1058,7 +1089,7 @@ public class SQLiteDataStore implements DataStoreInterface, AutoCloseable {
      * @return model.User or null if it does not exist
      */
     @Override
-    public User getUser(int userID) {
+    public User getUserByID(int userID) {
         String sql = """
                 SELECT * FROM users WHERE user_ID = ?;
                 """;
@@ -1076,6 +1107,31 @@ public class SQLiteDataStore implements DataStoreInterface, AutoCloseable {
             }
         } catch (SQLException e) {
             throw new RuntimeException("Error retrieving user with ID: " + userID, e);
+        }
+
+        return null;
+    }
+
+    @Override
+    public User getUserByName(String username) {
+        String sql = """
+                SELECT * FROM users WHERE username = ?;
+                """;
+
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setString(1, username);
+
+            try (ResultSet results = stmt.executeQuery()) {
+                if (results.next()) {
+                    return new User(
+                            results.getInt("user_ID"),
+                            username
+                    );
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(
+                    "Error retrieving user with username: " + username, e);
         }
 
         return null;
@@ -1398,14 +1454,17 @@ public class SQLiteDataStore implements DataStoreInterface, AutoCloseable {
     @Override
     public Message addMessage(Message newMessage) {
         String sql = """
-        INSERT INTO messages (recipient_agent_ID, content)
-        VALUES (?, ?)
+        INSERT INTO messages (sender_user_ID, recipient_agent_ID, content, read_status)
+        VALUES (?, ?, ?)
         """;
 
         try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
             Agent messageRecipient = newMessage.getRecipient();
-            pstmt.setInt(1, messageRecipient.getAgentID());
-            pstmt.setString(2, newMessage.getMessageContent());
+            User messageSender = newMessage.getSender();
+            pstmt.setInt(1, messageSender.getUserID());
+            pstmt.setInt(2, messageRecipient.getAgentID());
+            pstmt.setString(3, newMessage.getMessageContent());
+            pstmt.setInt(4, (newMessage.isRead() ? 1 : 0));
 
             pstmt.executeUpdate();
 
@@ -1431,9 +1490,17 @@ public class SQLiteDataStore implements DataStoreInterface, AutoCloseable {
 
             try (ResultSet rs = pstmt.executeQuery()) {
                 while (rs.next()) {
+                    Boolean messageRead = false;
+                    if (rs.getInt("read_status") == 1) {
+                        messageRead = true;
+                    }
+
                     Message currMessage = new Message(
-                            recipient,
-                            rs.getString("content")
+                            rs.getInt("message_ID"),
+                            getUserByName(rs.getString("sender")),
+                            getAgentByName(rs.getString("recipient")),
+                            rs.getString("content"),
+                            messageRead
                     );
 
                     messages.add(currMessage);
@@ -1447,6 +1514,8 @@ public class SQLiteDataStore implements DataStoreInterface, AutoCloseable {
         return messages;
 
         }
+
+
 
     @Override
     public Country addCountry(Country country) {
