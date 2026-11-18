@@ -1,0 +1,15 @@
+<<interface>>
+UserManagerInterface
+-----------------------------------------------------
+-----------------------------------------------------
++ hasUser(): boolean
++ createUser(username: String): User
+  throws TopSecretException
++ getUserByID(userID: int): User
+  throws TopSecretException
++ verifyLogin(username: String, Password: String): boolean
++ changePassword(username: String, newPassword1: String, newPasswordConfirmation: String): void
+  throws TopSecretException
++ needsPasswordSetup(username: String): boolean
++ getUserByUsername(username: String): User
++ listUsernames(): List<String>
