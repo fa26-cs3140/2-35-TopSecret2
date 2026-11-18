@@ -1390,14 +1390,17 @@ public class SQLiteDataStore implements DataStoreInterface, AutoCloseable {
     @Override
     public Message addMessage(Message newMessage) {
         String sql = """
-        INSERT INTO messages (recipient_agent_ID, content)
-        VALUES (?, ?)
+        INSERT INTO messages (sender_user_ID, recipient_agent_ID, content, read_status)
+        VALUES (?, ?, ?)
         """;
 
         try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
             Agent messageRecipient = newMessage.getRecipient();
-            pstmt.setInt(1, messageRecipient.getAgentID());
-            pstmt.setString(2, newMessage.getMessageContent());
+            User messageSender = newMessage.getSender();
+            pstmt.setInt(1, messageSender.getUserID());
+            pstmt.setInt(2, messageRecipient.getAgentID());
+            pstmt.setString(3, newMessage.getMessageContent());
+            pstmt.setInt(4, (newMessage.isRead() ? 1 : 0));
 
             pstmt.executeUpdate();
 
