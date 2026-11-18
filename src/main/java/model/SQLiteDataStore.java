@@ -1073,6 +1073,31 @@ public class SQLiteDataStore implements DataStoreInterface, AutoCloseable {
         return null;
     }
 
+    @Override
+    public User getUserByName(String username) {
+        String sql = """
+                SELECT * FROM users WHERE username = ?;
+                """;
+
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setString(1, username);
+
+            try (ResultSet results = stmt.executeQuery()) {
+                if (results.next()) {
+                    return new User(
+                            results.getInt("user_ID"),
+                            username
+                    );
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(
+                    "Error retrieving user with username: " + username, e);
+        }
+
+        return null;
+    }
+
     /**
      * Adds a user to the database.
      *
