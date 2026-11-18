@@ -1480,9 +1480,17 @@ public class SQLiteDataStore implements DataStoreInterface, AutoCloseable {
 
             try (ResultSet rs = pstmt.executeQuery()) {
                 while (rs.next()) {
+                    Boolean messageRead = false;
+                    if (rs.getInt("read_status") == 1) {
+                        messageRead = true;
+                    }
+
                     Message currMessage = new Message(
-                            recipient,
-                            rs.getString("content")
+                            rs.getInt("message_ID"),
+                            getUserByName(rs.getString("sender")),
+                            getAgentByName(rs.getString("recipient")),
+                            rs.getString("content"),
+                            messageRead
                     );
 
                     messages.add(currMessage);
