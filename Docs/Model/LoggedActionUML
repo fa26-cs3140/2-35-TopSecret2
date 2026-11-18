@@ -1,0 +1,15 @@
+LoggedAction
+-----------------------------------------------------
++ READ: int {static, final} = 0
++ CREATE: int {static, final} = 1
++ EDIT: int {static, final} = 2
+- action: int
+- user: User
+- dateTime: String
+- record: String
+-----------------------------------------------------
++ LoggedAction(action: int, user: User, dateTime: String, record: String)
++ getAction(): int
++ getUser(): User
++ getDateTime(): String
++ getRecord(): String
