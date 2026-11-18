@@ -135,7 +135,7 @@ public class WebView {
 
         body.append(HTMLUtils.createHeading(title));
 
-        body.append(HTMLUtils.createTextBlock(records));
+        body.append(createBrowseLinks(type, records));
 
         body.append(HTMLUtils.createHeading("Read a Record"));
 
@@ -146,6 +146,46 @@ public class WebView {
                 .append("</p>");
 
         return HTMLUtils.createPage(title, body.toString());
+    }
+
+    private String createBrowseLinks(String type, String records) {
+
+        if (records == null || records.isBlank()) {
+            return HTMLUtils.createTextBlock("No records found.");
+        }
+
+        StringBuilder html = new StringBuilder("<ul>");
+
+        for (String line : records.split("\\R")) {
+
+            String trimmed = line.trim();
+
+            if (trimmed.isEmpty()) {
+                continue;
+            }
+
+            String[] parts = trimmed.split("\\s*:\\s*", 2);
+
+            if (parts.length == 2 && parts[0].matches("\\d+")) {
+
+                int id = Integer.parseInt(parts[0]);
+
+                String url = "/read?type=" + type + "&id=" + id;
+
+                html.append("<li>")
+                        .append(HTMLUtils.createLink(url, trimmed))
+                        .append("</li>");
+
+            } else {
+                html.append("<li>")
+                        .append(HTMLUtils.escapeHTML(trimmed))
+                        .append("</li>");
+            }
+        }
+
+        html.append("</ul>");
+
+        return html.toString();
     }
 
     /**
