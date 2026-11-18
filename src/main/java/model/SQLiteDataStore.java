@@ -597,6 +597,35 @@ public class SQLiteDataStore implements DataStoreInterface, AutoCloseable {
         return null;
     }
 
+    @Override
+    public Agent getAgentByName(String name) {
+        String sql = """
+                SELECT * FROM agents WHERE name = ?;
+                """;
+
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setString(1, name);
+
+            try (ResultSet results = stmt.executeQuery()) {
+                if (results.next()) {
+                    return new Agent(
+                            results.getInt("agent_ID"),
+                            results.getInt("facility_ID)"),
+                            name,
+                            results.getString("date_of_birth"),
+                            results.getString("date_of_death"),
+                            results.getString("notes")
+                    );
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(
+                    "Error retrieving agent with name: " + name, e);
+        }
+
+        return null;
+    }
+
     /**
      * get a model.Facility from database by id
      *
