@@ -98,7 +98,16 @@ public interface DataStoreInterface {
      * @param id the id of the agent to get
      * @return model.Agent object representing the queried model.Agent null if no agent found
      */
-    Agent getAgent(int id);
+    Agent getAgentByID(int id);
+
+    /**
+     * get an agent from database by name
+     *
+     * @param name the name of the agent to get
+     * @return model.Agent object representing the queried model.Agent null if no agent found
+     */
+
+    Agent getAgentByName(String name);
 
     /**
      * get a model.Facility from database by id
@@ -202,7 +211,15 @@ public interface DataStoreInterface {
      * @param userID
      * @return model.User or null if it does not exist
      */
-    User getUser(int userID);
+    User getUserByID(int userID);
+
+    /**
+     * get the user from database with the given username
+     *
+     * @param username
+     * @return model.User or null if it does not exist
+     */
+    User getUserByName(String username);
 
     /**
      * add a model.User to DB
