@@ -60,10 +60,10 @@ public class SQLiteDataStore implements DataStoreInterface, AutoCloseable {
 
             String facilitiesInitSql = """
                     CREATE TABLE IF NOT EXISTS facilities (
-                        facility_ID INTEGER PRIMARY KEY AUTOINCREMENT,
-                        country_ID INTEGER NOT NULL REFERENCES countries(country_ID),
-                        name TEXT NOT NULL UNIQUE,
-                        abbreviation TEXT NOT NULL UNIQUE
+                    facility_ID INTEGER PRIMARY KEY AUTOINCREMENT,
+                    country_ID INTEGER REFERENCES countries(country_ID),
+                    name TEXT NOT NULL UNIQUE,
+                    abbreviation TEXT NOT NULL UNIQUE
                     )
                     """;
 
@@ -510,8 +510,9 @@ public class SQLiteDataStore implements DataStoreInterface, AutoCloseable {
     @Override
     public List<Facility> listFacilities() {
         String sql = """
-                SELECT * FROM facilities
-                """;
+            SELECT facility_ID, name, abbreviation, country_ID
+            FROM facilities
+            """;
 
         List<Facility> facilities = new ArrayList<>();
 
@@ -522,7 +523,8 @@ public class SQLiteDataStore implements DataStoreInterface, AutoCloseable {
                 Facility facility = new Facility(
                         rs.getInt("facility_ID"),
                         rs.getString("name"),
-                        rs.getString("abbreviation")
+                        rs.getString("abbreviation"),
+                        rs.getInt("country_ID")
                 );
 
                 facilities.add(facility);
@@ -645,9 +647,10 @@ public class SQLiteDataStore implements DataStoreInterface, AutoCloseable {
     @Override
     public Facility getFacility(int id) {
         String sql = """
-                SELECT * FROM facilities
-                WHERE facility_ID = ?
-                """;
+            SELECT facility_ID, name, abbreviation, country_ID
+            FROM facilities
+            WHERE facility_ID = ?
+            """;
 
         try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
             pstmt.setInt(1, id);
@@ -657,7 +660,8 @@ public class SQLiteDataStore implements DataStoreInterface, AutoCloseable {
                     return new Facility(
                             rs.getInt("facility_ID"),
                             rs.getString("name"),
-                            rs.getString("abbreviation")
+                            rs.getString("abbreviation"),
+                            rs.getInt("country_ID")
                     );
                 }
             }
@@ -799,15 +803,16 @@ public class SQLiteDataStore implements DataStoreInterface, AutoCloseable {
     @Override
     public Facility addFacility(Facility facility) {
         String sql = """
-                INSERT INTO facilities (name, abbreviation)
-                VALUES (?, ?)
-                """;
+            INSERT INTO facilities (name, abbreviation, country_ID)
+            VALUES (?, ?, ?)
+            """;
 
         try (PreparedStatement pstmt = connection.prepareStatement(
                 sql, Statement.RETURN_GENERATED_KEYS)) {
 
             pstmt.setString(1, facility.getName());
             pstmt.setString(2, facility.getAbbreviation());
+            pstmt.setInt(3, facility.getCountryID());
 
             pstmt.executeUpdate();
 
@@ -816,7 +821,8 @@ public class SQLiteDataStore implements DataStoreInterface, AutoCloseable {
                     return new Facility(
                             keys.getInt(1),
                             facility.getName(),
-                            facility.getAbbreviation()
+                            facility.getAbbreviation(),
+                            facility.getCountryID()
                     );
                 }
             }
@@ -840,7 +846,7 @@ public class SQLiteDataStore implements DataStoreInterface, AutoCloseable {
     public Facility updateFacility(Facility facility) {
         String sql = """
             UPDATE facilities
-            SET name = ?, abbreviation = ?
+            SET name = ?, abbreviation = ?, country_ID = ?
             WHERE facility_ID = ?
             """;
 
@@ -848,7 +854,8 @@ public class SQLiteDataStore implements DataStoreInterface, AutoCloseable {
 
             pstmt.setString(1, facility.getName());
             pstmt.setString(2, facility.getAbbreviation());
-            pstmt.setInt(3, facility.getFacilityID());
+            pstmt.setInt(3, facility.getCountryID());
+            pstmt.setInt(4, facility.getFacilityID());
 
             if (pstmt.executeUpdate() == 0) {
                 throw new IllegalArgumentException("Facility does not exist.");
@@ -1519,26 +1526,147 @@ public class SQLiteDataStore implements DataStoreInterface, AutoCloseable {
 
     @Override
     public Country addCountry(Country country) {
-        return null;
+        String sql = """
+            INSERT INTO countries (name)
+            VALUES (?)
+            """;
+
+        try (PreparedStatement pstmt = connection.prepareStatement(
+                sql, Statement.RETURN_GENERATED_KEYS)) {
+
+            pstmt.setString(1, country.getName());
+
+            pstmt.executeUpdate();
+
+            try (ResultSet keys = pstmt.getGeneratedKeys()) {
+                if (keys.next()) {
+                    return new Country(
+                            keys.getInt(1),
+                            country.getName()
+                    );
+                }
+            }
+
+            throw new SQLException("Failed to retrieve generated country ID");
+
+        } catch (SQLException e) {
+            throw new IllegalArgumentException(
+                    "Failed to add country. Country name may already exist.", e);
+        }
     }
 
     @Override
     public Country getCountry(int countryID) {
+        String sql = """
+            SELECT country_ID, name
+            FROM countries
+            WHERE country_ID = ?
+            """;
+
+        try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
+            pstmt.setInt(1, countryID);
+
+            try (ResultSet rs = pstmt.executeQuery()) {
+                if (rs.next()) {
+                    return new Country(
+                            rs.getInt("country_ID"),
+                            rs.getString("name")
+                    );
+                }
+            }
+        } catch (SQLException e) {
+            throw new IllegalStateException(
+                    "Failed to retrieve country with ID: " + countryID, e);
+        }
+
         return null;
     }
 
     @Override
     public List<Country> listCountries() {
-        return new ArrayList<>();
+        String sql = """
+            SELECT country_ID, name
+            FROM countries
+            ORDER BY name
+            """;
+
+        List<Country> countries = new ArrayList<>();
+
+        try (PreparedStatement pstmt = connection.prepareStatement(sql);
+             ResultSet rs = pstmt.executeQuery()) {
+
+            while (rs.next()) {
+                Country country = new Country(
+                        rs.getInt("country_ID"),
+                        rs.getString("name")
+                );
+
+                countries.add(country);
+            }
+
+        } catch (SQLException e) {
+            throw new IllegalStateException("Failed to retrieve countries", e);
+        }
+
+        return countries;
     }
 
     @Override
     public Country updateCountry(Country country) {
-        return null;
+        String sql = """
+            UPDATE countries
+            SET name = ?
+            WHERE country_ID = ?
+            """;
+
+        try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
+
+            pstmt.setString(1, country.getName());
+            pstmt.setInt(2, country.getCountryID());
+
+            if (pstmt.executeUpdate() == 0) {
+                throw new IllegalArgumentException("Country does not exist.");
+            }
+
+            return country;
+
+        } catch (SQLException e) {
+            throw new IllegalArgumentException(
+                    "Failed to update country. Country name may already exist.", e);
+        }
     }
 
     @Override
     public List<Facility> listFacilitiesForCountry(int countryID) {
-        return new ArrayList<>();
+        String sql = """
+            SELECT facility_ID, name, abbreviation, country_ID
+            FROM facilities
+            WHERE country_ID = ?
+            """;
+
+        List<Facility> facilities = new ArrayList<>();
+
+        try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
+            pstmt.setInt(1, countryID);
+
+            try (ResultSet rs = pstmt.executeQuery()) {
+                while (rs.next()) {
+                    Facility facility = new Facility(
+                            rs.getInt("facility_ID"),
+                            rs.getString("name"),
+                            rs.getString("abbreviation"),
+                            rs.getInt("country_ID")
+                    );
+
+                    facilities.add(facility);
+                }
+            }
+
+        } catch (SQLException e) {
+            throw new IllegalStateException(
+                    "Failed to retrieve facilities for country ID: " + countryID, e);
+        }
+
+        return facilities;
     }
 }

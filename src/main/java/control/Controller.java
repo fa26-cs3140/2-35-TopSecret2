@@ -298,14 +298,12 @@ public class Controller implements ControllerInterface {
                     break;
                 }
                 case "facilities": {
-                    if (fields.size() < 2) {
+                    if (fields.size() < 3) {
                         return "Not enough fields";
                     }
-                    // The country is parsed here so a bad id fails
-                    // like any other bad number, but Facility has
-                    // no country field yet, so it is not stored.
-                    int countryId = fields.size() > 2 ? Integer.parseInt(fields.get(2)) : 0;
-                    Facility added = store.addFacility(new Facility(fields.get(0), fields.get(1)));
+                    // Parse the country ID so the facility is assigned to a country.
+                    int countryId = Integer.parseInt(fields.get(2));
+                    Facility added = store.addFacility(new Facility(fields.get(0), fields.get(1), countryId));
                     audit(username, LoggedAction.CREATE, "facilities " + added.getFacilityID());
                     break;
                 }
@@ -363,17 +361,14 @@ public class Controller implements ControllerInterface {
                     break;
                 }
                 case "facilities": {
-                    if (fields.size() < 2) {
+                    if (fields.size() < 3) {
                         return "Not enough fields";
                     }
                     if (store.getFacility(id) == null) {
                         return "No facility found with this id";
                     }
-                    // The country is parsed here so a bad id fails
-                    // like any other bad number, but Facility has
-                    // no country field yet, so it is not stored.
-                    int countryId = fields.size() > 2 ? Integer.parseInt(fields.get(2)) : 0;
-                    store.updateFacility(new Facility(id, fields.get(0), fields.get(1)));
+                    // Update the facility's name, abbreviation, and assigned country.
+                    store.updateFacility(new Facility(id, fields.get(0), fields.get(1), Integer.parseInt(fields.get(2))));
                     break;
                 }
                 case "missions": {
