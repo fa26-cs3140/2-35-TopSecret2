@@ -26,6 +26,7 @@ public class SQLiteDataStore implements DataStoreInterface, AutoCloseable {
         this.databaseUrl = databaseUrl;
         initDatabase();
 
+        importDatasetTsv("countries.tsv", "countries");
         importDatasetTsv("facilities.tsv", "facilities");
         importDatasetTsv("missions.tsv", "missions");
         importDatasetTsv("briefs.tsv", "briefs");
@@ -60,6 +61,7 @@ public class SQLiteDataStore implements DataStoreInterface, AutoCloseable {
             String facilitiesInitSql = """
                     CREATE TABLE IF NOT EXISTS facilities (
                         facility_ID INTEGER PRIMARY KEY AUTOINCREMENT,
+                        country_ID INTEGER NOT NULL REFERENCES countries(country_ID),
                         name TEXT NOT NULL UNIQUE,
                         abbreviation TEXT NOT NULL UNIQUE
                     )
@@ -114,6 +116,13 @@ public class SQLiteDataStore implements DataStoreInterface, AutoCloseable {
                     )
                     """;
 
+            String countriesInitSql = """
+                    CREATE TABLE IF NOT EXISTS countries (
+                        country_ID INTEGER PRIMARY KEY AUTOINCREMENT,
+                        name TEXT NOT NULL UNIQUE
+                    )
+                    """;
+
             //use this if 2 foreign key constraint is not working for mission_ID
 //            String clearAgentMissionTriggerSql = """
 //                CREATE TRIGGER IF NOT EXISTS clear_agent_mission_on_delete
@@ -132,6 +141,7 @@ public class SQLiteDataStore implements DataStoreInterface, AutoCloseable {
 
                 statement.execute(usersInitSql);
                 statement.execute(logsInitSql);
+                statement.execute(countriesInitSql);
                 statement.execute(facilitiesInitSql);
                 statement.execute(missionsInitSql);
                 statement.execute(briefsInitSql);

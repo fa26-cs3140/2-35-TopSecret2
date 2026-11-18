@@ -1,32 +1,22 @@
 package model;
 
 public class Facility {
+
     private int facilityID;
+    private int countryID;
     private String name, abbreviation;
 
-
-    /**
-     * usually used for data insertion to database
-     * @param name
-     * @param abbreviation
-     */
-    public Facility(String name, String abbreviation) {
-        this(-1, name, abbreviation);
+    // Used for data insertion
+    public Facility(String name, String abbreviation, int countryID) {
+        this(-1, name, abbreviation, countryID);
     }
 
-
-
-    /**
-     *  for database use only, not to be used for database data insertion.
-     *  The {@code facilityID} parameter will be ignored because database automatically assigns one when inserting.
-     * @param facilityID
-     * @param name
-     * @param abbreviation
-     */
-    public Facility(int facilityID, String name, String abbreviation) {
+    // Used when retrieving an existing Facility from the database
+    public Facility(int facilityID, String name, String abbreviation, int countryID) {
+        this.facilityID = facilityID;
         this.name = name;
         this.abbreviation = abbreviation;
-        this.facilityID = facilityID;
+        this.countryID = countryID;
     }
 
     public String getName() {
@@ -39,5 +29,13 @@ public class Facility {
 
     public int getFacilityID() {
         return facilityID;
+    }
+
+    public int getCountryID() {
+        return countryID;
+    }
+
+    public void setCountryID(int countryID) {
+        this.countryID = countryID;
     }
 }
