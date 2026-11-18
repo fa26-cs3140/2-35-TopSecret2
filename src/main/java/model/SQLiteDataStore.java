@@ -569,7 +569,7 @@ public class SQLiteDataStore implements DataStoreInterface, AutoCloseable {
      *
      */
     @Override
-    public Agent getAgent(int id) {
+    public Agent getAgentByID(int id) {
         String sql = """
             SELECT * FROM agents
             WHERE agent_ID = ?
@@ -924,7 +924,7 @@ public class SQLiteDataStore implements DataStoreInterface, AutoCloseable {
 
             while (results.next()) {
                 int userID = results.getInt("user_ID");
-                User user = getUser(userID);
+                User user = getUserByID(userID);
 
                 logs.add(new LoggedAction(
 //                        results.getInt("log_ID"),
@@ -962,7 +962,7 @@ public class SQLiteDataStore implements DataStoreInterface, AutoCloseable {
 
             try (ResultSet rs = stmt.executeQuery()) {
                 while (rs.next()) {
-                    User user = getUser(userID);
+                    User user = getUserByID(userID);
 
                     logs.add(new LoggedAction(
 //                        results.getInt("log_ID"),
@@ -1050,7 +1050,7 @@ public class SQLiteDataStore implements DataStoreInterface, AutoCloseable {
      * @return model.User or null if it does not exist
      */
     @Override
-    public User getUser(int userID) {
+    public User getUserByID(int userID) {
         String sql = """
                 SELECT * FROM users WHERE user_ID = ?;
                 """;
