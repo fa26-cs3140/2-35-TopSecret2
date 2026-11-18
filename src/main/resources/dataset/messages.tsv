@@ -1,4 +1,4 @@
-recipient_agent_ID	content
-5	This is not a friendship; it's a spaceship.
-1	Spend the dollar
-3	URGENT: Tear it down
+recipient_agent_ID	content	read_status
+5	This is not a friendship; it's a spaceship.	0
+1	Spend the dollar	0
+3	URGENT: Tear it down	0
