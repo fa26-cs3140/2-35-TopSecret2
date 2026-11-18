@@ -26,19 +26,87 @@ public class HTMLUtils {
      * Generates a complete HTML document.
      */
     public static String createPage(String title, String body) {
+        String navigation = """
+            <nav class="site-nav">
+                <a href="/">Main Menu</a>
+                <a href="/browse?type=briefs">Briefs</a>
+                <a href="/browse?type=agents">Agents</a>
+                <a href="/browse?type=facilities">Facilities</a>
+                <a href="/browse?type=missions">Missions</a>
+                <a href="/browse?type=countries">Countries</a>
+                <a href="/messages">Messages</a>
+                <a href="/audit">Audit Log</a>
+                <a href="/logout">Logout</a>
+            </nav>
+            """;
+
+        String css = """
+            body {
+                font-family: Arial, sans-serif;
+                margin: 0;
+                padding: 20px;
+                background-color: #f4f6f8;
+                color: #222;
+            }
+
+            h1, h2 {
+                color: #1f3a5f;
+            }
+
+            .site-nav {
+                background-color: #1f3a5f;
+                padding: 12px;
+                margin-bottom: 24px;
+            }
+
+            .site-nav a {
+                color: white;
+                text-decoration: none;
+                margin-right: 16px;
+            }
+
+            .site-nav a:hover {
+                text-decoration: underline;
+            }
+
+            a {
+                color: #245ea8;
+            }
+
+            form {
+                margin: 16px 0;
+            }
+
+            input, select, button {
+                padding: 8px;
+                margin: 4px 0;
+            }
+
+            pre {
+                background-color: white;
+                padding: 16px;
+                border-radius: 6px;
+                white-space: pre-wrap;
+            }
+            """;
+
         return """
-                <!DOCTYPE html>
-                <html lang="en">
-                <head>
-                    <meta charset="UTF-8">
-                    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-                    <title>%s</title>
-                </head>
-                <body>
-                    %s
-                </body>
-                </html>
-                """.formatted(escapeHTML(title), body == null ? "" : body);
+            <!DOCTYPE html>
+            <html lang="en">
+            <head>
+                <meta charset="UTF-8">
+                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                <title>%s</title>
+                <style>
+            %s
+                </style>
+            </head>
+            <body>
+                %s
+                %s
+            </body>
+            </html>
+            """.formatted(escapeHTML(title), css, navigation, body == null ? "" : body);
     }
 
     /**
