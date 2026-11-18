@@ -1,0 +1,21 @@
+UserManager
+-----------------------------------------------------
+- CREDENTIAL_FILE: Path {private, static, final}
+- KEY_FILE: String {private, static, final}
+- ALLOWED_CHARACTERS: String {private, static, final}
+- dataStore: DataStoreInterface {private}
+-----------------------------------------------------
++ UserManager(dataStore: DataStoreInterface)
+- getNextUserID(): int
+~ isUsernameValid(username: String): boolean
+~ isPasswordValid(password: String): boolean
+- loadCredentials(): Map<String, String>
+- saveCredentials(credentials: Map<String, String>): void
++ hasUser(): boolean
++ createUser(username: String): User
++ getUserByID(userID: int): User
++ verifyLogin(username: String, password: String): boolean
++ changePassword(username: String, newPassword1: String, newPasswordConfirmation: String): void
++ needsPasswordSetup(username: String): boolean
++ getUserByUsername(username: String): User
++ listUsernames(): List<String>
