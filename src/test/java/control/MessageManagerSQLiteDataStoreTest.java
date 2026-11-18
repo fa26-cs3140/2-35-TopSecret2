@@ -17,6 +17,7 @@ import static org.junit.jupiter.api.Assertions.fail;
 public class MessageManagerSQLiteDataStoreTest {
     private SQLiteDataStore dataStore;
     private MessageManager messageManager;
+    private User sampleUser;
 
     @TempDir
     Path tempDir;
@@ -28,6 +29,8 @@ public class MessageManagerSQLiteDataStoreTest {
     void setUp() {
         String dbLocation = "jdbc:sqlite:" + tempDir.resolve("test.db");
         dataStore = new model.SQLiteDataStore(dbLocation);
+        sampleUser = dataStore.addUser(new User(-1,"user1"));
+
         messageManager = new MessageManager(dataStore);
     }
     @AfterEach
@@ -42,7 +45,7 @@ public class MessageManagerSQLiteDataStoreTest {
         Agent sampleAgent = dataStore.getAgent(4);
 
         try {
-            returnMessage = messageManager.createMessage(sampleAgent,
+            returnMessage = messageManager.createMessage(sampleUser, sampleAgent,
                     "It's a weather plane!");
         } catch (TopSecretException e){
             fail();
@@ -51,6 +54,9 @@ public class MessageManagerSQLiteDataStoreTest {
         // Check for correct return value
 
         assertEquals(sampleAgent, returnMessage.getRecipient());
+        assertEquals(sampleUser.getUserID(), returnMessage.getSender().getUserID());
+        assertEquals(sampleUser.getUsername(), returnMessage.getSender().getUsername());
+
         assertEquals("It's a weather plane!",
                 returnMessage.getMessageContent());
 
