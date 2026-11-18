@@ -22,6 +22,18 @@ import view.TerminalView;
 
 public class TopSecret {
     public static void main(String[] args) {
+
+        // Display help and exit if -h is provided
+        for (String arg : args) {
+            if (arg.equals("-h")) {
+                System.out.println("Usage: java TopSecret [options]");
+                System.out.println("Options:");
+                System.out.println("  -h     Display this help message");
+                System.out.println("  -web   Start the web interface");
+                return;
+            }
+        }
+
         DataStoreInterface store = new SQLiteDataStore();
         UserManagerInterface users = new UserManager(store);
         Set<String> userSet = new HashSet<>();
