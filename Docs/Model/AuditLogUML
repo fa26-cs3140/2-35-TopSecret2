@@ -1,0 +1,7 @@
+AuditLog
+-----------------------------------------------------
+- dataStore: DataStoreInterface
+-----------------------------------------------------
++ AuditLog(dataStore: DataStoreInterface)
++ log(action: LoggedAction): LoggedAction
++ getLog(): List<LoggedAction>

@@ -1,0 +1,6 @@
+<<interface>>
+AuditLogInterface
+-----------------------------------------------------
+-----------------------------------------------------
++ log(action: LoggedAction): LoggedAction
++ getLog(): List<LoggedAction>
