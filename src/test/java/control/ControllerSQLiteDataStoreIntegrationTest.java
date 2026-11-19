@@ -99,15 +99,16 @@ public class ControllerSQLiteDataStoreIntegrationTest {
         String list = controller.addEntry("boss", "agents",
                 List.of("1", "New Agent", "1990-01-01", "2000-01-01", "Notes"));
         assertTrue(list.contains("New Agent"));
-        assertEquals("New Agent", store.getAgent(11).getName());
+        assertEquals("New Agent", store.getAgentByID(11).getName());
     }
 
     @Test
     void addEntryPersistsFacilityInRealStore() {
         String list = controller.addEntry("boss", "facilities",
-                List.of("New Facility", "NF"));
+                List.of("New Facility", "NF", "1"));
         assertTrue(list.contains("New Facility"));
         assertEquals("New Facility", store.getFacility(7).getName());
+        assertEquals(1, store.getFacility(7).getCountryID());
     }
 
     @Test
