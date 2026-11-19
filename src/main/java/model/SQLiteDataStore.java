@@ -111,10 +111,10 @@ public class SQLiteDataStore implements DataStoreInterface, AutoCloseable {
             String messagesInitSql = """
                     CREATE TABLE IF NOT EXISTS messages (
                         message_ID INTEGER PRIMARY KEY AUTOINCREMENT,
-                        sender_user_ID INTEGER NOT NULL REFRENCES users(user_ID) ON DELETE CASCADE,
+                        sender_user_ID INTEGER NOT NULL REFERENCES users(user_ID) ON DELETE CASCADE,
                         recipient_agent_ID INTEGER NOT NULL REFERENCES agents(agent_ID) ON DELETE CASCADE,
                         content TEXT NOT NULL,
-                        read_status INT NOT NULL
+                        read_status INTEGER NOT NULL
                     )
                     """;
 
