@@ -1462,7 +1462,7 @@ public class SQLiteDataStore implements DataStoreInterface, AutoCloseable {
     public Message addMessage(Message newMessage) {
         String sql = """
         INSERT INTO messages (sender_user_ID, recipient_agent_ID, content, read_status)
-        VALUES (?, ?, ?)
+        VALUES (?, ?, ?, ?)
         """;
 
         try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
@@ -1480,6 +1480,30 @@ public class SQLiteDataStore implements DataStoreInterface, AutoCloseable {
         } catch (SQLException e) {
             throw new IllegalArgumentException(
                     "Unable to create message", e);
+        }
+    }
+
+    @Override
+    public Message updateMessage(Message newMessage) {
+        String sql = """
+            UPDATE messages
+            SET content = ?, read_status = ?
+            WHERE message_ID = ?
+        """;
+
+        try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
+            pstmt.setString(1, newMessage.getMessageContent());
+            pstmt.setInt(2, (newMessage.isRead() ? 1 : 0));
+
+            if (pstmt.executeUpdate() != 1) {
+                throw new IllegalArgumentException(
+                        "The provided message is not in the database"
+                );
+            }
+
+            return newMessage;
+        } catch (SQLException e){
+            throw new IllegalStateException("Failed to update provided message", e);
         }
     }
 
