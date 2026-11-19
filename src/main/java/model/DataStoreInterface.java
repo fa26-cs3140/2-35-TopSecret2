@@ -230,6 +230,8 @@ public interface DataStoreInterface {
 
     Message addMessage(Message newMessage);
 
+    Message updateMessage(Message newMessage);
+
     List<Message> listMessagesForAgent(Agent recipient);
 
     Country addCountry(Country country);
