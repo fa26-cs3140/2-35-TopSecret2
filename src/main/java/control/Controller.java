@@ -238,7 +238,7 @@ public class Controller implements ControllerInterface {
                 return "Title: " + requested.getTitle() + "\nDate: " + requested.getDate() + "\nContent: " + requested.getContent();
             }
             case "agents": {
-                Agent requested = store.getAgent(id);
+                Agent requested = store.getAgentByID(id);
                 if (requested == null) {
                     return "No agent found with this id";
                 }
@@ -353,7 +353,7 @@ public class Controller implements ControllerInterface {
                     if (fields.size() < 5) {
                         return "Not enough fields";
                     }
-                    Agent existing = store.getAgent(id);
+                    Agent existing = store.getAgentByID(id);
                     if (existing == null) {
                         return "No agent found with this id";
                     }
@@ -520,7 +520,7 @@ public class Controller implements ControllerInterface {
                         new FormField("content", "Brief content", brief == null ? "" : brief.getContent(), "text", List.of()));
             }
             case "agents": {
-                Agent agent = id == 0 ? null : store.getAgent(id);
+                Agent agent = id == 0 ? null : store.getAgentByID(id);
                 if (id != 0 && agent == null) {
                     return List.of();
                 }
@@ -547,7 +547,7 @@ public class Controller implements ControllerInterface {
                 return List.of(
                         new FormField("name", "Facility name", facility == null ? "" : facility.getName(), "text", List.of()),
                         new FormField("abbreviation", "Facility abbreviation", facility == null ? "" : facility.getAbbreviation(), "text", List.of()),
-                        new FormField("countryID", "Country", "", "number", countryOptions));
+                        new FormField("countryID", "Country", facility == null ? "" : String.valueOf(facility.getCountryID()), "number", countryOptions));
             }
             case "missions": {
                 Mission mission = id == 0 ? null : store.getMission(id);
