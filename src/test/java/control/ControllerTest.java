@@ -230,7 +230,7 @@ public class ControllerTest {
 
     @Test
     void listEntriesListsFacilities() {
-        when(store.listFacilities()).thenReturn(List.of(new Facility(1, "HQ", "H")));
+        when(store.listFacilities()).thenReturn(List.of(new Facility(1, "HQ", "H", 1)));
         assertEquals("1 : HQ", controller.listEntries("alice", "facilities"));
     }
 
@@ -266,14 +266,14 @@ public class ControllerTest {
 
     @Test
     void readEntryPrintsAgent() {
-        when(store.getAgent(1)).thenReturn(new Agent(1, 2, "Ghost", "1990-01-01", "2000-01-01", "Notes"));
+        when(store.getAgentByID(1)).thenReturn(new Agent(1, 2, "Ghost", "1990-01-01", "2000-01-01", "Notes"));
         assertEquals("Name: Ghost\nDoB: 1990-01-01\nDoDeath: 2000-01-01\nNotes: Notes",
                 controller.readEntry("alice", "agents", 1));
     }
 
     @Test
     void readEntryPrintsFacility() {
-        when(store.getFacility(1)).thenReturn(new Facility(1, "HQ", "H"));
+        when(store.getFacility(1)).thenReturn(new Facility(1, "HQ", "H", 1));
         assertEquals("Name: HQ\nAbbreviation: H", controller.readEntry("alice", "facilities", 1));
     }
 
@@ -347,24 +347,26 @@ public class ControllerTest {
     @Test
     void addEntryAddsFacility() {
         when(access.isAdmin("boss")).thenReturn(true);
-        when(store.addFacility(any(Facility.class))).thenReturn(new Facility(1, "HQ", "H"));
-        when(store.listFacilities()).thenReturn(List.of(new Facility(1, "HQ", "H")));
-        assertEquals("1 : HQ", controller.addEntry("boss", "facilities", List.of("HQ", "H")));
+        when(store.addFacility(any(Facility.class))).thenReturn(new Facility(1, "HQ", "H", 1));
+        when(store.listFacilities()).thenReturn(List.of(new Facility(1, "HQ", "H", 1)));
+        assertEquals("1 : HQ", controller.addEntry("boss", "facilities", List.of("HQ", "H", "1")));
         ArgumentCaptor<Facility> captor = ArgumentCaptor.forClass(Facility.class);
         verify(store).addFacility(captor.capture());
         assertEquals("HQ", captor.getValue().getName());
         assertEquals("H", captor.getValue().getAbbreviation());
+        assertEquals(1, captor.getValue().getCountryID());
     }
 
     @Test
     void addEntryAddsFacilityWithCountry() {
         when(access.isAdmin("boss")).thenReturn(true);
-        when(store.addFacility(any(Facility.class))).thenReturn(new Facility(1, "HQ", "H"));
-        when(store.listFacilities()).thenReturn(List.of(new Facility(1, "HQ", "H")));
+        when(store.addFacility(any(Facility.class))).thenReturn(new Facility(1, "HQ", "H", 1));
+        when(store.listFacilities()).thenReturn(List.of(new Facility(1, "HQ", "H", 1)));
         assertEquals("1 : HQ", controller.addEntry("boss", "facilities", List.of("HQ", "H", "1")));
         ArgumentCaptor<Facility> captor = ArgumentCaptor.forClass(Facility.class);
         verify(store).addFacility(captor.capture());
         assertEquals("HQ", captor.getValue().getName());
+        assertEquals(1, captor.getValue().getCountryID());
     }
 
     @Test
@@ -430,7 +432,7 @@ public class ControllerTest {
     @Test
     void editEntryKeepsAgentMission() {
         when(access.isAdmin("boss")).thenReturn(true);
-        when(store.getAgent(1)).thenReturn(new Agent(1, 2, "Ghost", "1990-01-01", "2000-01-01", "Notes"));
+        when(store.getAgentByID(1)).thenReturn(new Agent(1, 2, "Ghost", "1990-01-01", "2000-01-01", "Notes"));
         when(store.listAgents()).thenReturn(List.of(
                 new Agent(1, 3, "Ghost2", "1990-01-01", "2000-01-01", "Notes2")));
         assertEquals("1 : Ghost2", controller.editEntry("boss", "agents", 1,
@@ -471,13 +473,14 @@ public class ControllerTest {
     @Test
     void editEntryEditsFacility() {
         when(access.isAdmin("boss")).thenReturn(true);
-        when(store.getFacility(1)).thenReturn(new Facility(1, "Old", "O"));
-        when(store.listFacilities()).thenReturn(List.of(new Facility(1, "New", "N")));
+        when(store.getFacility(1)).thenReturn(new Facility(1, "Old", "O", 1));
+        when(store.listFacilities()).thenReturn(List.of(new Facility(1, "New", "N", 1)));
         assertEquals("1 : New", controller.editEntry("boss", "facilities", 1, List.of("New", "N", "1")));
         ArgumentCaptor<Facility> captor = ArgumentCaptor.forClass(Facility.class);
         verify(store).updateFacility(captor.capture());
         assertEquals(1, captor.getValue().getFacilityID());
         assertEquals("New", captor.getValue().getName());
+        assertEquals(1, captor.getValue().getCountryID());
     }
 
     @Test
@@ -624,7 +627,7 @@ public class ControllerTest {
     @Test
     void getFormFieldsReturnsNewAgentFields() {
         when(access.isAdmin("boss")).thenReturn(true);
-        when(store.listFacilities()).thenReturn(List.of(new Facility(2, "HQ", "H")));
+        when(store.listFacilities()).thenReturn(List.of(new Facility(2, "HQ", "H", 1)));
         List<ControllerInterface.FormField> fields = controller.getFormFields("boss", "agents", 0);
         assertEquals(5, fields.size());
         assertEquals(List.of("2 : HQ"), fields.get(0).options());
@@ -645,7 +648,7 @@ public class ControllerTest {
     @Test
     void getFormFieldsReturnsNewMissionFields() {
         when(access.isAdmin("boss")).thenReturn(true);
-        when(store.listFacilities()).thenReturn(List.of(new Facility(2, "HQ", "H")));
+        when(store.listFacilities()).thenReturn(List.of(new Facility(2, "HQ", "H", 1)));
         List<ControllerInterface.FormField> fields = controller.getFormFields("boss", "missions", 0);
         assertEquals(2, fields.size());
         assertEquals(List.of("2 : HQ"), fields.get(1).options());
