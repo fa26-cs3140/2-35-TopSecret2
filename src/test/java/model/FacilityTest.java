@@ -40,5 +40,20 @@ public class FacilityTest {
         assertEquals("ST", f2.getAbbreviation());
     }
 
+    @Test
+    void setCountryIDChanges() {
+        Facility testFacility = new Facility(
+                1,
+                "Startrek",
+                "SK",
+                1
+        );
+
+        testFacility.setCountryID(1966);
+
+        assertEquals(1966, testFacility.getCountryID());
+
+    }
+
 
 }
