@@ -79,7 +79,7 @@ public class MessageManagerSQLiteDataStoreTest {
 
         // Check if message was actually stored in the database
 
-        assertEquals(sampleAgent, lastAgentMessage.getRecipient());
+        assertEquals(sampleAgent.getAgentID(), lastAgentMessage.getRecipient().getAgentID());
         assertEquals("It's a weather plane!",
                 lastAgentMessage.getMessageContent());
 
