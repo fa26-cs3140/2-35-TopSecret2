@@ -19,10 +19,11 @@ Features:
         immediately visible in the lists
     A mission is run by one facility; agents belong to one facility and
         may be assigned to multiple missions, from any facility
-    Messages are terminal-only: a user addresses a message to an agent
-        by name, and an agent reads it by logging in with a matching
-        username (matching is case-insensitive, no admin needed)
-    Every read and create is written to an audit log stored in the
+    Messages can be sent and read in the terminal or on the web Messages
+        page: a user addresses a message to an agent by name, and an agent
+        reads it by logging in with a matching username (matching is
+        case-insensitive, no admin needed)
+    Every read, create and edit is written to an audit log stored in the
         database, recording the user, the action, the record, and the time
     Passwords are stored ciphered in a credentials file; only the account
         owner can change their own password
@@ -46,12 +47,12 @@ Running the terminal version (default):
 Running the web version:
     .\gradlew run --args="-web"
     Then open http://localhost:3002/ in a browser. The first page is a
-    username and password form. Valid credentials set a session cookie
-    that expires when the browser is closed; every page except the login
-    form requires that session, and unknown pages show an error page
-    instead of crashing. The web view is read-only: records and the audit
-    log can be browsed and read, but not created or edited. The web
-    version does not start until at least one user account exists;
+    username and password form. Valid credentials set a session cookie.
+    A session stays valid for 30 minutes of inactivity, and the timer resets on each request.
+    Every page except the login form requires a session, and unknown pages show an error page
+    instead of crashing. Admins can create and edit records from the web view (Add links on the
+    browse pages, Edit links on the read pages) and review the audit log. Standard users can browse,
+    read and use messages. The web version does not start until at least one user account exists;
     create one in the terminal first.
 
 Building a runnable jar:
