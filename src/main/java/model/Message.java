@@ -28,7 +28,7 @@ public class Message {
      * @param recipient
      * @param content
      */
-    public Message(User sender, Agent recipient, String content) {
+    public Message(User sender, Agent recipient, String content, boolean isRead) {
         this.messageID = -1;
         this.sender = sender;
         this.recipient = recipient;
