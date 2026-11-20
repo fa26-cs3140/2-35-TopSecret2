@@ -223,8 +223,6 @@ class SQLiteDataStoreTest {
         }
     }
 
-
-    //adding records
     @Test
     void addFacilityInsertsCorrectly() {
         Facility expected = new Facility("f1", "ab1");
@@ -707,4 +705,50 @@ class SQLiteDataStoreTest {
                 store.listBriefsForMission(emptyMission.getMissionID()).isEmpty()
         );
     }
+
+    @Test
+    void getUserByNameReturnsExistingUser() {
+        List<User> users = store.listUsers();
+
+        if (!users.isEmpty()) {
+            User expected = users.get(0);
+            User actual = store.getUserByName(expected.getUsername());
+
+            assertNotNull(actual);
+            // Checks if the user ID matches
+            assertEquals(expected.getUserID(), actual.getUserID());
+            // Checks if the username matches
+            assertEquals(expected.getUsername(), actual.getUsername());
+        } else {
+            store.getUserByName("user1");
+        }
+    }
+
+    @Test
+    void addMessageInsertsCorrectly() {
+        Message testMessage = new Message(
+                -1,
+                store.getUserByID(1),
+                store.getAgentByID(1),
+                "Spend the dollar.",
+                false
+                );
+
+        Message insertedMessage = store.addMessage(testMessage);
+
+        assertNotNull(insertedMessage);
+        assertEquals(
+                testMessage.getSender().getUserID(),
+                insertedMessage.getSender().getUserID()
+        );
+        assertEquals(
+                testMessage.getRecipient().getAgentID(),
+                insertedMessage.getRecipient().getAgentID()
+        );
+        assertEquals(testMessage.getMessageContent(),
+                insertedMessage.getMessageContent()
+        );
+        assertEquals(testMessage.isRead(), insertedMessage.isRead());
+    }
+
 }
