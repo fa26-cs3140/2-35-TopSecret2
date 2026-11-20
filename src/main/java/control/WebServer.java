@@ -90,6 +90,10 @@ public class WebServer {
 
     // Escape plain controller text for HTML pages.
     private String escape(String text) {
+        if (text == null) {
+            return "";
+        }
+
         return text
                 .replace("&", "&amp;")
                 .replace("<", "&lt;")

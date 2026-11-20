@@ -339,6 +339,12 @@ public class Controller implements ControllerInterface {
         if (!access.isAdmin(username)) {
             return "Not allowed";
         }
+        for (int i = 0; i< fields.size(); i++) {
+            if (fields.get(i).isBlank()){
+                fields.set(i, null);
+            }
+        }
+
         try {
             switch (itemType) {
                 case "briefs": {
