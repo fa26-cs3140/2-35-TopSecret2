@@ -1465,7 +1465,10 @@ public class SQLiteDataStore implements DataStoreInterface, AutoCloseable {
         VALUES (?, ?, ?, ?)
         """;
 
-        try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
+        try (PreparedStatement pstmt = connection.prepareStatement(
+                sql,
+                Statement.RETURN_GENERATED_KEYS)) {
+            Message insertedMessage = null;
             Agent messageRecipient = newMessage.getRecipient();
             User messageSender = newMessage.getSender();
             pstmt.setInt(1, messageSender.getUserID());
@@ -1473,9 +1476,20 @@ public class SQLiteDataStore implements DataStoreInterface, AutoCloseable {
             pstmt.setString(3, newMessage.getMessageContent());
             pstmt.setInt(4, (newMessage.isRead() ? 1 : 0));
 
-            pstmt.executeUpdate();
+            if (pstmt.executeUpdate() == 1) {
+                ResultSet rs = pstmt.getGeneratedKeys();
+                if (rs.next()) {
+                    insertedMessage = new Message(
+                            rs.getInt(1),
+                            messageSender,
+                            messageRecipient,
+                            newMessage.getMessageContent(),
+                            newMessage.isRead()
+                            );
+                }
+            }
 
-            return newMessage;
+            return insertedMessage;
 
         } catch (SQLException e) {
             throw new IllegalArgumentException(
