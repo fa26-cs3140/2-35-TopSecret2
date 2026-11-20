@@ -11,13 +11,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class MessageManagerSQLiteDataStoreTest {
     private SQLiteDataStore dataStore;
     private MessageManager messageManager;
     private User sampleUser;
+    private Message sampleMessage;
 
     @TempDir
     Path tempDir;
@@ -33,7 +33,7 @@ public class MessageManagerSQLiteDataStoreTest {
 
         dataStore.addMessage(new Message(sampleUser, dataStore.getAgentByID(5),
                 "This is not a friendship; it's a spaceship."));
-        dataStore.addMessage(new Message(sampleUser, dataStore.getAgentByID(1),
+        sampleMessage = dataStore.addMessage(new Message(sampleUser, dataStore.getAgentByID(1),
                 "Spend the dollar"));
         dataStore.addMessage(new Message(sampleUser, dataStore.getAgentByID(3),
                 "URGENT: Tear it down"));
@@ -157,5 +157,25 @@ public class MessageManagerSQLiteDataStoreTest {
 
         assertEquals("URGENT: Tear it down"
                 , lastAgent3Message.getMessageContent());
+    }
+
+    @Test
+    void readMessagesTest1() {
+        try {
+            messageManager.readMessage(sampleMessage);
+
+        }catch (TopSecretException e) {
+            fail();
+        }
+
+        for (Message m: dataStore.listMessagesForAgent(sampleMessage.getRecipient())){
+            if (m.getMessageID() == sampleMessage.getMessageID()){
+                assertEquals(sampleMessage.getMessageContent(), m.getMessageContent());
+                assertEquals(sampleMessage.getSender().getUsername(), m.getSender().getUsername());
+                assertEquals(sampleMessage.getRecipient().getAgentID(), m.getRecipient().getAgentID());
+                assertTrue(m.isRead());
+                break;
+            }
+        }
     }
 }

@@ -1,21 +1,16 @@
 package control;
 
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.List;
-import model.AccessControlInterface;
-import model.Agent;
-import model.AuditLogInterface;
-import model.Message;
-import model.SQLiteDataStore;
-import model.User;
-import model.UserManagerInterface;
+
+import model.*;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -33,17 +28,19 @@ public class ControllerMessageManagerTest {
 
     private SQLiteDataStore store;
     private Agent courier;
+    private User boss;
     private Controller controller;
+    private MessageManager messages;
 
     @BeforeEach
     void setUp() throws Exception {
         String databaseUrl = "jdbc:sqlite:" + tempDir.resolve("test.db");
         store = new SQLiteDataStore(databaseUrl);
         courier = store.addAgent(new Agent(1, "Courier", "1990-05-05", null, "Test agent"));
-        User boss = store.addUser(new User(-1, "boss"));
+        boss = store.addUser(new User(-1, "boss"));
         UserManagerInterface users = mock(UserManagerInterface.class);
         when(users.getUserByUsername("boss")).thenReturn(boss);
-        MessageManager messages = new MessageManager(store);
+        messages = new MessageManager(store);
         controller = new Controller(users,
                 mock(AccessControlInterface.class), store,
                 mock(AuditLogInterface.class), messages, mock(SessionManager.class));
@@ -98,5 +95,26 @@ public class ControllerMessageManagerTest {
         controller.sendMessage("boss", "Courier", "First");
         controller.sendMessage("boss", "Courier", "Second");
         assertEquals("First\nSecond", controller.viewMessages("courier"));
+    }
+
+    @Test
+    void readMessageChangesReadStatus(){
+        controller.sendMessage("boss", "Courier", "First");
+        String msg = controller.readMessage("Courier",1);
+        assertEquals("1 : First", msg);
+        List<Message> msgs = new ArrayList<>();
+        try {
+            msgs = messages.retrieveMessages(courier);
+        }catch (Exception e){
+            fail();
+        }
+
+        for (Message m : msgs) {
+            if (m.getMessageContent().equals("First")){
+                assertEquals("First", m.getMessageContent());
+                assertTrue(m.isRead());
+            }
+        }
+
     }
 }
