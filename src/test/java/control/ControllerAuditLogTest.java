@@ -25,7 +25,7 @@ import static org.mockito.Mockito.when;
 // controller-to-audit-log wiring only, that is, reads and adds
 // that reach the log as real rows. The acting user is seeded
 // into the store first, since log rows reference their user.
-// Run: .\gradlew test --tests "control.ControllerAuditLogIntegrationTest" --console=plain
+// Run: .\gradlew test --tests "control.ControllerAuditLogTest" --console=plain
 public class ControllerAuditLogTest {
     @TempDir
     Path tempDir;
@@ -66,7 +66,7 @@ public class ControllerAuditLogTest {
 
     @Test
     void addEntryLogsRealCreateAction() {
-        controller.addEntry("boss", "facilities", List.of("New Facility", "NF"));
+        controller.addEntry("boss", "facilities", List.of("New Facility", "NF", "1"));
         List<LoggedAction> log = audit.getLog();
         assertEquals(1, log.size());
         assertEquals(LoggedAction.CREATE, log.get(0).getAction());
@@ -76,7 +76,7 @@ public class ControllerAuditLogTest {
     @Test
     void reviewAuditLogShowsRealEntries() {
         controller.readEntry("boss", "briefs", 1);
-        controller.addEntry("boss", "facilities", List.of("New Facility", "NF"));
+        controller.addEntry("boss", "facilities", List.of("New Facility", "NF", "1"));
         String review = controller.reviewAuditLog("boss");
         assertTrue(review.contains("briefs 1"));
         assertTrue(review.contains("facilities 7"));
