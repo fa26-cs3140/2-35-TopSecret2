@@ -145,6 +145,10 @@ public class WebView {
                 .append(HTMLUtils.createBackLink())
                 .append("</p>");
 
+        body.append("<p>")
+                .append(HTMLUtils.createLink("/create?type=" + type, "Add " + type))
+                .append("</p>");
+
         return HTMLUtils.createPage(title, body.toString());
     }
 
@@ -192,7 +196,10 @@ public class WebView {
      * Generates a page displaying one selected record.
      */
     public String readView(String type, String record) {
+        return readView(type, 0, record);
+    }
 
+    public String readView(String type, int id, String record) {
         String title = "Read " + type;
 
         StringBuilder body = new StringBuilder();
@@ -201,11 +208,14 @@ public class WebView {
 
         body.append(HTMLUtils.createTextBlock(record));
 
+        if (id > 0) {
+            body.append("<p>")
+                    .append(HTMLUtils.createLink("/edit?type=" + type + "&id=" + id, "Edit this record"))
+                    .append("</p>");
+        }
+
         body.append("<p>")
-                .append(HTMLUtils.createLink(
-                        "/browse?type=" + type,
-                        "Back to Browse " + type
-                ))
+                .append(HTMLUtils.createLink("/browse?type=" + type, "Back to Browse " + type))
                 .append("</p>");
 
         body.append("<p>")

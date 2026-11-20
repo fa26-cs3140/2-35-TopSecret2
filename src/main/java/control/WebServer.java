@@ -286,7 +286,10 @@ public class WebServer {
             sendPage(exchange, wrapText("Read", "Invalid option"), token);
             return;
         }
-        sendPage(exchange, wrapText("Read: " + type, controller.readEntry(username, type, id)), token);
+        String text = controller.readEntry(username, type, id);
+        boolean found = !text.startsWith("No ") && !text.equals("Invalid option");
+        String page = found ? view.readView(type, id, text) : wrapText("Read: " + type, text);
+        sendPage(exchange, page, token);
     }
 
     // Audit: the audit log, admin-gated by the controller.
