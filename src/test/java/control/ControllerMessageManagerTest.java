@@ -7,6 +7,7 @@ import model.Agent;
 import model.AuditLogInterface;
 import model.Message;
 import model.SQLiteDataStore;
+import model.User;
 import model.UserManagerInterface;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -16,6 +17,7 @@ import org.junit.jupiter.api.io.TempDir;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 // Integration tests: a real MessageManager over a real
 // SQLiteDataStore on a test database, behind the full
@@ -24,7 +26,7 @@ import static org.mockito.Mockito.mock;
 // sending and viewing through real persisted messages. The
 // manager's user side stays mocked; it is stored but never
 // used by create or retrieve.
-// Run: .\gradlew test --tests "control.ControllerMessageManagerIntegrationTest" --console=plain
+// Run: .\gradlew test --tests "control.ControllerMessageManagerTest" --console=plain
 public class ControllerMessageManagerTest {
     @TempDir
     Path tempDir;
@@ -38,8 +40,11 @@ public class ControllerMessageManagerTest {
         String databaseUrl = "jdbc:sqlite:" + tempDir.resolve("test.db");
         store = new SQLiteDataStore(databaseUrl);
         courier = store.addAgent(new Agent(1, "Courier", "1990-05-05", null, "Test agent"));
+        User boss = store.addUser(new User(-1, "boss"));
+        UserManagerInterface users = mock(UserManagerInterface.class);
+        when(users.getUserByUsername("boss")).thenReturn(boss);
         MessageManager messages = new MessageManager(store);
-        controller = new Controller(mock(UserManagerInterface.class),
+        controller = new Controller(users,
                 mock(AccessControlInterface.class), store,
                 mock(AuditLogInterface.class), messages, mock(SessionManager.class));
     }
