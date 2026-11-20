@@ -21,7 +21,7 @@ import static org.mockito.Mockito.when;
 // Controller. Users, store, audit, and messages stay mocked:
 // this file tests the controller-to-roles wiring only, that is,
 // which menu options and actions each role can actually use.
-// Run: .\gradlew test --tests "control.ControllerAccessControlIntegrationTest" --console=plain
+// Run: .\gradlew test --tests "control.ControllerAccessControlTest" --console=plain
 public class ControllerAccessControlTest {
     private AccessControl access;
     private UserManagerInterface users;
@@ -40,20 +40,20 @@ public class ControllerAccessControlTest {
     @Test
     void adminSeesAdminOptions() {
         String menu = controller.showMainMenu("boss");
-        assertTrue(menu.contains("6. Create a new user"));
-        assertTrue(menu.contains("7. Promote or Demote users"));
-        assertTrue(menu.contains("8. Review audit log"));
-        assertTrue(menu.contains("10. Assign agent to mission"));
+        assertTrue(menu.contains("7. Create a new user"));
+        assertTrue(menu.contains("8. Promote or Demote users"));
+        assertTrue(menu.contains("9. Review audit log"));
+        assertTrue(menu.contains("11. Assign agent to mission"));
     }
 
     @Test
     void standardUserSeesNoAdminOptions() {
         String menu = controller.showMainMenu("alice");
-        assertFalse(menu.contains("6. Create a new user"));
-        assertFalse(menu.contains("7. Promote or Demote users"));
-        assertFalse(menu.contains("8. Review audit log"));
-        assertFalse(menu.contains("10. Assign agent to mission"));
-        assertTrue(menu.contains("9. Send or view messages"));
+        assertFalse(menu.contains("7. Create a new user"));
+        assertFalse(menu.contains("8. Promote or Demote users"));
+        assertFalse(menu.contains("9. Review audit log"));
+        assertFalse(menu.contains("11. Assign agent to mission"));
+        assertTrue(menu.contains("10. Send or view messages"));
     }
 
     @Test
@@ -69,7 +69,7 @@ public class ControllerAccessControlTest {
         assertEquals("alice was promoted",
                 controller.manageAccess("boss", "alice", "Promote"));
         assertTrue(controller.isAdmin("alice"));
-        assertTrue(controller.showMainMenu("alice").contains("6. Create a new user"));
+        assertTrue(controller.showMainMenu("alice").contains("7. Create a new user"));
     }
 
     @Test
