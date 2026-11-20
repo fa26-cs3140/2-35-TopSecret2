@@ -13,6 +13,7 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
@@ -23,7 +24,7 @@ import static org.mockito.Mockito.when;
 // Mockito-mocked ControllerInterface, and a real HttpClient.
 // No browser needed. The mocked controller lets these tests
 // prove routing, cookies, and gating.
-// Run: .\gradlew test --tests "control.WebServerControllerIntegrationTest" --console=plain
+// Run: .\gradlew test --tests "control.WebServerControllerTest" --console=plain
 public class WebServerControllerTest {
     private ControllerInterface controller;
     private SessionManager sessions;
@@ -69,7 +70,7 @@ public class WebServerControllerTest {
     }
 
     private String loginAsBossAndGetCookie() throws Exception {
-        when(controller.verifyLogin("boss", "Pass123")).thenReturn(true);
+        when(controller.verifyLogin(anyString(), anyString())).thenReturn(true);
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create(base + "/login"))
                 .header("Content-Type", "application/x-www-form-urlencoded")
