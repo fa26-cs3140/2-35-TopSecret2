@@ -1507,6 +1507,7 @@ public class SQLiteDataStore implements DataStoreInterface, AutoCloseable {
         try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
             pstmt.setString(1, newMessage.getMessageContent());
             pstmt.setInt(2, (newMessage.isRead() ? 1 : 0));
+            pstmt.setInt(3, newMessage.getMessageID());
 
             if (pstmt.executeUpdate() != 1) {
                 throw new IllegalArgumentException(
