@@ -1,0 +1,3 @@
+Case setNameChanges: Verifies that setName changes the country name
+
+Case setCountryIDChanges: Verifies that setCountryID changes the country ID
