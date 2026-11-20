@@ -34,6 +34,15 @@ class SQLiteDataStoreTest {
     }
 
     @Test
+    void defaultConstructorTest() {
+        store.close();
+
+        store = new SQLiteDataStore();
+
+        assertNotNull(store);
+    }
+
+    @Test
     void listMissionsReturnsMissions() {
         List<Mission> missions = store.listMissions();
 
@@ -891,4 +900,321 @@ class SQLiteDataStoreTest {
                 );
     }
 
+    @Test
+    void updateMissionModifies() {
+        Country testCountry = new Country("Soviet Union");
+        Country storedCountry = store.addCountry(testCountry);
+
+        Facility testFacility = new Facility(
+                "Lubyanka",
+                "LBY",
+                storedCountry.getCountryID()
+        );
+
+        Facility storedFacility = store.addFacility(testFacility);
+
+        Mission testMission = new Mission(
+                "Monitor Reagan",
+                storedFacility.getFacilityID()
+        );
+
+        Mission storedMission = store.addMission(testMission);
+
+        Country testCountry2 = new Country("East Germany");
+
+        Country storedCountry2 = store.addCountry(testCountry2);
+
+        Facility testFacility2 = new Facility(
+                "Karlshorst",
+                "KST",
+                storedCountry2.getCountryID()
+        );
+
+        Facility storedFacility2 = store.addFacility(testFacility2);
+
+        Mission updatedMission = new Mission(
+                storedMission.getMissionID(),
+                "Analyze Reagan",
+                storedFacility2.getFacilityID()
+                );
+
+        Mission newStoredMission = store.updateMission(updatedMission);
+
+        assertNotNull(newStoredMission);
+        assertEquals(
+                storedMission.getMissionID(),
+                newStoredMission.getMissionID()
+        );
+        assertEquals(
+                updatedMission.getTitle(),
+                newStoredMission.getTitle()
+        );
+        assertEquals(
+            updatedMission.getFacilityID(),
+            newStoredMission.getFacilityID()
+        );
+    }
+
+    @Test
+    void getAgentByNameReturnAgent() {
+        Country storedCountry = store.addCountry(
+                new Country("Soviet Union")
+        );
+
+        Facility storedFacility = store.addFacility(
+               new Facility(
+                       "Bolshoy Dom",
+                       "BHD",
+                       storedCountry.getCountryID()
+               )
+        );
+
+        Agent testAgent = new Agent(
+                storedFacility.getFacilityID(),
+                "Vladimir Putin",
+                "1952-10-07",
+                null,
+                "Second Chief Directorate"
+                );
+
+        Agent storedAgent = store.addAgent(testAgent);
+
+        Agent returnedAgent = store.getAgentByName("Vladimir Putin");
+
+        assertNotNull(returnedAgent);
+        assertEquals(
+                storedAgent.getAgentID(),
+                returnedAgent.getAgentID()
+        );
+        assertEquals(storedAgent.getName(), returnedAgent.getName());
+        assertEquals(
+                storedAgent.getDate_of_birth(),
+                returnedAgent.getDate_of_birth()
+        );
+        assertEquals(
+                storedAgent.getDate_of_death(),
+                returnedAgent.getDate_of_death()
+        );
+        assertEquals(storedAgent.getNotes(), returnedAgent.getNotes());
+    }
+
+    @Test
+    void getAgentByNameNullForNonexistent() {
+        Agent returnedAgent = store.getAgentByName("Agent T");
+
+        assertNull(returnedAgent);
+    }
+
+    @Test
+    void updateAgentModifies() {
+        Country storedCountry = store.addCountry(
+                new Country("Soviet Union")
+        );
+
+        Facility storedFacility1 = store.addFacility(
+                new Facility(
+                        "Lubyanka",
+                        "LBY",
+                        storedCountry.getCountryID()
+                )
+        );
+
+        Facility storedFacility2 = store.addFacility(
+                new Facility(
+                        "Bolshoy Dom",
+                        "BHD",
+                        storedCountry.getCountryID()
+                )
+        );
+
+        Agent storedAgent = store.addAgent(
+                new Agent(
+                        storedFacility1.getFacilityID(),
+                        "Secret7",
+                        "1975-07-13",
+                        null,
+                        ""
+                )
+        );
+
+        Agent updatedAgent = new Agent(
+                storedAgent.getAgentID(),
+                storedFacility2.getFacilityID(),
+                "SecretSeven",
+                "1974-07-13",
+                "2004-04-09",
+                "MIA"
+                );
+
+        Agent returnedAgent = store.updateAgent(updatedAgent);
+
+        assertNotNull(returnedAgent);
+        assertEquals(
+                storedAgent.getAgentID(),
+                returnedAgent.getAgentID()
+        );
+        assertEquals(
+                storedFacility2.getFacilityID(),
+                returnedAgent.getFacilityID()
+        );
+        assertEquals(
+                updatedAgent.getName(),
+                returnedAgent.getName()
+                );
+        assertEquals(
+                updatedAgent.getDate_of_birth(),
+                returnedAgent.getDate_of_birth()
+                );
+        assertEquals(
+                updatedAgent.getDate_of_death(),
+                returnedAgent.getDate_of_death()
+        );
+        assertEquals(
+                updatedAgent.getNotes(),
+                returnedAgent.getNotes()
+                );
+    }
+
+    @Test
+    void updateFacilityModifies() {
+        Country storedCountry1 = store.addCountry(
+                new Country("Soviet Union")
+        );
+
+        Country storedCountry2 = store.addCountry(
+                new Country("Russian Federation")
+        );
+
+        Facility storedFacility = store.addFacility(
+                new Facility(
+                        "Lubyanka",
+                        "LBY",
+                        storedCountry1.getCountryID()
+                )
+        );
+
+        Facility updatedFacility = new Facility(
+                storedFacility.getFacilityID(),
+                "Lubyanka Building",
+                "LYB",
+                storedCountry2.getCountryID()
+                );
+
+        Facility newStoredFacility =
+                store.updateFacility(updatedFacility);
+
+        assertNotNull(newStoredFacility);
+        assertEquals(
+                storedFacility.getFacilityID(),
+                newStoredFacility.getFacilityID()
+        );
+        assertEquals(
+                updatedFacility.getName(),
+                newStoredFacility.getName()
+        );
+        assertEquals(
+                updatedFacility.getAbbreviation(),
+                newStoredFacility.getAbbreviation()
+        );
+        assertEquals(
+                updatedFacility.getCountryID(),
+                newStoredFacility.getCountryID()
+        );
+    }
+
+    @Test
+    void updateBriefsModifies() {
+        Brief storedBrief = store.addBrief(
+                new Brief(
+                98,
+                "Evaluate PRISM Leak",
+                "2014-08-18",
+                "Understand lost information about PRISM"
+                )
+        );
+
+        Brief updatedBrief = new Brief(
+                storedBrief.getBriefID(),
+                98,
+                "Evaluate PRISM Leaks",
+                "2014-08-19",
+                "Understand revealed information about PRISM"
+                );
+
+        Brief newStoredBrief = store.updateBrief(updatedBrief);
+
+        assertNotNull(newStoredBrief);
+        assertEquals(
+                updatedBrief.getBriefID(),
+                newStoredBrief.getBriefID()
+                );
+        assertEquals(
+                updatedBrief.getMissionID(),
+                newStoredBrief.getMissionID()
+        );
+        assertEquals(
+                updatedBrief.getTitle(),
+                newStoredBrief.getTitle()
+        );
+        assertEquals(
+                updatedBrief.getDate(),
+                newStoredBrief.getDate()
+        );
+        assertEquals(
+                updatedBrief.getContent(),
+                newStoredBrief.getContent()
+        );
+    }
+
+    @Test
+    void messagesListForAgent() {
+        Agent testAgent1 = store.getAgentByID(1);
+
+        Message sentMessage = store.addMessage(
+                new Message(
+                        store.getUserByID(1),
+                        testAgent1,
+                        "Find the coin."
+                )
+        );
+
+        List<Message> messageList =
+                store.listMessagesForAgent(testAgent1);
+
+        assertNotNull(messageList);
+        assertFalse(messageList.isEmpty());
+        Message retrievedMessage = messageList.getFirst();
+
+        assertEquals(
+                sentMessage.getMessageID(),
+                retrievedMessage.getMessageID()
+                );
+        assertEquals(
+                sentMessage.getSender().getUserID(),
+                retrievedMessage.getSender().getUserID()
+        );
+        assertEquals(
+                sentMessage.getRecipient().getAgentID(),
+                retrievedMessage.getRecipient().getAgentID()
+                );
+        assertEquals(
+                sentMessage.getMessageContent(),
+                retrievedMessage.getMessageContent()
+                );
+        assertEquals(
+                sentMessage.isRead(),
+                retrievedMessage.isRead()
+        );
+    }
+
+    @Test
+    void messagesListEmptyForAgent() {
+        Agent testAgent1 = store.getAgentByID(1);
+
+        List<Message> messageList =
+                store.listMessagesForAgent(testAgent1);
+
+        assertNotNull(messageList);
+        assertTrue(messageList.isEmpty());
+    }
 }
