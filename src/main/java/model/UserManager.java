@@ -137,7 +137,7 @@ public class UserManager implements UserManagerInterface {
     @Override
     public User getUserByID(int userID) throws TopSecretException {
         try {
-            return dataStore.getUser(userID);
+            return dataStore.getUserByID(userID);
         } catch (RuntimeException e) {
             throw new TopSecretException("Could not look up user", e);
         }
