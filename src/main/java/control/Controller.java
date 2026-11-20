@@ -145,22 +145,30 @@ public class Controller implements ControllerInterface {
     public String showMainMenu(String username) {
         boolean admin = access.isAdmin(username);
         StringBuilder menu = new StringBuilder();
+
         menu.append("1. Browse briefs\n");
         menu.append("2. Browse agents\n");
         menu.append("3. Browse facilities\n");
         menu.append("4. Browse missions\n");
         menu.append("5. Browse countries\n");
         menu.append("6. Change Password\n");
+
         if (admin) {
             menu.append("7. Create a new user\n");
             menu.append("8. Promote or Demote users\n");
             menu.append("9. Review audit log\n");
         }
+
         menu.append("10. Send or view messages\n");
+
         if (admin) {
             menu.append("11. Assign agent to mission\n");
+            menu.append("12. Manage Web Sessions\n");
+            menu.append("13. Exit/logout\n");
+        } else {
+            menu.append("12. Exit/logout\n");
         }
-        menu.append("12. Exit/logout\n");
+
         menu.append("Enter an option number:");
         return menu.toString();
     }

@@ -61,7 +61,7 @@ public class TerminalViewControllerTest {
         when(store.listMissions()).thenReturn(List.of(mission));
 
         System.setIn(new ByteArrayInputStream(
-                "alice\npassword\n4\n1\n5\n12\n".getBytes()
+                "alice\npassword\n4\n1\n5\n13\n".getBytes()
         ));
 
         TerminalView view = new TerminalView(controller);
@@ -90,7 +90,7 @@ public class TerminalViewControllerTest {
         when(store.listFacilities()).thenReturn(List.of(facility));
 
         System.setIn(new ByteArrayInputStream(
-                "admin\npassword\n3\n3\nHeadquarters\nHQ\n1\n5\n12\n".getBytes()
+                "admin\npassword\n3\n3\nHeadquarters\nHQ\n1\n5\n13\n".getBytes()
         ));
 
         TerminalView view = new TerminalView(controller);
@@ -115,7 +115,7 @@ public class TerminalViewControllerTest {
         when(access.isAdmin("alice")).thenReturn(false);
 
         System.setIn(new ByteArrayInputStream(
-                "alice\noldPassword\n6\nnewPassword\nnewPassword\n12\n".getBytes()
+                "alice\noldPassword\n6\nnewPassword\nnewPassword\n13\n".getBytes()
         ));
 
         TerminalView view = new TerminalView(controller);

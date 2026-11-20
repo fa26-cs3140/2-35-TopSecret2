@@ -299,7 +299,7 @@ public class TerminalView {
 
             int choice = -1;
             if (isAdmin()){
-                choice = getInputInt(1,12,controller.showMainMenu(currentUser));
+                choice = getInputInt(1, 13, controller.showMainMenu(currentUser));
             }else{
                 choice = getInputInt(controller.showMainMenu(currentUser), 1,6,10,12);
             }
@@ -344,6 +344,9 @@ public class TerminalView {
                         assignAgentToMission();
                         break;
                     case 12:
+                        manageWebSessions();
+                        break;
+                    case 13:
                         return;
                     default:
                         System.out.println("Invalid option.");
@@ -737,5 +740,50 @@ public class TerminalView {
         display(controller.sendMessage(
                 currentUser, agentName, message
         ));
+    }
+
+
+    // ---------------- WEB SESSION MANAGEMENT ----------------
+
+    private void manageWebSessions() {
+        while (true) {
+            display("""
+                ----------Manage Web Sessions----------
+
+                1. List active web sessions
+                2. Revoke a web session
+                3. Back
+                """);
+
+            int choice = getInputInt(
+                    1, 3, "Enter an option number: "
+            );
+
+            switch (choice) {
+                case 1:
+                    display(controller.listWebSessions(currentUser));
+                    break;
+
+                case 2:
+                    revokeWebSession();
+                    break;
+
+                case 3:
+                    return;
+
+                default:
+                    System.out.println("Invalid option.");
+            }
+        }
+    }
+
+    private void revokeWebSession() {
+        String token = getRequiredInput("Session token to revoke: ");
+
+        if (token == null) {
+            return;
+        }
+
+        display(controller.deleteWebSession(currentUser, token));
     }
 }

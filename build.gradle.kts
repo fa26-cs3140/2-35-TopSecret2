@@ -26,6 +26,8 @@ dependencies {
 
 tasks.test {
     useJUnitPlatform()
+    maxHeapSize = "1024m"
+    maxParallelForks = 1
 }
 tasks.named<JavaExec>("run") {
     standardInput = System.`in`

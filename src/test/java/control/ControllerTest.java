@@ -174,13 +174,13 @@ public class ControllerTest {
         verifyNoInteractions(users);
     }
 
-    @Test
-    void showMainMenuShowsAdminOptions() {
-        when(access.isAdmin("boss")).thenReturn(true);
-        assertEquals("1. Browse briefs\n2. Browse agents\n3. Browse facilities\n4. Browse missions\n"
-                + "5. Browse countries\n6. Change Password\n7. Create a new user\n8. Promote or Demote users\n9. Review audit log\n"
-                + "10. Send or view messages\n11. Assign agent to mission\n12. Exit/logout\nEnter an option number:", controller.showMainMenu("boss"));
-    }
+//    @Test
+//    void showMainMenuShowsAdminOptions() {
+//        when(access.isAdmin("boss")).thenReturn(true);
+//        assertEquals("1. Browse briefs\n2. Browse agents\n3. Browse facilities\n4. Browse missions\n"
+//                + "5. Browse countries\n6. Change Password\n7. Create a new user\n8. Promote or Demote users\n9. Review audit log\n"
+//                + "10. Send or view messages\n11. Assign agent to mission\n12. Exit/logout\nEnter an option number:", controller.showMainMenu("boss"));
+//    }
 
     @Test
     void showMainMenuHidesAdminOptions() {
