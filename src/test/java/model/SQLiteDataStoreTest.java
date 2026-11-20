@@ -784,4 +784,111 @@ class SQLiteDataStoreTest {
                 newlyUpdatedMessage.isRead()
         );
     }
+
+    @Test
+    void addCountryInsertsCorrectly() {
+        Country testCountry = new Country("Wakanda");
+
+        Country insertedCountry = store.addCountry(testCountry);
+
+        assertNotNull(insertedCountry);
+        assertEquals(testCountry.getName(), insertedCountry.getName());
+        assertTrue((insertedCountry.getCountryID() > 0));
+    }
+
+    @Test
+    void getCountryReturnsCorrectly() {
+        Country testCountry = new Country("Soviet Union");
+
+        Country insertedCountry = store.addCountry(testCountry);
+
+        Country retrievedCountry = store.getCountry(
+                insertedCountry.getCountryID()
+        );
+
+        assertNotNull(retrievedCountry);
+        assertEquals(
+                insertedCountry.getCountryID(),
+                retrievedCountry.getCountryID()
+        );
+        assertEquals(insertedCountry.getName(),
+                retrievedCountry.getName()
+        );
+    }
+
+    @Test
+    void updateCountryModifies() {
+        Country testCountry = new Country("Soviet Union");
+
+        Country insertedCountry = store.addCountry(testCountry);
+
+        Country modifiedCountry = new Country(
+                insertedCountry.getCountryID(),
+                insertedCountry.getName()
+        );
+
+        Country newlyInsertedCountry =
+                store.updateCountry(modifiedCountry);
+
+        assertNotNull(newlyInsertedCountry);
+        assertEquals(
+                modifiedCountry.getCountryID(),
+                newlyInsertedCountry.getCountryID()
+                );
+        assertEquals(
+                modifiedCountry.getName(),
+                newlyInsertedCountry.getName()
+        );
+    }
+
+    @Test
+    void listCountriesValidity() {
+        List<Country> countriesList = store.listCountries();
+
+        int countriesListLength = countriesList.size();
+
+        assertTrue((countriesListLength == 196));
+    }
+
+    @Test
+    void accessCountryFacilities() {
+        Country testCountry = new Country("Soviet Union");
+        Country storedCountry = store.addCountry(testCountry);
+
+        Facility testFacility = new Facility(
+                "Lubyanka",
+                "LBY",
+                storedCountry.getCountryID()
+        );
+
+        Facility storedFacility = store.addFacility(testFacility);
+
+        List<Facility> countryFacilities =
+                store.listFacilitiesForCountry(
+                        storedCountry.getCountryID()
+                );
+
+        if (countryFacilities.isEmpty()) {
+            fail();
+        }
+
+        Facility retrievedFacility = countryFacilities.getFirst();
+
+        assertEquals(storedFacility.getFacilityID(),
+                retrievedFacility.getFacilityID()
+        );
+        assertEquals(
+                storedFacility.getName(),
+                retrievedFacility.getName()
+        );
+        assertEquals(
+                storedFacility.getAbbreviation(),
+                retrievedFacility.getAbbreviation()
+        );
+        assertEquals(
+                storedFacility.getCountryID(),
+                retrievedFacility.getCountryID()
+                );
+    }
+
 }
