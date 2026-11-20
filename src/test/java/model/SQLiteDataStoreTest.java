@@ -108,7 +108,7 @@ class SQLiteDataStoreTest {
 
     @Test
     void getAgentReturnsNullForNonExistingId() {
-        assertNull(store.getAgent(-1));
+        assertNull(store.getAgentByID(-1));
     }
 
 
@@ -158,7 +158,7 @@ class SQLiteDataStoreTest {
 
         if (!agents.isEmpty()) {
             Agent expected = agents.get(0);
-            Agent actual = store.getAgent(expected.getAgentID());
+            Agent actual = store.getAgentByID(expected.getAgentID());
 
 
             assertNotNull(expected);
@@ -169,7 +169,7 @@ class SQLiteDataStoreTest {
             assertEquals(expected.getDate_of_death(), actual.getDate_of_death());
             assertEquals(expected.getNotes(), actual.getNotes());
         } else {
-            store.getAgent(-1);
+            store.getAgentByID(-1);
         }
 
     }
@@ -194,24 +194,24 @@ class SQLiteDataStoreTest {
     }
 
     @Test
-    void getUserReturnsExistingUser() {
+    void getUserByIDReturnsExistingUser() {
         List<User> users = store.listUsers();
 
         if (!users.isEmpty()) {
             User expected = users.get(0);
-            User actual = store.getUser(expected.getUserID());
+            User actual = store.getUserByID(expected.getUserID());
 
             assertNotNull(actual);
             assertEquals(expected.getUserID(), actual.getUserID());
             assertEquals(expected.getUsername(), actual.getUsername());
         } else {
-            store.getUser(-1);
+            store.getUserByID(-1);
         }
     }
 
     @Test
     void listLogsReturnsExistingLogs() {
-        User user = store.getUser(1);
+        User user = store.getUserByID(1);
         List<LoggedAction> logs = store.listLogs(user.getUserID());
 
         if (!logs.isEmpty()) {
@@ -225,7 +225,7 @@ class SQLiteDataStoreTest {
 
     @Test
     void addFacilityInsertsCorrectly() {
-        Facility expected = new Facility("f1", "ab1");
+        Facility expected = new Facility("f1", "ab1", 1);
 
         Facility actual = store.addFacility(expected);
 
@@ -277,7 +277,7 @@ class SQLiteDataStoreTest {
         assertEquals(expected.getNotes(), actual.getNotes());
 
         expected = actual;
-        actual = store.getAgent(expected.getAgentID());
+        actual = store.getAgentByID(expected.getAgentID());
 
         assertNotNull(actual);
         assertEquals(expected.getAgentID(), actual.getAgentID());
@@ -335,7 +335,7 @@ class SQLiteDataStoreTest {
         assertNotNull(actual);
         assertEquals(user.getUsername(), actual.getUsername());
 
-        User expected = store.getUser(actual.getUserID());
+        User expected = store.getUserByID(actual.getUserID());
 
         assertNotNull(expected);
         assertEquals(expected.getUserID(), actual.getUserID());
@@ -432,11 +432,11 @@ class SQLiteDataStoreTest {
 
         // Create two different facilities
         Facility facility1 = store.addFacility(
-                new Facility("Facility A", "FA")
+                new Facility("Facility A", "FA", 1)
         );
 
         Facility facility2 = store.addFacility(
-                new Facility("Facility B", "FB")
+                new Facility("Facility B", "FB", 1)
         );
 
         // Create a mission run by Facility A
