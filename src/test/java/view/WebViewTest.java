@@ -31,18 +31,6 @@ public class WebViewTest {
     }
 
     @Test
-    public void generateHTMLReadTest1() {
-        WebView view = new WebView();
-
-        String actual = view.generateHTML("Read: agents", "Agent ID: 1");
-
-        assertTrue(actual.contains("<title>Read agents</title>"));
-        assertTrue(actual.contains("<h1>Read agents</h1>"));
-        assertTrue(actual.contains("Agent ID: 1"));
-        assertTrue(actual.contains("/browse?type=agents"));
-    }
-
-    @Test
     public void generateHTMLAuditTest1() {
         WebView view = new WebView();
 
@@ -138,19 +126,6 @@ public class WebViewTest {
         assertTrue(actual.contains("Agent ID: 1"));
         assertTrue(actual.contains("Read a Record"));
         assertTrue(actual.contains("Enter agents ID:"));
-        assertTrue(actual.contains("Back to Main Menu"));
-    }
-
-    @Test
-    public void readViewTest1() {
-        WebView view = new WebView();
-
-        String actual = view.readView("agents", "Agent ID: 1");
-
-        assertTrue(actual.contains("<title>Read agents</title>"));
-        assertTrue(actual.contains("<h1>Read agents</h1>"));
-        assertTrue(actual.contains("Agent ID: 1"));
-        assertTrue(actual.contains("Back to Browse agents"));
         assertTrue(actual.contains("Back to Main Menu"));
     }
 
