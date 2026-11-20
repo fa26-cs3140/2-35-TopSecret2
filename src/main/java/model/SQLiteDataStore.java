@@ -1707,4 +1707,75 @@ public class SQLiteDataStore implements DataStoreInterface, AutoCloseable {
 
         return facilities;
     }
+
+    @Override
+    public List<Agent> listAgentsForFacility(int facilityID) {
+        String sql = """
+        SELECT *
+        FROM agents
+        WHERE facility_ID = ?
+        """;
+
+        List<Agent> agents = new ArrayList<>();
+
+        try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
+            pstmt.setInt(1, facilityID);
+
+            try (ResultSet rs = pstmt.executeQuery()) {
+                while (rs.next()) {
+                    Agent agent = new Agent(
+                            rs.getInt("agent_ID"),
+                            rs.getInt("facility_ID"),
+                            rs.getString("name"),
+                            rs.getString("date_of_birth"),
+                            rs.getString("date_of_death"),
+                            rs.getString("notes")
+                    );
+
+                    agents.add(agent);
+                }
+            }
+
+        } catch (SQLException e) {
+            throw new IllegalStateException(
+                    "Failed to retrieve agents for facility: " + facilityID, e);
+        }
+
+        return agents;
+    }
+
+    @Override
+    public List<Mission> listMissionsForFacility(int facilityID) {
+        String sql = """
+        SELECT *
+        FROM missions
+        WHERE facility_ID = ?
+        """;
+
+        List<Mission> missions = new ArrayList<>();
+
+        try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
+            pstmt.setInt(1, facilityID);
+
+            try (ResultSet rs = pstmt.executeQuery()) {
+                while (rs.next()) {
+                    Mission mission = new Mission(
+                            rs.getInt("mission_ID"),
+                            rs.getString("title"),
+                            rs.getInt("facility_ID")
+                    );
+
+                    missions.add(mission);
+                }
+            }
+
+        } catch (SQLException e) {
+            throw new IllegalStateException(
+                    "Failed to retrieve missions for facility: " + facilityID, e);
+        }
+
+        return missions;
+    }
+
+
 }

@@ -198,4 +198,48 @@ public class HTMLUtils {
     public static String createBackLink() {
         return createLink("/", "Back to Main Menu");
     }
+
+
+    public static String createRecordLink(String type, String line) {
+        if (line == null) {
+            return "";
+        }
+
+        String[] parts = line.trim().split("\\s*:\\s*", 2);
+
+        if (parts.length != 2 || !parts[0].matches("\\d+")) {
+            return escapeHTML(line);
+        }
+
+        int id = Integer.parseInt(parts[0]);
+
+        String url = "/read?type=" + type + "&id=" + id;
+
+        return createLink(url, line);
+    }
+
+
+    public static String createRelatedList(String type, String records) {
+        if (records == null || records.isBlank() || records.equals("None")) {
+            return "<p>None</p>";
+        }
+
+        StringBuilder html = new StringBuilder("<ul>");
+
+        for (String line : records.split("\\R")) {
+            String trimmed = line.trim();
+
+            if (trimmed.isEmpty()) {
+                continue;
+            }
+
+            html.append("<li>")
+                    .append(createRecordLink(type, trimmed))
+                    .append("</li>");
+        }
+
+        html.append("</ul>");
+
+        return html.toString();
+    }
 }

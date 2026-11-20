@@ -205,17 +205,20 @@ public class WebView {
         StringBuilder body = new StringBuilder();
 
         body.append(HTMLUtils.createHeading(title));
-
-        body.append(HTMLUtils.createTextBlock(record));
+        body.append(renderRecord(type, record));
 
         if (id > 0) {
             body.append("<p>")
-                    .append(HTMLUtils.createLink("/edit?type=" + type + "&id=" + id, "Edit this record"))
+                    .append(HTMLUtils.createLink(
+                            "/edit?type=" + type + "&id=" + id,
+                            "Edit this record"))
                     .append("</p>");
         }
 
         body.append("<p>")
-                .append(HTMLUtils.createLink("/browse?type=" + type, "Back to Browse " + type))
+                .append(HTMLUtils.createLink(
+                        "/browse?type=" + type,
+                        "Back to Browse " + type))
                 .append("</p>");
 
         body.append("<p>")
@@ -223,6 +226,123 @@ public class WebView {
                 .append("</p>");
 
         return HTMLUtils.createPage(title, body.toString());
+    }
+
+    private String renderRecord(String type, String record) {
+        if (record == null || record.isBlank()) {
+            return HTMLUtils.createTextBlock("");
+        }
+
+        StringBuilder html = new StringBuilder();
+        String relatedType = null;
+
+        for (String line : record.split("\\R")) {
+            String trimmed = line.trim();
+
+            if (trimmed.isEmpty()) {
+                html.append("<br>");
+                continue;
+            }
+
+            // Detect related-record sections such as Missions: or Agents:
+            if (trimmed.endsWith(":")) {
+                String section = trimmed.substring(0, trimmed.length() - 1);
+                relatedType = getRelatedType(type, section);
+
+                html.append("<h2>")
+                        .append(HTMLUtils.escapeHTML(section))
+                        .append("</h2>");
+
+                continue;
+            }
+
+            // Detect inline fields such as Facility: 3 : CIA Headquarters
+            int colon = trimmed.indexOf(':');
+
+            if (colon > 0) {
+                String field = trimmed.substring(0, colon).trim();
+                String value = trimmed.substring(colon + 1).trim();
+
+                String inlineType = getRelatedType(type, field);
+
+                html.append("<p><strong>")
+                        .append(HTMLUtils.escapeHTML(field))
+                        .append(":</strong> ");
+
+                if (inlineType != null) {
+                    html.append(HTMLUtils.createRecordLink(
+                            inlineType, value));
+                } else {
+                    html.append(HTMLUtils.escapeHTML(value));
+                }
+
+                html.append("</p>");
+                continue;
+            }
+
+            // Lines inside related-record sections become clickable.
+            if (relatedType != null) {
+                html.append(HTMLUtils.createRecordLink(
+                                relatedType, trimmed))
+                        .append("<br>");
+            } else {
+                html.append(HTMLUtils.escapeHTML(trimmed))
+                        .append("<br>");
+            }
+        }
+
+        return html.toString();
+    }
+
+    private String getRelatedType(String currentType, String relationship) {
+        switch (currentType) {
+            case "briefs":
+                if (relationship.equalsIgnoreCase("Related Mission")) {
+                    return "missions";
+                }
+                break;
+
+            case "agents":
+                if (relationship.equalsIgnoreCase("Facility")) {
+                    return "facilities";
+                }
+                if (relationship.equalsIgnoreCase("Missions")) {
+                    return "missions";
+                }
+                break;
+
+            case "facilities":
+                if (relationship.equalsIgnoreCase("Country")) {
+                    return "countries";
+                }
+                if (relationship.equalsIgnoreCase("Agents")) {
+                    return "agents";
+                }
+                if (relationship.equalsIgnoreCase("Missions")) {
+                    return "missions";
+                }
+                break;
+
+            case "missions":
+                if (relationship.equalsIgnoreCase("Facility")) {
+                    return "facilities";
+                }
+                if (relationship.equalsIgnoreCase("Agents")) {
+                    return "agents";
+                }
+                if (relationship.equalsIgnoreCase("Briefs")) {
+                    return "briefs";
+                }
+                break;
+
+            case "countries":
+                if (relationship.equalsIgnoreCase("Facilities")) {
+                    return "facilities";
+                }
+                break;
+        }
+
+        return null;
     }
 
     /**

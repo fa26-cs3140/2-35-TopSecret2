@@ -235,7 +235,14 @@ public class Controller implements ControllerInterface {
                     return "No brief found with this id";
                 }
                 audit(username, LoggedAction.READ, itemType + " " + id);
-                return "Title: " + requested.getTitle() + "\nDate: " + requested.getDate() + "\nContent: " + requested.getContent();
+                Mission mission = store.getMission(requested.getMissionID());
+
+                return "Title: " + requested.getTitle()
+                        + "\nDate: " + requested.getDate()
+                        + "\nContent: " + requested.getContent()
+                        + "\n\nRelated Mission: "
+                        + (mission == null ? "None" :
+                        mission.getMissionID() + " : " + mission.getTitle());
             }
             case "agents": {
                 Agent requested = store.getAgentByID(id);
@@ -243,7 +250,17 @@ public class Controller implements ControllerInterface {
                     return "No agent found with this id";
                 }
                 audit(username, LoggedAction.READ, itemType + " " + id);
-                return "Name: " + requested.getName() + "\nDoB: " + requested.getDate_of_birth() + "\nDoDeath: " + requested.getDate_of_death() + "\nNotes: " + requested.getNotes();
+                Facility facility = store.getFacility(requested.getFacilityID());
+                List<Mission> missions = store.listMissionsForAgent(id);
+
+                return "Name: " + requested.getName()
+                        + "\nDoB: " + requested.getDate_of_birth()
+                        + "\nDoDeath: " + requested.getDate_of_death()
+                        + "\nNotes: " + requested.getNotes()
+                        + "\n\nFacility: "
+                        + (facility == null ? "None" :
+                        facility.getFacilityID() + " : " + facility.getName())
+                        + "\n\nMissions:\n" + formatMissions(missions);
             }
             case "facilities": {
                 Facility requested = store.getFacility(id);
@@ -252,8 +269,15 @@ public class Controller implements ControllerInterface {
                 }
                 audit(username, LoggedAction.READ, itemType + " " + id);
                 Country country = store.getCountry(requested.getCountryID());
-                return "Name: " + requested.getName() + "\nAbbreviation: " + requested.getAbbreviation()
-                        + "\nCountry: " + (country == null ? "None" : country.getName());
+                List<Agent> agents = store.listAgentsForFacility(id);
+                List<Mission> missions = store.listMissionsForFacility(id);
+
+                return "Name: " + requested.getName()
+                        + "\nAbbreviation: " + requested.getAbbreviation()
+                        + "\nCountry: " + (country == null ? "None" :
+                        country.getCountryID() + " : " + country.getName())
+                        + "\n\nAgents:\n" + formatAgents(agents)
+                        + "\n\nMissions:\n" + formatMissions(missions);
             }
             case "missions": {
                 Mission requested = store.getMission(id);
@@ -261,7 +285,15 @@ public class Controller implements ControllerInterface {
                     return "No mission found with this id";
                 }
                 audit(username, LoggedAction.READ, itemType + " " + id);
-                return "Title: " + requested.getTitle() + "\nFacility ID: " + requested.getFacilityID();
+                Facility facility = store.getFacility(requested.getFacilityID());
+                List<Agent> agents = store.listAgentsForMission(id);
+                List<Brief> briefs = store.listBriefsForMission(id);
+
+                return "Title: " + requested.getTitle()
+                        + "\nFacility: " + (facility == null ? "None" :
+                        facility.getFacilityID() + " : " + facility.getName())
+                        + "\n\nAgents:\n" + formatAgents(agents)
+                        + "\n\nBriefs:\n" + formatBriefs(briefs);
             }
             case "countries": {
                 Country requested = store.getCountry(id);
@@ -269,7 +301,10 @@ public class Controller implements ControllerInterface {
                     return "No country found with this id";
                 }
                 audit(username, LoggedAction.READ, itemType + " " + id);
-                return "Name: " + requested.getName();
+                List<Facility> facilities = store.listFacilitiesForCountry(id);
+
+                return "Name: " + requested.getName()
+                        + "\n\nFacilities:\n" + formatFacilities(facilities);
             }
             default:
                 return "Invalid option";
@@ -694,5 +729,38 @@ public class Controller implements ControllerInterface {
             return "No session found with this token";
         }
         return listWebSessions(username);
+    }
+
+
+    private String formatAgents(List<Agent> agents) {
+        List<String> lines = new ArrayList<>();
+        for (Agent a : agents) {
+            lines.add(a.getAgentID() + " : " + a.getName());
+        }
+        return lines.isEmpty() ? "None" : String.join("\n", lines);
+    }
+
+    private String formatMissions(List<Mission> missions) {
+        List<String> lines = new ArrayList<>();
+        for (Mission m : missions) {
+            lines.add(m.getMissionID() + " : " + m.getTitle());
+        }
+        return lines.isEmpty() ? "None" : String.join("\n", lines);
+    }
+
+    private String formatBriefs(List<Brief> briefs) {
+        List<String> lines = new ArrayList<>();
+        for (Brief b : briefs) {
+            lines.add(b.getBriefID() + " : " + b.getTitle());
+        }
+        return lines.isEmpty() ? "None" : String.join("\n", lines);
+    }
+
+    private String formatFacilities(List<Facility> facilities) {
+        List<String> lines = new ArrayList<>();
+        for (Facility f : facilities) {
+            lines.add(f.getFacilityID() + " : " + f.getName());
+        }
+        return lines.isEmpty() ? "None" : String.join("\n", lines);
     }
 }

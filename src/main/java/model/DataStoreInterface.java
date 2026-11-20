@@ -244,4 +244,8 @@ public interface DataStoreInterface {
 
     List<Facility> listFacilitiesForCountry(int countryID);
 
+
+    List<Agent> listAgentsForFacility(int facilityID);
+
+    List<Mission> listMissionsForFacility(int facilityID);
 }
