@@ -11,4 +11,4 @@ classpath; credentials.cip is deleted before and after each
 test.
 The Controller is constructed with a mocked
 SessionManager as its 6th argument.
-Run: .\gradlew test --tests "control.ControllerUserManagerIntegrationTest" --console=plain
+Run: .\gradlew test --tests "control.ControllerUserManagerTest" --console=plain

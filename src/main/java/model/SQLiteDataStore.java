@@ -621,7 +621,7 @@ public class SQLiteDataStore implements DataStoreInterface, AutoCloseable {
                 if (results.next()) {
                     return new Agent(
                             results.getInt("agent_ID"),
-                            results.getInt("facility_ID)"),
+                            results.getInt("facility_ID"),
                             name,
                             results.getString("date_of_birth"),
                             results.getString("date_of_death"),
@@ -1484,7 +1484,7 @@ public class SQLiteDataStore implements DataStoreInterface, AutoCloseable {
                             messageRecipient,
                             newMessage.getMessageContent(),
                             newMessage.isRead()
-                            );
+                    );
                 }
             }
 
@@ -1542,8 +1542,8 @@ public class SQLiteDataStore implements DataStoreInterface, AutoCloseable {
 
                     Message currMessage = new Message(
                             rs.getInt("message_ID"),
-                            getUserByName(rs.getString("sender")),
-                            getAgentByName(rs.getString("recipient")),
+                            getUserByID(rs.getInt("sender_user_ID")),
+                            getAgentByID(rs.getInt("recipient_agent_ID")),
                             rs.getString("content"),
                             messageRead
                     );
@@ -1558,7 +1558,7 @@ public class SQLiteDataStore implements DataStoreInterface, AutoCloseable {
 
         return messages;
 
-        }
+    }
 
 
 

@@ -22,7 +22,7 @@ import static org.mockito.Mockito.when;
 // this file tests the controller-to-roles wiring only, that is,
 // which menu options and actions each role can actually use.
 // Run: .\gradlew test --tests "control.ControllerAccessControlIntegrationTest" --console=plain
-public class ControllerAccessControlIntegrationTest {
+public class ControllerAccessControlTest {
     private AccessControl access;
     private UserManagerInterface users;
     private DataStoreInterface store;

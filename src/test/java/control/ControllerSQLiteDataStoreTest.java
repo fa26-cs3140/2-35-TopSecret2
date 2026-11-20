@@ -24,7 +24,7 @@ import static org.mockito.Mockito.when;
 // construction: 6 facilities, 100 missions, 100 briefs, and
 // 10 agents, so a record added here takes the next id.
 // Run: .\gradlew test --tests "control.ControllerSQLiteDataStoreIntegrationTest" --console=plain
-public class ControllerSQLiteDataStoreIntegrationTest {
+public class ControllerSQLiteDataStoreTest {
     @TempDir
     Path tempDir;
 

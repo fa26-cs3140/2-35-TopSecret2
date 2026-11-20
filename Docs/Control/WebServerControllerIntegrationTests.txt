@@ -34,4 +34,4 @@ corrected in the test code.
 The POST /create and POST /edit tests now post
 real field values in field order and assert the
 302 redirect and the Location header.
-Run: .\gradlew test --tests "control.WebServerControllerIntegrationTest" --console=plain
+Run: .\gradlew test --tests "control.WebServerControllerTest" --console=plain

@@ -26,42 +26,18 @@ public class HTMLUtilsTest {
     public void createPageTest1() {
         String actual = HTMLUtils.createPage("Test Page", "<h1>Hello</h1>");
 
-        String expected = """
-                <!DOCTYPE html>
-                <html lang="en">
-                <head>
-                    <meta charset="UTF-8">
-                    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-                    <title>Test Page</title>
-                </head>
-                <body>
-                    <h1>Hello</h1>
-                </body>
-                </html>
-                """;
-
-        assertEquals(expected, actual);
+        assertTrue(actual.contains("<title>Test Page</title>"));
+        assertTrue(actual.contains("<h1>Hello</h1>"));
+        assertTrue(actual.contains("site-nav"));
+        assertTrue(actual.contains("<style>"));
     }
 
     @Test
     public void createPageTest2() {
         String actual = HTMLUtils.createPage("<Test>", null);
 
-        String expected = """
-                <!DOCTYPE html>
-                <html lang="en">
-                <head>
-                    <meta charset="UTF-8">
-                    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-                    <title>&lt;Test&gt;</title>
-                </head>
-                <body>
-                   \s
-                </body>
-                </html>
-                """;
-
-        assertEquals(expected, actual);
+        assertTrue(actual.contains("<title>&lt;Test&gt;</title>"));
+        assertTrue(actual.contains("site-nav"));
     }
 
     @Test

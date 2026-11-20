@@ -3,6 +3,7 @@ package view;
 import control.Controller;
 import control.ControllerInterface;
 import control.MessageManager;
+import control.SessionManager;
 import model.*;
 import org.junit.jupiter.api.*;
 
@@ -33,7 +34,7 @@ public class TerminalViewControllerTest {
         audit = mock(AuditLogInterface.class);
         messages = mock(MessageManager.class);
 
-        controller = new Controller(users, access, store, audit, messages);
+        controller = new Controller(users, access, store, audit, messages, mock(SessionManager.class));
 
         originalIn = System.in;
         originalOut = System.out;
@@ -60,7 +61,7 @@ public class TerminalViewControllerTest {
         when(store.listMissions()).thenReturn(List.of(mission));
 
         System.setIn(new ByteArrayInputStream(
-                "alice\npassword\n4\n1\n5\n11\n".getBytes()
+                "alice\npassword\n4\n1\n5\n12\n".getBytes()
         ));
 
         TerminalView view = new TerminalView(controller);
@@ -89,7 +90,7 @@ public class TerminalViewControllerTest {
         when(store.listFacilities()).thenReturn(List.of(facility));
 
         System.setIn(new ByteArrayInputStream(
-                "admin\npassword\n3\n3\nHeadquarters\nHQ\n5\n11\n".getBytes()
+                "admin\npassword\n3\n3\nHeadquarters\nHQ\n1\n5\n12\n".getBytes()
         ));
 
         TerminalView view = new TerminalView(controller);
@@ -114,7 +115,7 @@ public class TerminalViewControllerTest {
         when(access.isAdmin("alice")).thenReturn(false);
 
         System.setIn(new ByteArrayInputStream(
-                "alice\noldPassword\n5\nnewPassword\nnewPassword\n11\n".getBytes()
+                "alice\noldPassword\n6\nnewPassword\nnewPassword\n12\n".getBytes()
         ));
 
         TerminalView view = new TerminalView(controller);

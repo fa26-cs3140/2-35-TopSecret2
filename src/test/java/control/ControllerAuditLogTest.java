@@ -26,7 +26,7 @@ import static org.mockito.Mockito.when;
 // that reach the log as real rows. The acting user is seeded
 // into the store first, since log rows reference their user.
 // Run: .\gradlew test --tests "control.ControllerAuditLogIntegrationTest" --console=plain
-public class ControllerAuditLogIntegrationTest {
+public class ControllerAuditLogTest {
     @TempDir
     Path tempDir;
 

@@ -25,7 +25,7 @@ class utilityTest {
 
     @Test
     void facilityToStr() {
-        Facility facility = new Facility(1, "FacilityName", "FT");
+        Facility facility = new Facility(1, "FacilityName", "FT", 1);
         String actual = Utility.facilityToStr(facility);
 
         String expected = """
@@ -98,7 +98,7 @@ class utilityTest {
     @Test
     void messageToStr() {
         Agent agent = new Agent(1,3,"AgentName", "1999-02-23", null, "notes");
-        Message message = new Message(agent, "Message");
+        Message message = new Message(new User(1, "sender"), agent, "Message");
         String actual = Utility.messageToStr(message);
 
         String expected = """
@@ -129,8 +129,8 @@ class utilityTest {
     @Test
     void facilitiesToStr() {
         List<Facility> facilities = List.of(
-                new Facility(1, "FacilityName1", "FT"),
-                new Facility(2, "FacilityName2", "HQ")
+                new Facility(1, "FacilityName1", "FT", 1),
+                new Facility(2, "FacilityName2", "HQ", 1)
         );
 
         List<String> actual = Utility.facilitiesToStr(facilities);
@@ -220,8 +220,8 @@ class utilityTest {
         Agent agent2 = new Agent(2, 4, "AgentName2", "2000-03-24", null, "notes2");
 
         List<Message> messages = List.of(
-                new Message(agent1, "Message1"),
-                new Message(agent2, "Message2")
+                new Message(new User(1, "sender"), agent1, "Message1"),
+                new Message(new User(1, "sender"), agent2, "Message2")
         );
 
         List<String> actual = Utility.messagesToStr(messages);

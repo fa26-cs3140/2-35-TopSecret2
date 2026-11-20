@@ -3,6 +3,7 @@ package view;
 
 import control.ControllerInterface;
 import control.WebServer;
+import control.SessionManager;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -14,6 +15,7 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.nio.charset.StandardCharsets;
+import java.time.Clock;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -28,7 +30,7 @@ public class WebViewWebServerTest {
     @BeforeEach
     public void setUp() throws IOException {
         controller = mock(ControllerInterface.class);
-        server = new WebServer(controller, 0);
+        server = new WebServer(controller, new SessionManager(Clock.systemUTC()), 0);
         client = HttpClient.newHttpClient();
 
         server.start();

@@ -20,4 +20,4 @@ missions, 100 briefs, 10 agents). editEntryUpdatesRealBrief
 fails until the store implements the update methods.
 The Controller is constructed with a mocked
 SessionManager as its 6th argument.
-Run: .\gradlew test --tests "control.ControllerSQLiteDataStoreIntegrationTest" --console=plain
+Run: .\gradlew test --tests "control.ControllerSQLiteDataStoreTest" --console=plain

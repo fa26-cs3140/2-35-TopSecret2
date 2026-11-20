@@ -570,6 +570,10 @@ public class TerminalView {
                 )) {
                     return null;
                 }
+
+                if (!addRequiredField(fields, "Country ID: ")) {
+                    return null;
+                }
                 break;
 
             case "missions":

@@ -24,7 +24,7 @@ import static org.mockito.Mockito.when;
 // No browser needed. The mocked controller lets these tests
 // prove routing, cookies, and gating.
 // Run: .\gradlew test --tests "control.WebServerControllerIntegrationTest" --console=plain
-public class WebServerControllerIntegrationTest {
+public class WebServerControllerTest {
     private ControllerInterface controller;
     private SessionManager sessions;
     private WebServer server;

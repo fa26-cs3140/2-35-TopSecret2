@@ -15,7 +15,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class ModelSQLiteDataStoreIntegrationTest {
+class ModelSQLiteDataStoreTest {
 
     @TempDir
     Path tempDir;
@@ -32,10 +32,10 @@ class ModelSQLiteDataStoreIntegrationTest {
         store = new SQLiteDataStore(databaseUrl);
 
         headquarters = store.addFacility(
-                new Facility("Integration HQ", "IHQ"));
+                new Facility("Integration HQ", "IHQ", 1));
 
         outpost = store.addFacility(
-                new Facility("Integration Outpost", "IOP"));
+                new Facility("Integration Outpost", "IOP", 1));
     }
 
     @AfterEach
@@ -183,7 +183,7 @@ class ModelSQLiteDataStoreIntegrationTest {
 
         assertEquals(
                 outpost.getFacilityID(),
-                store.getAgent(agent.getAgentID()).getFacilityID());
+                store.getAgentByID(agent.getAgentID()).getFacilityID());
     }
 
     // ---------- Missions and Briefs ----------
@@ -297,7 +297,7 @@ class ModelSQLiteDataStoreIntegrationTest {
         assertFalse(hasAgent(
                 store.listAgentsForMission(drop.getMissionID()), agent));
 
-        assertNotNull(store.getAgent(agent.getAgentID()),
+        assertNotNull(store.getAgentByID(agent.getAgentID()),
                 "agent record must not be deleted");
     }
 

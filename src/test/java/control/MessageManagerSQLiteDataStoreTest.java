@@ -31,6 +31,13 @@ public class MessageManagerSQLiteDataStoreTest {
         dataStore = new model.SQLiteDataStore(dbLocation);
         sampleUser = dataStore.addUser(new User(-1,"user1"));
 
+        dataStore.addMessage(new Message(sampleUser, dataStore.getAgentByID(5),
+                "This is not a friendship; it's a spaceship."));
+        dataStore.addMessage(new Message(sampleUser, dataStore.getAgentByID(1),
+                "Spend the dollar"));
+        dataStore.addMessage(new Message(sampleUser, dataStore.getAgentByID(3),
+                "URGENT: Tear it down"));
+
         messageManager = new MessageManager(dataStore);
     }
     @AfterEach
@@ -42,7 +49,7 @@ public class MessageManagerSQLiteDataStoreTest {
     void creationTest() {
         Message returnMessage = null;
         Message lastAgentMessage = null;
-        Agent sampleAgent = dataStore.getAgent(4);
+        Agent sampleAgent = dataStore.getAgentByID(4);
 
         try {
             returnMessage = messageManager.createMessage(sampleUser, sampleAgent,
@@ -83,7 +90,7 @@ public class MessageManagerSQLiteDataStoreTest {
         List<Message> returnedMessages = null;
         Message lastAgent5Message = null;
 
-        Agent tsvAgent5 = dataStore.getAgent(5);
+        Agent tsvAgent5 = dataStore.getAgentByID(5);
 
         try {
             returnedMessages = messageManager.retrieveMessages(tsvAgent5);
@@ -109,7 +116,7 @@ public class MessageManagerSQLiteDataStoreTest {
         List<Message> returnedMessages = null;
         Message lastAgent1Message = null;
 
-        Agent tsvAgent1 = dataStore.getAgent(1);
+        Agent tsvAgent1 = dataStore.getAgentByID(1);
 
         try {
             returnedMessages = messageManager.retrieveMessages(tsvAgent1);
@@ -133,7 +140,7 @@ public class MessageManagerSQLiteDataStoreTest {
         List<Message> returnedMessages = null;
         Message lastAgent3Message = null;
 
-        Agent tsvAgent3 = dataStore.getAgent(3);
+        Agent tsvAgent3 = dataStore.getAgentByID(3);
 
         try {
             returnedMessages = messageManager.retrieveMessages(tsvAgent3);

@@ -8,7 +8,7 @@ public class FacilityTest {
 
     @Test
     public void facilityTest1(){
-        Facility f1 = new Facility(1,"Startrek", "SK");
+        Facility f1 = new Facility(1, "Startrek", "SK", 1);
 
         assertEquals(1,f1.getFacilityID());
         assertEquals("Startrek", f1.getName());
@@ -18,7 +18,7 @@ public class FacilityTest {
 
     @Test
     public void facilityTest2(){
-        Facility f1 = new Facility("Startrek", "SK");
+        Facility f1 = new Facility("Startrek", "SK", 1);
 
         assertEquals(-1,f1.getFacilityID());
         assertEquals("Startrek", f1.getName());
@@ -28,8 +28,8 @@ public class FacilityTest {
 
     @Test
     public void facilityTest3(){
-        Facility f1 = new Facility(1,"Startrek", "SK");
-        Facility f2 = new Facility(2,"Sandtrap", "ST");
+        Facility f1 = new Facility(1, "Startrek", "SK", 1);
+        Facility f2 = new Facility(2, "Sandtrap", "ST", 1);
 
         assertEquals(1,f1.getFacilityID());
         assertEquals("Startrek", f1.getName());

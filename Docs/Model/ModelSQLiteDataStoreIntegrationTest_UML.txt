@@ -1,4 +1,4 @@
-model.ModelSQLiteDataStoreIntegrationTest
+model.ModelSQLiteDataStoreTest
 -----------------------------------------------------
 ~ tempDir: Path {@TempDir}
 - databaseUrl: String

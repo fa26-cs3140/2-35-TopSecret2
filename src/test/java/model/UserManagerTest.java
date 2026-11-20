@@ -33,7 +33,7 @@ class UserManagerTest {
             backing.add(u);
             return u;
         });
-        when(store.getUser(anyInt())).thenAnswer(inv -> {
+        when(store.getUserByID(anyInt())).thenAnswer(inv -> {
             int id = inv.getArgument(0);
             for (User u : backing) {
                 if (u.getUserID() == id) {

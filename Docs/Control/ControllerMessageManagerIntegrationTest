@@ -13,4 +13,4 @@ audit stay mocked. The manager's user side stays mocked; it
 is stored but never used by create or retrieve.
 The Controller is constructed with a mocked
 SessionManager as its 6th argument.
-Run: .\gradlew test --tests "control.ControllerMessageManagerIntegrationTest" --console=plain
+Run: .\gradlew test --tests "control.ControllerMessageManagerTest" --console=plain

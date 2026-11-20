@@ -25,7 +25,7 @@ import static org.mockito.Mockito.mock;
 // manager's user side stays mocked; it is stored but never
 // used by create or retrieve.
 // Run: .\gradlew test --tests "control.ControllerMessageManagerIntegrationTest" --console=plain
-public class ControllerMessageManagerIntegrationTest {
+public class ControllerMessageManagerTest {
     @TempDir
     Path tempDir;
 
