@@ -751,4 +751,37 @@ class SQLiteDataStoreTest {
         assertEquals(testMessage.isRead(), insertedMessage.isRead());
     }
 
+    @Test
+    void updateMessageModifies() {
+        Message testMessage = new Message(
+                -1,
+                store.getUserByID(1),
+                store.getAgentByID(1),
+                "Spend the dollar.",
+                false
+        );
+
+        Message insertedMessage = store.addMessage(testMessage);
+
+        Message modifiedMessage = new Message(
+                insertedMessage.getMessageID(),
+                insertedMessage.getSender(),
+                insertedMessage.getRecipient(),
+                insertedMessage.getMessageContent(),
+                insertedMessage.isRead()
+        );
+
+        Message newlyUpdatedMessage =
+                store.updateMessage(modifiedMessage);
+
+        assertNotNull(newlyUpdatedMessage);
+        assertEquals(
+                modifiedMessage.getMessageContent(),
+                newlyUpdatedMessage.getMessageContent()
+        );
+        assertEquals(
+                modifiedMessage.isRead(),
+                newlyUpdatedMessage.isRead()
+        );
+    }
 }
