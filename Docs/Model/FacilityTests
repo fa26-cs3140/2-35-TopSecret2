@@ -12,3 +12,5 @@ Scenario: facilityTest3 | model.User creates multiple facilities with different 
 GIVEN user creates two model.Facility objects with different IDs, names, and abbreviations
 WHEN both model.Facility objects are initialized
 THEN each facility contains its own expected facility ID, name, and abbreviation independently
+
+Case setCountryIDChanges: Verifies that setCountryID changes the object's countryID
