@@ -513,7 +513,7 @@ public class TerminalViewTest {
     @Test
     public void adminCanAddFacility() {
         createView(
-                "alice\npassword\n3\n3\nFacility Name\nFAC\n5\n12\n"
+                "alice\npassword\n3\n3\nFacility Name\nFAC\n1\n5\n12\n"
         );
         mockSuccessfulLogin(true);
 
@@ -528,7 +528,7 @@ public class TerminalViewTest {
         verify(controller).addEntry(
                 "alice",
                 "facilities",
-                List.of("Facility Name", "FAC")
+                List.of("Facility Name", "FAC", "1")
         );
     }
 
@@ -640,7 +640,7 @@ public class TerminalViewTest {
     @Test
     public void adminCanEditFacility() {
         createView(
-                "alice\npassword\n3\n4\n12\nFacility Name\nFAC\n5\n12\n"
+                "alice\npassword\n3\n4\n12\nFacility Name\nFAC\n1\n5\n12\n"
         );
         mockSuccessfulLogin(true);
 
@@ -656,7 +656,7 @@ public class TerminalViewTest {
                 "alice",
                 "facilities",
                 12,
-                List.of("Facility Name", "FAC")
+                List.of("Facility Name", "FAC", "1")
         );
     }
 
