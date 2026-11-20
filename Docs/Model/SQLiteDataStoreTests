@@ -1,123 +1,195 @@
-Scenario: listMissionsReturnsMissions | model.User retrieves the list of missions
-GIVEN user calls method model.SQLiteDataStore.listMissions()
+Scenario: listMissionsReturnsMissions | User retrieves the list of missions
+GIVEN user calls method SQLiteDataStore.listMissions()
 WHEN user requests the list of missions
 THEN user receives a non-empty list of missions
 
-Scenario: listFacilitiesReturnsFacilities | model.User retrieves the list of facilities
-GIVEN user calls method model.SQLiteDataStore.listFacilities()
+Scenario: listFacilitiesReturnsFacilities | User retrieves the list of facilities
+GIVEN user calls method SQLiteDataStore.listFacilities()
 WHEN user requests the list of facilities
 THEN user receives a non-empty list of facilities
 
-Scenario: listBriefsReturnsBriefs | model.User retrieves the list of briefs
-GIVEN user calls method model.SQLiteDataStore.listBriefs()
+Scenario: listBriefsReturnsBriefs | User retrieves the list of briefs
+GIVEN user calls method SQLiteDataStore.listBriefs()
 WHEN user requests the list of briefs
 THEN user receives a non-empty list of briefs
 
-Scenario: listAgentsReturnsAgents | model.User retrieves the list of agents
-GIVEN user calls method model.SQLiteDataStore.listAgents()
+Scenario: listAgentsReturnsAgents | User retrieves the list of agents
+GIVEN user calls method SQLiteDataStore.listAgents()
 WHEN user requests the list of agents
 THEN user receives a non-empty list of agents
 
-Scenario: listUsersReturnsUsers | model.User retrieves the list of users
-GIVEN user calls method model.SQLiteDataStore.listUsers()
+Scenario: listUsersReturnsUsers | User retrieves the list of users
+GIVEN user calls method SQLiteDataStore.listUsers()
 WHEN user requests the list of users
 THEN user receives a non-empty list of users
 
-Scenario: listLogsReturnsLogs | model.User retrieves the list of logs
-GIVEN user calls method model.SQLiteDataStore.listLogs()
+Scenario: listLogsReturnsLogs | User retrieves the list of logs
+GIVEN user calls method SQLiteDataStore.listLogs()
 WHEN user requests the list of logs
 THEN user receives a non-empty list of logs
 Initializing the database
 
-Scenario: initDatabaseCanBeCalledAgain | model.User initializes the database more than once
+Scenario: initDatabaseCanBeCalledAgain | User initializes the database more than once
 GIVEN user has an initialized database
-WHEN user calls method model.SQLiteDataStore.initDatabase() again
+WHEN user calls method SQLiteDataStore.initDatabase() again
 THEN the method completes without throwing an exception, and the database continues to contain missions, facilities, briefs, and agents
 Retrieving records by ID
 
-Scenario: getMissionReturnsNullForMissingId | model.User requests a mission with a nonexistent ID
-GIVEN user calls method model.SQLiteDataStore.getMission()
+Scenario: getMissionReturnsNullForMissingId | User requests a mission with a nonexistent ID
+GIVEN user calls method SQLiteDataStore.getMission()
 WHEN user passes the ID -1
 THEN user receives null
 
-Scenario: getFacilityReturnsNullForNonExistingId | model.User requests a facility with a nonexistent ID
-GIVEN user calls method model.SQLiteDataStore.getFacility()
+Scenario: getFacilityReturnsNullForNonExistingId | User requests a facility with a nonexistent ID
+GIVEN user calls method SQLiteDataStore.getFacility()
 WHEN user passes the ID -1
 THEN user receives null
 
-Scenario: getBriefReturnsNullForNonExistingId | model.User requests a brief with a nonexistent ID
-GIVEN user calls method model.SQLiteDataStore.getBrief()
+Scenario: getBriefReturnsNullForNonExistingId | User requests a brief with a nonexistent ID
+GIVEN user calls method SQLiteDataStore.getBrief()
 WHEN user passes the ID -1
 THEN user receives null
 
-Scenario: getAgentReturnsNullForNonExistingId | model.User requests an agent with a nonexistent ID
-GIVEN user calls method model.SQLiteDataStore.getAgent()
+Scenario: getAgentReturnsNullForNonExistingId | User requests an agent with a nonexistent ID
+GIVEN user calls method SQLiteDataStore.getAgent()
 WHEN user passes the ID -1
 THEN user receives null
 
-Scenario: getFacilityReturnsExistingFacility | model.User requests an existing facility
-GIVEN user calls methods model.SQLiteDataStore.listFacilities() and model.SQLiteDataStore.getFacility()
+Scenario: getFacilityReturnsExistingFacility | User requests an existing facility
+GIVEN user calls methods SQLiteDataStore.listFacilities() and SQLiteDataStore.getFacility()
 WHEN user passes the ID of an existing facility
 THEN user receives the facility with matching ID, name, and abbreviation
 
-Scenario: getBriefReturnsExistingBrief | model.User requests an existing brief
-GIVEN user calls methods model.SQLiteDataStore.listBriefs() and model.SQLiteDataStore.getBrief()
+Scenario: getBriefReturnsExistingBrief | User requests an existing brief
+GIVEN user calls methods SQLiteDataStore.listBriefs() and SQLiteDataStore.getBrief()
 WHEN user passes the ID of an existing brief
 THEN user receives the brief with matching brief ID, mission ID, title, date, and content
 
-Scenario: getAgentReturnsExistingAgent | model.User requests an existing agent
-GIVEN user calls methods model.SQLiteDataStore.listAgents() and model.SQLiteDataStore.getAgent()
+Scenario: getAgentReturnsExistingAgent | User requests an existing agent
+GIVEN user calls methods SQLiteDataStore.listAgents() and SQLiteDataStore.getAgent()
 WHEN user passes the ID of an existing agent
 THEN user receives the agent with matching agent ID, mission ID, facility ID, name, date of birth, date of death, and notes
 
-Scenario: getMissionReturnsExistingMission | model.User requests an existing mission
-GIVEN user calls methods model.SQLiteDataStore.listMissions() and model.SQLiteDataStore.getMission()
+Scenario: getMissionReturnsExistingMission | User requests an existing mission
+GIVEN user calls methods SQLiteDataStore.listMissions() and SQLiteDataStore.getMission()
 WHEN user passes the ID of an existing mission
 THEN user receives the mission with matching mission ID, title, and facility ID
 
-Scenario: getUserReturnsExistingUser | model.User requests an existing user
-GIVEN user calls methods model.SQLiteDataStore.listUsers() and model.SQLiteDataStore.getUser()
+Scenario: getUserByIDReturnsExistingUser | User requests an existing user
+GIVEN user calls methods SQLiteDataStore.listUsers() and SQLiteDataStore.getUser()
 WHEN user passes the ID of an existing user
 THEN user receives the user with matching user ID and username
 
-Scenario: listLogsReturnsExistingLogs | model.User retrieves logs for a specific user
-GIVEN user calls method model.SQLiteDataStore.listLogs()
+Scenario: listLogsReturnsExistingLogs | User retrieves logs for a specific user
+GIVEN user calls method SQLiteDataStore.listLogs()
 WHEN user passes the ID of an existing user
 THEN user receives the logs associated with that user, where each log's user ID matches the specified user ID
 Adding records
 
-Scenario: addFacilityInsertsCorrectly | model.User adds a new facility
-GIVEN user creates a new model.Facility with name "f1" and abbreviation "ab1"
-WHEN user calls method model.SQLiteDataStore.addFacility()
+Scenario: addFacilityInsertsCorrectly | User adds a new facility
+GIVEN user creates a new Facility with name "f1" and abbreviation "ab1"
+WHEN user calls method SQLiteDataStore.addFacility()
 THEN the facility is inserted into the database and the returned facility contains the expected facility ID, name, and abbreviation
-AND user can retrieve the inserted facility using model.SQLiteDataStore.getFacility()
+AND user can retrieve the inserted facility using SQLiteDataStore.getFacility()
 
-Scenario: addBriefInsertsCorrectly | model.User adds a new brief
-GIVEN user creates a new model.Brief with mission ID 1, title "b1", date "1990-03-12", and content "content 1"
-WHEN user calls method model.SQLiteDataStore.addBrief()
+Scenario: addBriefInsertsCorrectly | User adds a new brief
+GIVEN user creates a new Brief with mission ID 1, title "b1", date "1990-03-12", and content "content 1"
+WHEN user calls method SQLiteDataStore.addBrief()
 THEN the brief is inserted into the database and the returned brief contains the expected brief ID, mission ID, title, date, and content
-AND user can retrieve the inserted brief using model.SQLiteDataStore.getBrief()
+AND user can retrieve the inserted brief using SQLiteDataStore.getBrief()
 
-Scenario: addAgentInsertsCorrectly | model.User adds a new agent
-GIVEN user creates a new model.Agent with mission ID 1, facility ID 1, name "a1", date of birth "1990-02-01", date of death "2000-02-01", and notes "note1"
-WHEN user calls method model.SQLiteDataStore.addAgent()
+Scenario: addAgentInsertsCorrectly | User adds a new agent
+GIVEN user creates a new Agent with mission ID 1, facility ID 1, name "a1", date of birth "1990-02-01", date of death "2000-02-01", and notes "note1"
+WHEN user calls method SQLiteDataStore.addAgent()
 THEN the agent is inserted into the database and the returned agent contains the expected agent ID, mission ID, facility ID, name, date of birth, date of death, and notes
-AND user can retrieve the inserted agent using model.SQLiteDataStore.getAgent()
+AND user can retrieve the inserted agent using SQLiteDataStore.getAgent()
 
-Scenario: addMissionInsertsCorrectly | model.User adds a new mission
-GIVEN user creates a new model.Mission with title "test1title" and facility ID 1
-WHEN user calls method model.SQLiteDataStore.addMission()
+Scenario: addMissionInsertsCorrectly | User adds a new mission
+GIVEN user creates a new Mission with title "test1title" and facility ID 1
+WHEN user calls method SQLiteDataStore.addMission()
 THEN the mission is inserted into the database and the returned mission contains the expected mission ID, title, and facility ID
-AND user can retrieve the inserted mission using model.SQLiteDataStore.getMission()
+AND user can retrieve the inserted mission using SQLiteDataStore.getMission()
 
-Scenario: addLogInsertsCorrectly | model.User adds a new log entry
+Scenario: addLogInsertsCorrectly | User adds a new log entry
 GIVEN user retrieves an existing user and records the original number of logs associated with that user
-WHEN user creates a model.LoggedAction with date and time "2024-10-25" and record "Agents", then calls method model.SQLiteDataStore.addLog()
+WHEN user creates a LoggedAction with date and time "2024-10-25" and record "Agents", then calls method SQLiteDataStore.addLog()
 THEN the returned log contains the expected user ID, action, date and time, and record
 AND the number of logs associated with that user increases by one
 
-Scenario: addUserInsertsCorrectly | model.User adds a new user
-GIVEN user creates a new model.User with username "testUser1"
-WHEN user calls method model.SQLiteDataStore.addUser()
+Scenario: addUserInsertsCorrectly | User adds a new user
+GIVEN user creates a new User with username "testUser1"
+WHEN user calls method SQLiteDataStore.addUser()
 THEN the returned user contains the expected username
-AND user can retrieve the inserted user using model.SQLiteDataStore.getUser(), which returns the expected user ID and username
+AND user can retrieve the inserted user using SQLiteDataStore.getUser(), which returns the expected user ID and username
+
+Case assignAgentToMissionSuccessfully: Attempts to assign an agent to a
+mission and verifies the the assignment was made successfully
+
+Case assignAgentToMultipleMissions: Attempts to assign 2 missions to a
+an agent and verifies that the assignment was successful
+
+Case assignAgentsFromDifferentFacilitiesToMission: Creates 2 agents, each
+assigned to a different facility and attempts to assign both to a mission
+
+Case assignAgentToMissionRejectsDuplicateAssignment: Attempts to assign an
+agent to a mission it's already assigned to. It verifies that this fails
+
+Case unassignAgentFromMissionSuccessfully: Attempts to unassign a mission
+from an agent and checks for success
+
+Case listMissionsForAgentReturnsAssignedMissions: Verifies correct return
+when requesting a mission list for an agent
+
+Case listAgentsForMissionReturnsAssignedAgents: Verifies correct return
+when requesting an agent list for a mission
+
+Case listBriefsForMissionReturnsBriefs: Verifies newly stored briefs for
+a mission are returned in the mission's brief list
+
+Case getUserByNameReturnsExistingUser: Verifies that getUserByName returns
+the correct user identified by the passed username
+
+Case addMessageInsertsCorrectly: Verify that a message inserted with
+addMessage is successfully added
+
+Case updateMessageModifies: Verifies that a message is properly modified
+when passing it to updateMessage
+
+Case addCountryInsertsCorrectly: Verifies that a country is properly added
+when it is passed to addCountry
+
+Case getCountryReturnsCorrectly: Verifies that getCountry returns the
+proper country when passed an ID
+
+Case updateCountryModifies: Verifies that a country is properly modified
+when passing it to updateCountry
+
+Case listCountriesValidity: Verifies that listCountries properly returns a
+list of countries in the database
+
+Case accessCountryFacilities: Verifies that the correct facilities are
+returned by accessCountryFacilities when given a country ID
+
+Case updateMissionModifies: Verifies that a mission is properly modified
+when passing it to updateMission
+
+Case getAgentByNameReturnAgent: Verifies that getAgentByName correctly
+returns an existing agent with the passed name
+
+Case getAgentByNameNullForNonexistent: Verifies that getAgentByName
+returns null for a name that isn't in the database for an agent
+
+Case updateAgentModifies: Verifies that an agent is properly modified
+when passing it to updateAgent
+
+Case updateFacilityModifies: Verifies that a facility is properly modified
+when passing it to updateFacility
+
+Case updateBriefsModifies: Verifies that a brief is properly modified
+when passing it to updateBrief
+
+Case messagesListForAgent: Verifies an agent with a message is given a
+list with the proper message
+
+Case messagesListEmptyForAgent: Verifies an agent with no messages is
+given an empty message list
