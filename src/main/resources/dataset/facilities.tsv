@@ -1,7 +1,7 @@
-name	abbreviation
-Blackwood Annex	BA
-Rose Garden	RG
-Meridian Observatory	MO
-Echo Point	EP
-Glass House	GA
-Fairbanks Point	FP
+name	abbreviation	country_ID
+Blackwood Annex	BA	1
+Rose Garden	RG	8
+Meridian Observatory	MO	2
+Echo Point	EP	3
+Glass House	GA	4
+Fairbanks Point	FP	5
