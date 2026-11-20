@@ -251,7 +251,9 @@ public class Controller implements ControllerInterface {
                     return "No facility found with this id";
                 }
                 audit(username, LoggedAction.READ, itemType + " " + id);
-                return "Name: " + requested.getName() + "\nAbbreviation: " + requested.getAbbreviation();
+                Country country = store.getCountry(requested.getCountryID());
+                return "Name: " + requested.getName() + "\nAbbreviation: " + requested.getAbbreviation()
+                        + "\nCountry: " + (country == null ? "None" : country.getName());
             }
             case "missions": {
                 Mission requested = store.getMission(id);

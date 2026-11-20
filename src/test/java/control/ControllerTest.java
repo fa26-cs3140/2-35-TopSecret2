@@ -274,7 +274,14 @@ public class ControllerTest {
     @Test
     void readEntryPrintsFacility() {
         when(store.getFacility(1)).thenReturn(new Facility(1, "HQ", "H", 1));
-        assertEquals("Name: HQ\nAbbreviation: H", controller.readEntry("alice", "facilities", 1));
+        when(store.getCountry(1)).thenReturn(new Country(1, "France"));
+        assertEquals("Name: HQ\nAbbreviation: H\nCountry: France", controller.readEntry("alice", "facilities", 1));
+    }
+
+    @Test
+    void readEntryPrintsFacilityWithNoCountry() {
+        when(store.getFacility(1)).thenReturn(new Facility(1, "HQ", "H", 0));
+        assertEquals("Name: HQ\nAbbreviation: H\nCountry: None", controller.readEntry("alice", "facilities", 1));
     }
 
     @Test
