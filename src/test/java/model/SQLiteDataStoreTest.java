@@ -33,14 +33,15 @@ class SQLiteDataStoreTest {
         store.close();
     }
 
-    @Test
-    void defaultConstructorTest() {
-        store.close();
-
-        store = new SQLiteDataStore();
-
-        assertNotNull(store);
-    }
+// This would create a production database that would entangle with the real database at runtime.
+//    @Test
+//    void defaultConstructorTest() {
+//        store.close();
+//
+//        store = new SQLiteDataStore();
+//
+//        assertNotNull(store);
+//    }
 
     @Test
     void listMissionsReturnsMissions() {
